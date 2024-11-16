@@ -142,10 +142,10 @@ def update_content():
             
             # Store new version
             version_key = f"{chapter_id}_v{new_version}.md"
-            client.upload_from_text(version_key, section)
+            client.upload(key=version_key, value=section)
             
             # Update current version
-            client.upload_from_text(base_name, section)
+            client.upload(key=base_name, value=section)
         
         return jsonify({"message": "Content updated successfully"})
     except Exception as e:
@@ -183,9 +183,9 @@ def upload_image():
             
         filename = secure_filename(file.filename)
         
-        client.upload_bytes(
-            f"images/{filename}",
-            file.read()
+        client.upload(
+            key=f"images/{filename}",
+            value=file.read()
         )
         
         return jsonify({
@@ -228,9 +228,9 @@ def upload_pdf():
         
         # Upload PDF to object storage
         with open(temp_path, 'rb') as f:
-            client.upload_bytes(
-                f"pdfs/{filename}",
-                f.read()
+            client.upload(
+                key=f"pdfs/{filename}",
+                value=f.read()
             )
         
         # Clean up temporary file
