@@ -16,9 +16,11 @@ mimetypes.add_type('text/css', '.css')
 # Add supported file types
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'svg', 'pdf'}
 
-# Configure upload folder
+# Configure folders
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+SECTIONS_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sections')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(SECTIONS_FOLDER, exist_ok=True)
 
 app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
@@ -27,8 +29,21 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def verify_file_exists(filename):
-    file_path = os.path.join(UPLOAD_FOLDER, filename)
-    return os.path.exists(file_path)
+    # Check if PDF exists in uploads folder
+    pdf_path = os.path.join(UPLOAD_FOLDER, filename)
+    pdf_exists = os.path.exists(pdf_path)
+    
+    # Check if section content exists
+    base_name = os.path.splitext(filename)[0]
+    section_path = os.path.join(SECTIONS_FOLDER, f"{base_name}_section_1.txt")
+    sections_exist = os.path.exists(section_path)
+    
+    # Return tuple of existence status and detailed status message
+    if not pdf_exists:
+        return False, "file_missing"
+    elif not sections_exist:
+        return False, "sections_missing"
+    return True, "available"
 
 def extract_text_from_pdf(file_path):
     try:
@@ -39,6 +54,16 @@ def extract_text_from_pdf(file_path):
             if text.strip():  # Only add non-empty pages
                 text_content.append(text)
         doc.close()
+        
+        # Create sections for the extracted content
+        filename = os.path.basename(file_path)
+        base_name = os.path.splitext(filename)[0]
+        section_path = os.path.join(SECTIONS_FOLDER, f"{base_name}_section_1.txt")
+        
+        # Save first section (we can implement more sophisticated sectioning later)
+        with open(section_path, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(text_content))
+            
         return text_content, True
     except Exception as e:
         print(f"Error extracting text from PDF: {e}")
@@ -63,8 +88,11 @@ def upload_pdf():
         # Save file locally
         file.save(file_path)
         
-        # Extract text content from PDF
+        # Extract text content from PDF and create sections
         text_content, processing_success = extract_text_from_pdf(file_path)
+        
+        # Verify both PDF and sections exist
+        is_available, status = verify_file_exists(filename)
         
         # Create metadata
         metadata = {
@@ -74,8 +102,8 @@ def upload_pdf():
             "filename": filename,
             "id": filename,
             "uploadDate": datetime.now().isoformat(),
-            "processing_status": "processed" if processing_success else "failed",
-            "available": processing_success and len(text_content) > 0
+            "processing_status": status,
+            "available": is_available
         }
         
         # Store metadata and content in database
@@ -84,7 +112,7 @@ def upload_pdf():
             db[f"content_{filename}"] = json.dumps(text_content)
         
         return jsonify({
-            "message": "PDF uploaded successfully" if processing_success else "PDF processing failed",
+            "message": "PDF uploaded and processed successfully" if is_available else f"PDF processing incomplete: {status}",
             "metadata": metadata
         })
     except Exception as e:
@@ -100,15 +128,18 @@ def get_book(filename):
             return jsonify({"error": "Book not found"}), 404
             
         metadata = json.loads(db[metadata_key])
-        if not metadata.get('available', False):
-            return jsonify({"error": "Book is not available"}), 403
         
-        # Verify file exists
-        if not verify_file_exists(filename):
-            metadata['available'] = False
-            metadata['processing_status'] = 'file_missing'
+        # Verify both PDF and sections exist
+        is_available, status = verify_file_exists(filename)
+        
+        # Update metadata if availability has changed
+        if metadata.get('available', False) != is_available or metadata.get('processing_status') != status:
+            metadata['available'] = is_available
+            metadata['processing_status'] = status
             db[metadata_key] = json.dumps(metadata)
-            return jsonify({"error": "Book file is missing"}), 404
+        
+        if not is_available:
+            return jsonify({"error": f"Book is not available: {status}"}), 403
             
         return send_from_directory(UPLOAD_FOLDER, filename)
     except Exception as e:
@@ -123,8 +154,18 @@ def get_book_content(filename):
             return jsonify({"error": "Book not found"}), 404
             
         metadata = json.loads(db[metadata_key])
-        if not metadata.get('available', False):
-            return jsonify({"error": "Book is not available"}), 403
+        
+        # Verify both PDF and sections exist
+        is_available, status = verify_file_exists(filename)
+        
+        # Update metadata if availability has changed
+        if metadata.get('available', False) != is_available or metadata.get('processing_status') != status:
+            metadata['available'] = is_available
+            metadata['processing_status'] = status
+            db[metadata_key] = json.dumps(metadata)
+            
+        if not is_available:
+            return jsonify({"error": f"Book is not available: {status}"}), 403
             
         content_key = f"content_{filename}"
         if content_key in db:
@@ -141,12 +182,15 @@ def get_books():
         books = []
         for key in db.prefix("pdf_"):
             metadata = json.loads(db[key])
-            # Verify file existence and update availability
+            # Verify both PDF and sections exist
             filename = metadata.get('filename')
-            if filename and not verify_file_exists(filename):
-                metadata['available'] = False
-                metadata['processing_status'] = 'file_missing'
-                db[key] = json.dumps(metadata)
+            if filename:
+                is_available, status = verify_file_exists(filename)
+                # Update metadata if availability has changed
+                if metadata.get('available', False) != is_available or metadata.get('processing_status') != status:
+                    metadata['available'] = is_available
+                    metadata['processing_status'] = status
+                    db[key] = json.dumps(metadata)
             books.append(metadata)
         return jsonify(books)
     except Exception as e:
