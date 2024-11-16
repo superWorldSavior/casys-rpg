@@ -18,4 +18,5 @@ dependencies = [
     "openai>=1.54.4",
     "pypdf2>=3.0.1",
     "reportlab>=4.2.5",
+    "pillow>=11.0.0",
 ]

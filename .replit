@@ -86,7 +86,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python pdf_processor.py"
+args = "python main_processor.py"
 
 [[workflows.workflow]]
 name = "Create Test PDF"
