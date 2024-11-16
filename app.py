@@ -6,10 +6,14 @@ from pathlib import Path
 from replit import db
 from replit.object_storage import Client
 import json
+from werkzeug.utils import secure_filename
 
 # Add proper MIME type for JavaScript modules
 mimetypes.add_type('application/javascript', '.js')
 mimetypes.add_type('text/css', '.css')
+
+# Add supported image types
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'svg'}
 
 app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
@@ -17,6 +21,9 @@ CORS(app)
 # Initialize Object Storage
 client = Client()
 BUCKET_ID = os.environ.get('REPLIT_BUCKET_ID', 'replit-objstore-f05f56c7-9da7-4fbe-8b1f-ec80f5185697')
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def get_chapters_from_storage():
     try:
@@ -88,6 +95,56 @@ def update_content():
         
         return jsonify({"message": "Content updated successfully"})
     except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/images/<path:filename>')
+def get_image(filename):
+    try:
+        # Get image from object storage
+        image_data = client.download(BUCKET_ID, f"images/{filename}")
+        
+        # Create a temporary file to serve
+        temp_dir = Path('temp_images')
+        temp_dir.mkdir(exist_ok=True)
+        temp_path = temp_dir / filename
+        
+        with open(temp_path, 'wb') as f:
+            f.write(image_data)
+        
+        return send_from_directory('temp_images', filename)
+    except Exception as e:
+        print(f"Error retrieving image: {e}")
+        return jsonify({"error": str(e)}), 404
+
+@app.route('/api/images', methods=['POST'])
+def upload_image():
+    try:
+        if 'image' not in request.files:
+            return jsonify({"error": "No image file provided"}), 400
+            
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+            
+        if not allowed_file(file.filename):
+            return jsonify({"error": "File type not allowed"}), 400
+            
+        filename = secure_filename(file.filename)
+        
+        # Upload to object storage
+        client.upload(
+            BUCKET_ID,
+            f"images/{filename}",
+            file.read(),
+            metadata={'content-type': file.content_type}
+        )
+        
+        return jsonify({
+            "message": "Image uploaded successfully",
+            "url": f"/api/images/{filename}"
+        })
+    except Exception as e:
+        print(f"Error uploading image: {e}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/')

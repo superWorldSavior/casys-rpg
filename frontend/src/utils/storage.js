@@ -1,4 +1,4 @@
-// Storage service for managing text content
+// Storage service for managing text content and images
 export const storageService = {
   async saveChapter(key, content) {
     const response = await fetch('/api/content', {
@@ -33,5 +33,26 @@ export const storageService = {
     }
     const chapters = await response.json();
     return chapters.map((_, index) => `chapter_${index + 1}`);
+  },
+
+  async uploadImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch('/api/images', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload image');
+    }
+
+    const data = await response.json();
+    return data.url;
+  },
+
+  getImageUrl(filename) {
+    return `/api/images/${filename}`;
   }
 };
