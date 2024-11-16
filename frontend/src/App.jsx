@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material'
 import HomePage from './components/HomePage'
+import Chat from './components/Chat'
 
 // These will be moved to a separate route later
 // import TextReader from './components/TextReader'
@@ -34,6 +35,7 @@ function App() {
       <Container sx={{ mt: 4 }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/chat/:bookId" element={<Chat />} />
           {/* Reader route temporarily commented out
           <Route path="/reader" element={<TextReader />} />
           */}
