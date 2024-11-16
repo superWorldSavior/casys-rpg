@@ -93,7 +93,7 @@ const HomePage = () => {
   };
 
   const handleReadBook = (bookId) => {
-    navigate(`/reader/${bookId}`);
+    navigate(`/chat/${bookId}`);  // Updated to navigate to chat interface
   };
 
   const handlePreviewBook = (book) => {
@@ -183,20 +183,41 @@ const HomePage = () => {
                     Pages: {book.pages || '?'}
                   </Typography>
                 </CardContent>
-                <CardActions>
+                <CardActions sx={{ 
+                  padding: 2,
+                  justifyContent: 'space-between',
+                  backgroundColor: theme.palette.background.paper,
+                  borderTop: 1,
+                  borderColor: theme.palette.divider
+                }}>
                   <Button
-                    size="small"
+                    variant="outlined"
+                    size="medium"
                     color="primary"
                     startIcon={<PreviewIcon />}
                     onClick={() => handlePreviewBook(book)}
+                    sx={{
+                      fontWeight: 'medium',
+                      '&:hover': {
+                        backgroundColor: theme.palette.primary.light,
+                        color: theme.palette.primary.contrastText,
+                      }
+                    }}
                   >
                     Aperçu
                   </Button>
                   <Button
-                    size="small"
+                    variant="contained"
+                    size="medium"
                     color="primary"
                     startIcon={<MenuBookIcon />}
                     onClick={() => handleReadBook(book.id)}
+                    sx={{
+                      fontWeight: 'medium',
+                      '&:hover': {
+                        backgroundColor: theme.palette.primary.dark,
+                      }
+                    }}
                   >
                     Lire
                   </Button>
