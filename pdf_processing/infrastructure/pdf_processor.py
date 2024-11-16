@@ -8,12 +8,8 @@ from concurrent.futures import ThreadPoolExecutor
 from PyPDF2 import PdfReader
 from ..domain.ports import PDFProcessor
 from ..domain.entities import Section, PDFImage, ProcessedPDF
-from openai import OpenAI
 
 class MuPDFProcessor(PDFProcessor):
-    def __init__(self):
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
     def _get_pdf_folder_name(self, pdf_path: str) -> str:
         base_name = os.path.basename(pdf_path)
         folder_name = os.path.splitext(base_name)[0]
@@ -66,64 +62,47 @@ class MuPDFProcessor(PDFProcessor):
 
         reader = PdfReader(pdf_path)
         sections = []
-        current_section = None
-        current_text = ""
+        current_section: Optional[int] = None
+        current_text: str = ""
 
-        def process_section_text(text: str) -> str:
+        for page_num, page in enumerate(reader.pages):
             try:
-                completion = self.client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant that formats text for gamebooks."},
-                        {"role": "user", "content": f"Here is a text extracted from a gamebook:\n\n{text}\n\nIdentify numbers representing chapters that the reader should go to and surround them with [[ ]]. Leave other numbers as they are. Don't Say : Certainly! Here's the formatted text: Or Something else than the text"}
-                    ]
-                )
-                return completion.choices[0].message.content
+                text = page.extract_text()
+                if text:
+                    lines = text.splitlines()
+                    for line in lines:
+                        line = line.strip()
+                        if line.isdigit():
+                            if current_section is not None:
+                                # Save current section without OpenAI processing
+                                file_path = os.path.join(output_dir, f"{current_section}.md")
+                                sections.append(Section(
+                                    number=current_section,
+                                    content=current_text,
+                                    page_number=page_num + 1,
+                                    file_path=file_path,
+                                    pdf_name=pdf_folder_name
+                                ))
+                            
+                            current_section = int(line)
+                            current_text = ""
+                        else:
+                            if current_section is not None:
+                                current_text += line + "\n"
+
             except Exception as e:
-                print(f"Error processing text with AI: {e}")
-                return text
+                print(f"Error processing page {page_num + 1}: {e}")
 
-        with ThreadPoolExecutor() as executor:
-            for page_num, page in enumerate(reader.pages):
-                try:
-                    text = page.extract_text()
-                    if text:
-                        lines = text.splitlines()
-                        for line in lines:
-                            line = line.strip()
-                            if line.isdigit():
-                                if current_section is not None:
-                                    # Process and save current section
-                                    processed_text = process_section_text(current_text)
-                                    file_path = os.path.join(output_dir, f"{current_section}.md")
-                                    sections.append(Section(
-                                        number=current_section,
-                                        content=processed_text,
-                                        page_number=page_num + 1,
-                                        file_path=file_path,
-                                        pdf_name=pdf_folder_name
-                                    ))
-                                
-                                current_section = int(line)
-                                current_text = ""
-                            else:
-                                if current_section is not None:
-                                    current_text += line + "\n"
-
-                except Exception as e:
-                    print(f"Error processing page {page_num + 1}: {e}")
-
-            # Save last section
-            if current_section is not None:
-                processed_text = process_section_text(current_text)
-                file_path = os.path.join(output_dir, f"{current_section}.md")
-                sections.append(Section(
-                    number=current_section,
-                    content=processed_text,
-                    page_number=len(reader.pages),
-                    file_path=file_path,
-                    pdf_name=pdf_folder_name
-                ))
+        # Save last section
+        if current_section is not None:
+            file_path = os.path.join(output_dir, f"{current_section}.md")
+            sections.append(Section(
+                number=current_section,
+                content=current_text,
+                page_number=len(reader.pages),
+                file_path=file_path,
+                pdf_name=pdf_folder_name
+            ))
 
         # Extract images
         images = await self.extract_images(pdf_path, base_output_dir)
