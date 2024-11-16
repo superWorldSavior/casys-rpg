@@ -231,11 +231,10 @@ def upload_pdf():
             # Read the file into memory first
             pdf_data = f.read()
             
-            # Store in Replit Object Storage using store() method
-            client.store(
-                key=f"pdfs/{filename}",
-                value=pdf_data,
-                content_type="application/pdf"
+            # Store in Replit Object Storage using put() method
+            client.put(
+                f"pdfs/{filename}",
+                pdf_data
             )
         
         # Clean up temporary file
