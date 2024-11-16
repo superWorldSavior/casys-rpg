@@ -183,7 +183,7 @@ def upload_image():
             
         filename = secure_filename(file.filename)
         
-        client.upload(
+        client.upload_bytes(
             f"images/{filename}",
             file.read()
         )
@@ -228,7 +228,7 @@ def upload_pdf():
         
         # Upload PDF to object storage
         with open(temp_path, 'rb') as f:
-            client.upload(
+            client.upload_bytes(
                 f"pdfs/{filename}",
                 f.read()
             )
