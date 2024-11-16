@@ -22,20 +22,20 @@ const ANIMATION_STYLES = [
 function TextDisplay({ textContent, currentSection, speed }) {
   const [currentAnimation, setCurrentAnimation] = useState(0)
   const [revealedText, setRevealedText] = useState('')
-  const [isRevealing, setIsRevealing] = useState(false)
 
+  // Reset text and update animation when section changes
   useEffect(() => {
     if (currentSection >= 0) {
       setCurrentAnimation((prev) => (prev + 1) % ANIMATION_STYLES.length)
       setRevealedText('')
-      setIsRevealing(true)
     }
   }, [currentSection])
 
+  // Progressive text reveal effect
   useEffect(() => {
-    if (isRevealing && currentSection >= 0 && textContent[currentSection]) {
+    if (currentSection >= 0 && textContent[currentSection]) {
       const text = textContent[currentSection]
-      const revealSpeed = 11 - speed // Invert speed (1-10) for delay calculation
+      const revealSpeed = 11 - speed
       let currentChar = 0
 
       const revealInterval = setInterval(() => {
@@ -43,14 +43,13 @@ function TextDisplay({ textContent, currentSection, speed }) {
           setRevealedText(text.substring(0, currentChar + 1))
           currentChar++
         } else {
-          setIsRevealing(false)
           clearInterval(revealInterval)
         }
       }, revealSpeed * 30)
 
       return () => clearInterval(revealInterval)
     }
-  }, [isRevealing, currentSection, textContent, speed])
+  }, [currentSection, textContent, speed])
 
   return (
     <div id="text-display" className="mb-4">
@@ -69,14 +68,30 @@ function TextDisplay({ textContent, currentSection, speed }) {
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
               components={{
-                h1: ({node, ...props}) => <h1 className="mb-4" {...props}/>,
-                h2: ({node, ...props}) => <h2 className="mb-3" {...props}/>,
-                strong: ({node, ...props}) => <strong className="fw-bold" {...props}/>,
-                em: ({node, ...props}) => <em className="fst-italic" {...props}/>,
-                p: ({node, ...props}) => <p className="mb-3" {...props}/>,
-                ul: ({node, ...props}) => <ul className="list-unstyled mb-3" {...props}/>,
-                ol: ({node, ...props}) => <ol className="mb-3" {...props}/>,
-                li: ({node, ...props}) => <li className="mb-2" {...props}/>
+                h1: ({node, ...props}) => (
+                  <h1 className="text-4xl font-bold mb-4 text-emphasis" {...props}/>
+                ),
+                h2: ({node, ...props}) => (
+                  <h2 className="text-2xl font-semibold mb-3 text-emphasis" {...props}/>
+                ),
+                strong: ({node, ...props}) => (
+                  <strong className="font-bold text-emphasis" {...props}/>
+                ),
+                em: ({node, ...props}) => (
+                  <em className="italic text-emphasis" {...props}/>
+                ),
+                p: ({node, ...props}) => (
+                  <p className="mb-3 text-body" {...props}/>
+                ),
+                ul: ({node, ...props}) => (
+                  <ul className="list-disc pl-5 mb-3" {...props}/>
+                ),
+                ol: ({node, ...props}) => (
+                  <ol className="list-decimal pl-5 mb-3" {...props}/>
+                ),
+                li: ({node, ...props}) => (
+                  <li className="mb-2" {...props}/>
+                )
               }}
             >
               {index === currentSection ? revealedText : text}
