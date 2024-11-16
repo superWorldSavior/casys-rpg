@@ -141,10 +141,16 @@ def update_content():
             
             # Store new version
             version_key = f"{chapter_id}_v{new_version}.md"
-            client.put(version_key, section.encode('utf-8'))
+            client.create_object(
+                version_key,
+                section.encode('utf-8')
+            )
             
             # Update current version
-            client.put(base_name, section.encode('utf-8'))
+            client.create_object(
+                base_name,
+                section.encode('utf-8')
+            )
         
         return jsonify({"message": "Content updated successfully"})
     except Exception as e:
@@ -182,7 +188,10 @@ def upload_image():
             
         filename = secure_filename(file.filename)
         
-        client.put(f"images/{filename}", file.read())
+        client.create_object(
+            f"images/{filename}",
+            file.read()
+        )
         
         return jsonify({
             "message": "Image uploaded successfully",
@@ -228,7 +237,10 @@ def upload_pdf():
             pdf_data = f.read()
             
             # Store in Replit Object Storage
-            client.put(f"pdfs/{filename}", pdf_data)
+            client.create_object(
+                f"pdfs/{filename}",
+                pdf_data
+            )
         
         # Clean up temporary file
         temp_path.unlink()
