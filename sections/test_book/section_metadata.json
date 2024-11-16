@@ -1,0 +1,17 @@
+[
+    {
+        "section_number": 1,
+        "file_path": "test_book/1.md",
+        "pdf_name": "test_book"
+    },
+    {
+        "section_number": 2,
+        "file_path": "test_book/2.md",
+        "pdf_name": "test_book"
+    },
+    {
+        "section_number": 3,
+        "file_path": "test_book/3.md",
+        "pdf_name": "test_book"
+    }
+]
