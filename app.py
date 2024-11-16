@@ -26,6 +26,10 @@ CORS(app)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def verify_file_exists(filename):
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    return os.path.exists(file_path)
+
 def extract_text_from_pdf(file_path):
     try:
         doc = fitz.open(file_path)
@@ -98,6 +102,13 @@ def get_book(filename):
         metadata = json.loads(db[metadata_key])
         if not metadata.get('available', False):
             return jsonify({"error": "Book is not available"}), 403
+        
+        # Verify file exists
+        if not verify_file_exists(filename):
+            metadata['available'] = False
+            metadata['processing_status'] = 'file_missing'
+            db[metadata_key] = json.dumps(metadata)
+            return jsonify({"error": "Book file is missing"}), 404
             
         return send_from_directory(UPLOAD_FOLDER, filename)
     except Exception as e:
@@ -130,6 +141,12 @@ def get_books():
         books = []
         for key in db.prefix("pdf_"):
             metadata = json.loads(db[key])
+            # Verify file existence and update availability
+            filename = metadata.get('filename')
+            if filename and not verify_file_exists(filename):
+                metadata['available'] = False
+                metadata['processing_status'] = 'file_missing'
+                db[key] = json.dumps(metadata)
             books.append(metadata)
         return jsonify(books)
     except Exception as e:
