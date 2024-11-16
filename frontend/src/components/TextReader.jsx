@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material'
-import HomePage from './components/HomePage'
-import TextReader from './components/TextReader'
-import TextDisplay from './components/TextDisplay'
-import NavigationControls from './components/NavigationControls'
-import CommandInput from './components/CommandInput'
-import SpeedControl from './components/SpeedControl'
-import ThemeControl from './components/ThemeControl'
-import { storageService } from './utils/storage'
+import TextDisplay from './TextDisplay'
+import NavigationControls from './NavigationControls'
+import CommandInput from './CommandInput'
+import SpeedControl from './SpeedControl'
+import ThemeControl from './ThemeControl'
+import { storageService } from '../utils/storage'
 
 const DEFAULT_THEME = {
   fontFamily: 'var(--bs-body-font-family)',
@@ -17,7 +13,7 @@ const DEFAULT_THEME = {
   lineHeight: '1.6'
 };
 
-function App() {
+function TextReader() {
   const [currentSection, setCurrentSection] = useState(-1)
   const [isPaused, setIsPaused] = useState(true)
   const [speed, setSpeed] = useState(5)
@@ -40,7 +36,7 @@ function App() {
           const data = await response.json()
           // Store fetched content in Replit DB
           await Promise.all(
-            data.map((content, index) =>
+            data.map((content, index) => 
               storageService.saveChapter(`chapter_${index + 1}`, content)
             )
           )
@@ -66,39 +62,59 @@ function App() {
   }, [theme])
 
   return (
-    <Router>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Lecteur de Texte
-          </Typography>
-          <Button color="inherit" component={Link} to="/">
-            Accueil
-          </Button>
-          <Button color="inherit" component={Link} to="/reader">
-            Lecteur
-          </Button>
-        </Toolbar>
-      </AppBar>
-
-      <Container sx={{ mt: 4 }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/reader" element={
-            <TextReader
+    <div className="row justify-content-center">
+      <div className="col-md-8">
+        <div className="card">
+          <div className="card-body">
+            <TextDisplay
               textContent={textContent}
               currentSection={currentSection}
               speed={speed}
               theme={theme}
+            />
+            <NavigationControls
+              currentSection={currentSection}
+              setCurrentSection={setCurrentSection}
+              totalSections={textContent.length}
               isPaused={isPaused}
               setIsPaused={setIsPaused}
-              setCurrentSection={setCurrentSection}
             />
-          } />
-        </Routes>
-      </Container>
-    </Router>
+            <SpeedControl speed={speed} setSpeed={setSpeed} />
+            <ThemeControl theme={theme} onThemeChange={setTheme} />
+            <CommandInput
+              onCommand={(command) => {
+                switch (command) {
+                  case 'commencer':
+                    setCurrentSection(0)
+                    setIsPaused(false)
+                    break
+                  case 'pause':
+                    setIsPaused(true)
+                    break
+                  case 'resume':
+                    setIsPaused(false)
+                    break
+                  case 'skip':
+                    if (currentSection < textContent.length - 1) {
+                      setCurrentSection(prev => prev + 1)
+                    }
+                    break
+                  case 'help':
+                    alert(`Available commands:
+- commencer: Start reading
+- pause: Pause reading
+- resume: Resume reading
+- skip: Skip to next section
+- help: Show this help message`)
+                    break
+                }
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
-export default App
+export default TextReader

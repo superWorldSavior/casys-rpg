@@ -8,13 +8,14 @@ from replit.object_storage import Client
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
+import fitz  # PyMuPDF
 
 # Add proper MIME type for JavaScript modules
 mimetypes.add_type('application/javascript', '.js')
 mimetypes.add_type('text/css', '.css')
 
-# Add supported image types
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'svg'}
+# Add supported file types
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'svg', 'pdf'}
 
 app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
@@ -193,6 +194,69 @@ def upload_image():
         })
     except Exception as e:
         print(f"Error uploading image: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/upload-pdf', methods=['POST'])
+def upload_pdf():
+    try:
+        if 'pdf' not in request.files:
+            return jsonify({"error": "No PDF file provided"}), 400
+            
+        file = request.files['pdf']
+        if file.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+            
+        if not allowed_file(file.filename):
+            return jsonify({"error": "File type not allowed"}), 400
+            
+        filename = secure_filename(file.filename)
+        
+        # Save PDF to temporary file to extract metadata
+        temp_path = Path('temp_pdfs') / filename
+        temp_path.parent.mkdir(exist_ok=True)
+        file.save(temp_path)
+        
+        # Extract PDF metadata
+        doc = fitz.open(temp_path)
+        metadata = {
+            "title": doc.metadata.get("title", filename) or filename,
+            "author": doc.metadata.get("author", "Unknown"),
+            "pages": len(doc),
+            "filename": filename
+        }
+        doc.close()
+        
+        # Upload PDF to object storage
+        with open(temp_path, 'rb') as f:
+            client.upload(
+                f"pdfs/{filename}",
+                f.read()
+            )
+        
+        # Clean up temporary file
+        temp_path.unlink()
+        
+        # Store metadata in database
+        db[f"pdf_{filename}"] = json.dumps(metadata)
+        
+        return jsonify({
+            "message": "PDF uploaded successfully",
+            "metadata": metadata
+        })
+    except Exception as e:
+        print(f"Error uploading PDF: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/books')
+def get_books():
+    try:
+        books = []
+        for key in db.prefix("pdf_"):
+            metadata = json.loads(db[key])
+            books.append(metadata)
+        return jsonify(books)
+    except Exception as e:
+        print(f"Error getting books: {e}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/')
