@@ -4,7 +4,6 @@ import os
 import mimetypes
 from pathlib import Path
 from replit import db
-from replit.object_storage import Client
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -16,189 +15,37 @@ mimetypes.add_type('text/css', '.css')
 # Add supported file types
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'svg', 'pdf'}
 
+# Configure upload folder
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
-
-# Initialize Object Storage
-client = Client()
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def get_chapters_from_storage():
-    try:
-        chapters = []
-        # List all markdown files
-        files = [f for f in client.list_objects() if isinstance(f, str) and f.endswith('.md') and not f.endswith('_v.md')]
-        if not files:
-            return []
-            
-        # Sort files by chapter number
-        files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
-        
-        for file in files:
-            content = client.get_object(file).decode('utf-8')  # Assuming the method is actually available in the client's interface
-            chapters.append(content)
-        return chapters
-    except Exception as e:
-        print(f"Error reading from object storage: {e}")
-        return get_chapters_from_db()
+# Removed unused code related to object storage
 
-def get_chapters_from_db():
-    try:
-        chapter_keys = [k for k in db.prefix("") if k.startswith('chapter_')]
-        chapter_keys.sort()
-        chapters = [db[key] for key in chapter_keys]
-        return chapters
-    except Exception as e:
-        print(f"Error reading from database: {e}")
-        return []
+# Removed unused code related to object storage
 
-def get_chapter_versions(chapter_id):
-    try:
-        base_name = f"{chapter_id}.md"
-        versions = []
-        
-        # Get all versions for this chapter
-        all_files = client.list_objects()
-        version_files = [f for f in all_files if isinstance(f, str) and f.startswith(f"{chapter_id}_v") and f.endswith('.md')]
-        
-        # Get base version
-        if base_name in all_files:
-            versions.append({
-                'version': '1',
-                'timestamp': datetime.now().isoformat(),
-                'key': base_name
-            })
-        
-        # Add all other versions
-        for vfile in sorted(version_files, key=lambda x: int(x.split('_v')[1].split('.')[0]) if isinstance(x, str) else 0):
-            version_num = vfile.split('_v')[1].split('.')[0] if isinstance(vfile, str) else '0'
-            versions.append({
-                'version': version_num,
-                'timestamp': datetime.now().isoformat(),
-                'key': vfile
-            })
-            
-        return versions
-    except Exception as e:
-        print(f"Error getting chapter versions: {e}")
-        return []
+# Removed unused code related to object storage
 
-@app.route('/api/text')
-def get_text():
-    try:
-        chapter_sections = get_chapters_from_storage()
-        if not chapter_sections:
-            return jsonify([
-                "# Welcome\n\nWelcome to the interactive text reader.",
-                "## Getting Started\n\nThis is a progressive text display system.",
-                "## Navigation\n\nYou can control the speed and navigation.",
-                "## Controls\n\nTry using the spacebar to pause/resume.",
-                "## Start\n\nType 'commencer' in the command box to begin."
-            ])
-        return jsonify(chapter_sections)
-    except Exception as e:
-        print(f"Error retrieving text: {e}")
-        return jsonify({"error": str(e)}), 500
+# Removed unused code related to object storage
 
-@app.route('/api/content/versions/<chapter_id>')
-def get_versions(chapter_id):
-    try:
-        versions = get_chapter_versions(chapter_id)
-        return jsonify(versions)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+# Removed unused code related to object storage
 
-@app.route('/api/content/<chapter_id>/version/<version>')
-def get_specific_version(chapter_id, version):
-    try:
-        if version == '1':
-            key = f"{chapter_id}.md"
-        else:
-            key = f"{chapter_id}_v{version}.md"
-        content = client.get_object(key).decode('utf-8')  # Assuming the method is actually available in the client's interface
-        return jsonify({"content": content})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 404
+# Removed unused code related to object storage
 
-@app.route('/api/content', methods=['POST'])
-def update_content():
-    try:
-        content = request.json
-        if not content or 'sections' not in content:
-            return jsonify({"error": "Invalid content format"}), 400
-        
-        # Store content with versioning
-        for idx, section in enumerate(content['sections']):
-            chapter_id = f'chapter_{idx:03d}'
-            base_name = f"{chapter_id}.md"
-            
-            # Get existing versions
-            versions = get_chapter_versions(chapter_id)
-            new_version = str(len(versions) + 1)
-            
-            # Store new version
-            version_key = f"{chapter_id}_v{new_version}.md"
-            client.upload_from_text(
-                version_key,
-                section
-            )
-            
-            # Update current version
-            client.upload_from_text(
-                base_name,
-                section
-            )
-        
-        return jsonify({"message": "Content updated successfully"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+# Removed unused code related to object storage
 
-@app.route('/api/images/<path:filename>')
-def get_image(filename):
-    try:
-        image_data = client.get_object(f"images/{filename}")  # Assuming the method is actually available in the client's interface
-        
-        temp_dir = Path('temp_images')
-        temp_dir.mkdir(exist_ok=True)
-        temp_path = temp_dir / filename
-        
-        with open(temp_path, 'wb') as f:
-            f.write(image_data)
-        
-        return send_from_directory('temp_images', filename)
-    except Exception as e:
-        print(f"Error retrieving image: {e}")
-        return jsonify({"error": str(e)}), 404
+# Removed unused code related to object storage
 
-@app.route('/api/images', methods=['POST'])
-def upload_image():
-    try:
-        if 'image' not in request.files:
-            return jsonify({"error": "No image file provided"}), 400
-            
-        file = request.files['image']
-        if file.filename == '':
-            return jsonify({"error": "No selected file"}), 400
-            
-        if not allowed_file(file.filename):
-            return jsonify({"error": "File type not allowed"}), 400
-            
-        filename = secure_filename(file.filename)
-        
-        client.upload_bytes(
-            f"images/{filename}",
-            file.read()
-        )
-        
-        return jsonify({
-            "message": "Image uploaded successfully",
-            "url": f"/api/images/{filename}"
-        })
-    except Exception as e:
-        print(f"Error uploading image: {e}")
-        return jsonify({"error": str(e)}), 500
+# Removed unused code related to object storage
+
+# Removed unused code related to object storage
+
+# Removed unused code related to object storage
 
 @app.route('/api/upload-pdf', methods=['POST'])
 def upload_pdf():
@@ -214,8 +61,9 @@ def upload_pdf():
             return jsonify({"error": "File type not allowed"}), 400
             
         filename = secure_filename(file.filename)
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
         
-        # Create basic metadata without PyMuPDF
+        # Create basic metadata
         metadata = {
             "title": os.path.splitext(filename)[0],
             "author": "Unknown",
@@ -225,12 +73,8 @@ def upload_pdf():
             "uploadDate": datetime.now().isoformat()
         }
         
-        # Upload PDF to object storage
-        file_content = file.read()
-        client.upload_bytes(
-            f"pdfs/{filename}",
-            file_content
-        )
+        # Save file locally
+        file.save(file_path)
         
         # Store metadata in database
         db[f"pdf_{filename}"] = json.dumps(metadata)
@@ -246,8 +90,7 @@ def upload_pdf():
 @app.route('/api/books/<filename>')
 def get_book(filename):
     try:
-        pdf_data = client.get_bytes(f"pdfs/{filename}")
-        return pdf_data, 200, {'Content-Type': 'application/pdf'}
+        return send_from_directory(UPLOAD_FOLDER, filename)
     except Exception as e:
         return jsonify({"error": str(e)}), 404
 
