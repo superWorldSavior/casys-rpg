@@ -1,0 +1,42 @@
+{
+  "_NavigateBefore-BuEzxSw_.js": {
+    "file": "assets/NavigateBefore-BuEzxSw_.js",
+    "name": "NavigateBefore",
+    "imports": [
+      "index.html"
+    ]
+  },
+  "index.html": {
+    "file": "assets/index-bK7UOnro.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "dynamicImports": [
+      "src/pages/Home/index.jsx",
+      "src/pages/Reader/index.jsx"
+    ],
+    "css": [
+      "assets/index-BcO3ECpr.css"
+    ]
+  },
+  "src/pages/Home/index.jsx": {
+    "file": "assets/index-CdrXoqza.js",
+    "name": "index",
+    "src": "src/pages/Home/index.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_NavigateBefore-BuEzxSw_.js"
+    ]
+  },
+  "src/pages/Reader/index.jsx": {
+    "file": "assets/index-el0hjdxM.js",
+    "name": "index",
+    "src": "src/pages/Reader/index.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_NavigateBefore-BuEzxSw_.js"
+    ]
+  }
+}
