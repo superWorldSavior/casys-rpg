@@ -31,10 +31,32 @@ body {
   }
 }
 
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes slideInFromBottom {
   from {
     opacity: 0;
     transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -111,9 +133,32 @@ body {
   }
 }
 
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blurIn {
+  from {
+    opacity: 0;
+    filter: blur(20px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 .text-section {
   opacity: 0;
   display: none;
+  transition: all 0.3s ease-out;
 }
 
 .text-section.active {
@@ -128,8 +173,16 @@ body {
   animation: slideInFromRight 0.8s ease-out forwards;
 }
 
+.text-section.active.slide-left {
+  animation: slideInFromLeft 0.8s ease-out forwards;
+}
+
 .text-section.active.slide-up {
   animation: slideInFromBottom 0.8s ease-out forwards;
+}
+
+.text-section.active.slide-down {
+  animation: slideInFromTop 0.8s ease-out forwards;
 }
 
 .text-section.active.zoom-in {
@@ -152,6 +205,14 @@ body {
 .text-section.active.swing-in {
   animation: swingIn 1s ease-out forwards;
   transform-origin: top center;
+}
+
+.text-section.active.scale-in {
+  animation: scaleIn 0.8s ease-out forwards;
+}
+
+.text-section.active.blur-in {
+  animation: blurIn 0.8s ease-out forwards;
 }
 
 .text-section.active.typewriter {

@@ -30,6 +30,7 @@ function App() {
               <TextDisplay
                 textContent={textContent}
                 currentSection={currentSection}
+                speed={speed}
               />
               <NavigationControls
                 currentSection={currentSection}
