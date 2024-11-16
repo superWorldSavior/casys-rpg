@@ -231,8 +231,8 @@ def upload_pdf():
             # Read the file into memory first
             pdf_data = f.read()
             
-            # Store in Replit Object Storage using put() method
-            client.put(
+            # Store in Replit Object Storage using set_data() method
+            client.set_data(
                 f"pdfs/{filename}",
                 pdf_data
             )
@@ -254,7 +254,7 @@ def upload_pdf():
 @app.route('/api/books/<filename>')
 def get_book(filename):
     try:
-        pdf_data = client.get(f"pdfs/{filename}")
+        pdf_data = client.get_data(f"pdfs/{filename}")
         return pdf_data, 200, {'Content-Type': 'application/pdf'}
     except Exception as e:
         return jsonify({"error": str(e)}), 404
