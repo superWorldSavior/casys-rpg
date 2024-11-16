@@ -17,8 +17,9 @@ import {
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import DeleteIcon from '@mui/icons-material/Delete';
+import PreviewIcon from '@mui/icons-material/Preview';
 import { useNavigate } from 'react-router-dom';
+import PDFPreview from './PDFPreview';
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -26,11 +27,12 @@ const HomePage = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Fetch books when component mounts
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -77,7 +79,7 @@ const HomePage = () => {
         const result = await response.json();
         setBooks(prevBooks => [...prevBooks, result.metadata]);
         setSuccessMessage('Le livre a été téléchargé avec succès');
-        event.target.value = ''; // Reset file input
+        event.target.value = '';
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Erreur lors du téléchargement du PDF');
@@ -92,6 +94,11 @@ const HomePage = () => {
 
   const handleReadBook = (bookId) => {
     navigate(`/reader/${bookId}`);
+  };
+
+  const handlePreviewBook = (book) => {
+    setSelectedBook(book);
+    setPreviewOpen(true);
   };
 
   return (
@@ -180,6 +187,14 @@ const HomePage = () => {
                   <Button
                     size="small"
                     color="primary"
+                    startIcon={<PreviewIcon />}
+                    onClick={() => handlePreviewBook(book)}
+                  >
+                    Aperçu
+                  </Button>
+                  <Button
+                    size="small"
+                    color="primary"
                     startIcon={<MenuBookIcon />}
                     onClick={() => handleReadBook(book.id)}
                   >
@@ -201,6 +216,18 @@ const HomePage = () => {
             Commencez par télécharger un PDF
           </Typography>
         </Box>
+      )}
+
+      {selectedBook && (
+        <PDFPreview
+          open={previewOpen}
+          onClose={() => {
+            setPreviewOpen(false);
+            setSelectedBook(null);
+          }}
+          pdfUrl={`/api/books/${selectedBook.filename}`}
+          bookTitle={selectedBook.title}
+        />
       )}
     </Container>
   );
