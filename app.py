@@ -35,10 +35,10 @@ def extract_text_from_pdf(file_path):
             if text.strip():  # Only add non-empty pages
                 text_content.append(text)
         doc.close()
-        return text_content
+        return text_content, True
     except Exception as e:
         print(f"Error extracting text from PDF: {e}")
-        return []
+        return [], False
 
 @app.route('/api/upload-pdf', methods=['POST'])
 def upload_pdf():
@@ -60,7 +60,7 @@ def upload_pdf():
         file.save(file_path)
         
         # Extract text content from PDF
-        text_content = extract_text_from_pdf(file_path)
+        text_content, processing_success = extract_text_from_pdf(file_path)
         
         # Create metadata
         metadata = {
@@ -69,15 +69,18 @@ def upload_pdf():
             "pages": len(text_content),
             "filename": filename,
             "id": filename,
-            "uploadDate": datetime.now().isoformat()
+            "uploadDate": datetime.now().isoformat(),
+            "processing_status": "processed" if processing_success else "failed",
+            "available": processing_success and len(text_content) > 0
         }
         
         # Store metadata and content in database
         db[f"pdf_{filename}"] = json.dumps(metadata)
-        db[f"content_{filename}"] = json.dumps(text_content)
+        if processing_success:
+            db[f"content_{filename}"] = json.dumps(text_content)
         
         return jsonify({
-            "message": "PDF uploaded successfully",
+            "message": "PDF uploaded successfully" if processing_success else "PDF processing failed",
             "metadata": metadata
         })
     except Exception as e:
@@ -87,6 +90,15 @@ def upload_pdf():
 @app.route('/api/books/<filename>')
 def get_book(filename):
     try:
+        # Check if book exists and is available
+        metadata_key = f"pdf_{filename}"
+        if metadata_key not in db:
+            return jsonify({"error": "Book not found"}), 404
+            
+        metadata = json.loads(db[metadata_key])
+        if not metadata.get('available', False):
+            return jsonify({"error": "Book is not available"}), 403
+            
         return send_from_directory(UPLOAD_FOLDER, filename)
     except Exception as e:
         return jsonify({"error": str(e)}), 404
@@ -94,6 +106,15 @@ def get_book(filename):
 @app.route('/api/books/<filename>/content')
 def get_book_content(filename):
     try:
+        # Check if book exists and is available
+        metadata_key = f"pdf_{filename}"
+        if metadata_key not in db:
+            return jsonify({"error": "Book not found"}), 404
+            
+        metadata = json.loads(db[metadata_key])
+        if not metadata.get('available', False):
+            return jsonify({"error": "Book is not available"}), 403
+            
         content_key = f"content_{filename}"
         if content_key in db:
             content = json.loads(db[content_key])

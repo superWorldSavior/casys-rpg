@@ -14,10 +14,13 @@ import {
   Snackbar,
   useTheme,
   useMediaQuery,
+  Chip,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
+import ErrorIcon from '@mui/icons-material/Error';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PDFPreview from '../../components/features/books/PDFPreview';
 
 const HomePage = () => {
@@ -77,7 +80,7 @@ const HomePage = () => {
       if (response.ok) {
         const result = await response.json();
         setBooks(prevBooks => [...prevBooks, result.metadata]);
-        setSuccessMessage('Le livre a été téléchargé avec succès');
+        setSuccessMessage(result.message);
         event.target.value = '';
       } else {
         const errorData = await response.json();
@@ -91,13 +94,44 @@ const HomePage = () => {
     }
   };
 
-  const handleReadBook = (bookId) => {
-    navigate(`/reader/${bookId}`);
+  const handleReadBook = (book) => {
+    if (!book.available) {
+      setError('Ce livre n\'est pas disponible pour la lecture');
+      return;
+    }
+    navigate(`/reader/${book.id}`);
   };
 
   const handlePreviewBook = (book) => {
+    if (!book.available) {
+      setError('Ce livre n\'est pas disponible pour l\'aperçu');
+      return;
+    }
     setSelectedBook(book);
     setPreviewOpen(true);
+  };
+
+  const getStatusChip = (book) => {
+    if (book.available) {
+      return (
+        <Chip
+          icon={<CheckCircleIcon />}
+          label="Disponible"
+          color="success"
+          size="small"
+          sx={{ mb: 1 }}
+        />
+      );
+    }
+    return (
+      <Chip
+        icon={<ErrorIcon />}
+        label={book.processing_status === 'failed' ? 'Échec du traitement' : 'Non disponible'}
+        color="error"
+        size="small"
+        sx={{ mb: 1 }}
+      />
+    );
   };
 
   return (
@@ -166,9 +200,10 @@ const HomePage = () => {
                   flexDirection: 'column',
                   transition: 'transform 0.2s',
                   '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: 4,
-                  }
+                    transform: book.available ? 'translateY(-4px)' : 'none',
+                    boxShadow: book.available ? 4 : 1,
+                  },
+                  opacity: book.available ? 1 : 0.7,
                 }}
               >
                 <CardContent sx={{ flexGrow: 1 }}>
@@ -181,6 +216,7 @@ const HomePage = () => {
                   <Typography variant="body2" color="text.secondary">
                     Pages: {book.pages || '?'}
                   </Typography>
+                  {getStatusChip(book)}
                 </CardContent>
                 <CardActions sx={{ 
                   padding: 2,
@@ -195,6 +231,7 @@ const HomePage = () => {
                     color="primary"
                     startIcon={<PreviewIcon />}
                     onClick={() => handlePreviewBook(book)}
+                    disabled={!book.available}
                   >
                     Aperçu
                   </Button>
@@ -203,7 +240,8 @@ const HomePage = () => {
                     size="medium"
                     color="primary"
                     startIcon={<MenuBookIcon />}
-                    onClick={() => handleReadBook(book.id)}
+                    onClick={() => handleReadBook(book)}
+                    disabled={!book.available}
                   >
                     Lire
                   </Button>
