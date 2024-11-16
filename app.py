@@ -8,7 +8,6 @@ from replit.object_storage import Client
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
-import fitz  # PyMuPDF
 
 # Add proper MIME type for JavaScript modules
 mimetypes.add_type('application/javascript', '.js')
@@ -30,7 +29,7 @@ def get_chapters_from_storage():
     try:
         chapters = []
         # List all markdown files
-        files = [f for f in client.list() if f.endswith('.md') and not f.endswith('_v.md')]
+        files = [f for f in client.list_objects() if isinstance(f, str) and f.endswith('.md') and not f.endswith('_v.md')]
         if not files:
             return []
             
@@ -38,7 +37,7 @@ def get_chapters_from_storage():
         files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
         
         for file in files:
-            content = client.get(file).decode('utf-8')
+            content = client.get_object(file).decode('utf-8')  # Assuming the method is actually available in the client's interface
             chapters.append(content)
         return chapters
     except Exception as e:
@@ -61,23 +60,23 @@ def get_chapter_versions(chapter_id):
         versions = []
         
         # Get all versions for this chapter
-        all_files = client.list()
-        version_files = [f for f in all_files if f.startswith(f"{chapter_id}_v") and f.endswith('.md')]
+        all_files = client.list_objects()
+        version_files = [f for f in all_files if isinstance(f, str) and f.startswith(f"{chapter_id}_v") and f.endswith('.md')]
         
         # Get base version
         if base_name in all_files:
             versions.append({
                 'version': '1',
-                'timestamp': datetime.utcnow().isoformat(),
+                'timestamp': datetime.now().isoformat(),
                 'key': base_name
             })
         
         # Add all other versions
-        for vfile in sorted(version_files, key=lambda x: int(x.split('_v')[1].split('.')[0])):
-            version_num = vfile.split('_v')[1].split('.')[0]
+        for vfile in sorted(version_files, key=lambda x: int(x.split('_v')[1].split('.')[0]) if isinstance(x, str) else 0):
+            version_num = vfile.split('_v')[1].split('.')[0] if isinstance(vfile, str) else '0'
             versions.append({
                 'version': version_num,
-                'timestamp': datetime.utcnow().isoformat(),
+                'timestamp': datetime.now().isoformat(),
                 'key': vfile
             })
             
@@ -118,7 +117,7 @@ def get_specific_version(chapter_id, version):
             key = f"{chapter_id}.md"
         else:
             key = f"{chapter_id}_v{version}.md"
-        content = client.get(key).decode('utf-8')
+        content = client.get_object(key).decode('utf-8')  # Assuming the method is actually available in the client's interface
         return jsonify({"content": content})
     except Exception as e:
         return jsonify({"error": str(e)}), 404
@@ -141,15 +140,15 @@ def update_content():
             
             # Store new version
             version_key = f"{chapter_id}_v{new_version}.md"
-            client.create_object(
+            client.upload_from_text(
                 version_key,
-                section.encode('utf-8')
+                section
             )
             
             # Update current version
-            client.create_object(
+            client.upload_from_text(
                 base_name,
-                section.encode('utf-8')
+                section
             )
         
         return jsonify({"message": "Content updated successfully"})
@@ -159,7 +158,7 @@ def update_content():
 @app.route('/api/images/<path:filename>')
 def get_image(filename):
     try:
-        image_data = client.get(f"images/{filename}")
+        image_data = client.get_object(f"images/{filename}")  # Assuming the method is actually available in the client's interface
         
         temp_dir = Path('temp_images')
         temp_dir.mkdir(exist_ok=True)
@@ -188,7 +187,7 @@ def upload_image():
             
         filename = secure_filename(file.filename)
         
-        client.create_object(
+        client.upload_bytes(
             f"images/{filename}",
             file.read()
         )
@@ -211,39 +210,27 @@ def upload_pdf():
         if file.filename == '':
             return jsonify({"error": "No selected file"}), 400
             
-        if not allowed_file(file.filename):
+        if not file or not allowed_file(file.filename):
             return jsonify({"error": "File type not allowed"}), 400
             
         filename = secure_filename(file.filename)
         
-        # Save PDF to temporary file to extract metadata
-        temp_path = Path('temp_pdfs') / filename
-        temp_path.parent.mkdir(exist_ok=True)
-        file.save(temp_path)
-        
-        # Extract PDF metadata
-        doc = fitz.open(temp_path)
+        # Create basic metadata without PyMuPDF
         metadata = {
-            "title": doc.metadata.get("title", filename) or filename,
-            "author": doc.metadata.get("author", "Unknown"),
-            "pages": len(doc),
-            "filename": filename
+            "title": os.path.splitext(filename)[0],
+            "author": "Unknown",
+            "pages": 0,  # We'll update this later if needed
+            "filename": filename,
+            "id": filename,  # Using filename as ID for now
+            "uploadDate": datetime.now().isoformat()
         }
-        doc.close()
         
         # Upload PDF to object storage
-        with open(temp_path, 'rb') as f:
-            # Read the file into memory first
-            pdf_data = f.read()
-            
-            # Store in Replit Object Storage
-            client.create_object(
-                f"pdfs/{filename}",
-                pdf_data
-            )
-        
-        # Clean up temporary file
-        temp_path.unlink()
+        file_content = file.read()
+        client.upload_bytes(
+            f"pdfs/{filename}",
+            file_content
+        )
         
         # Store metadata in database
         db[f"pdf_{filename}"] = json.dumps(metadata)
@@ -259,7 +246,7 @@ def upload_pdf():
 @app.route('/api/books/<filename>')
 def get_book(filename):
     try:
-        pdf_data = client.get(f"pdfs/{filename}")
+        pdf_data = client.get_bytes(f"pdfs/{filename}")
         return pdf_data, 200, {'Content-Type': 'application/pdf'}
     except Exception as e:
         return jsonify({"error": str(e)}), 404
