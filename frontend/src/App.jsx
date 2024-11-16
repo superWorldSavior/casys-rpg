@@ -3,13 +3,22 @@ import TextDisplay from './components/TextDisplay'
 import NavigationControls from './components/NavigationControls'
 import CommandInput from './components/CommandInput'
 import SpeedControl from './components/SpeedControl'
+import ThemeControl from './components/ThemeControl'
 import { storageService } from './utils/storage'
+
+const DEFAULT_THEME = {
+  fontFamily: 'var(--bs-body-font-family)',
+  fontSize: '1rem',
+  textColor: '#ffffff',
+  lineHeight: '1.6'
+};
 
 function App() {
   const [currentSection, setCurrentSection] = useState(-1)
   const [isPaused, setIsPaused] = useState(true)
   const [speed, setSpeed] = useState(5)
   const [textContent, setTextContent] = useState([])
+  const [theme, setTheme] = useState(DEFAULT_THEME)
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -33,13 +42,24 @@ function App() {
           )
           setTextContent(data)
         }
+
+        // Load saved theme if exists
+        const savedTheme = await storageService.getChapter('user_theme')
+        if (savedTheme) {
+          setTheme(savedTheme)
+        }
       } catch (error) {
-        console.error('Error fetching text content:', error)
+        console.error('Error fetching content:', error)
       }
     }
 
     fetchContent()
   }, [])
+
+  // Save theme changes to storage
+  useEffect(() => {
+    storageService.saveChapter('user_theme', theme)
+  }, [theme])
 
   return (
     <div className="container py-4">
@@ -51,6 +71,7 @@ function App() {
                 textContent={textContent}
                 currentSection={currentSection}
                 speed={speed}
+                theme={theme}
               />
               <NavigationControls
                 currentSection={currentSection}
@@ -60,6 +81,7 @@ function App() {
                 setIsPaused={setIsPaused}
               />
               <SpeedControl speed={speed} setSpeed={setSpeed} />
+              <ThemeControl theme={theme} onThemeChange={setTheme} />
               <CommandInput
                 onCommand={(command) => {
                   switch (command) {

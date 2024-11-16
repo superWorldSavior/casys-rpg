@@ -19,7 +19,7 @@ const ANIMATION_STYLES = [
   'slide-left'
 ]
 
-function TextDisplay({ textContent, currentSection, speed }) {
+function TextDisplay({ textContent, currentSection, speed, theme }) {
   const [currentAnimation, setCurrentAnimation] = useState(0)
   const [revealedText, setRevealedText] = useState('')
 
@@ -51,9 +51,16 @@ function TextDisplay({ textContent, currentSection, speed }) {
     }
   }, [currentSection, textContent, speed])
 
+  const textStyle = {
+    fontFamily: theme.fontFamily,
+    fontSize: theme.fontSize,
+    color: theme.textColor,
+    lineHeight: theme.lineHeight
+  }
+
   return (
     <div id="text-display" className="mb-4">
-      <div className="text-content markdown-content">
+      <div className="text-content markdown-content" style={textStyle}>
         {textContent.map((text, index) => (
           <div
             key={index}
@@ -69,28 +76,28 @@ function TextDisplay({ textContent, currentSection, speed }) {
               rehypePlugins={[rehypeRaw]}
               components={{
                 h1: ({node, children, ...props}) => (
-                  <h1 className="text-4xl font-bold mb-4" {...props}>{children}</h1>
+                  <h1 style={textStyle} className="text-4xl font-bold mb-4" {...props}>{children}</h1>
                 ),
                 h2: ({node, children, ...props}) => (
-                  <h2 className="text-2xl font-semibold mb-3" {...props}>{children}</h2>
+                  <h2 style={textStyle} className="text-2xl font-semibold mb-3" {...props}>{children}</h2>
                 ),
                 strong: ({node, children, ...props}) => (
-                  <strong className="font-bold" {...props}>{children}</strong>
+                  <strong style={textStyle} className="font-bold" {...props}>{children}</strong>
                 ),
                 em: ({node, children, ...props}) => (
-                  <em className="italic" {...props}>{children}</em>
+                  <em style={textStyle} className="italic" {...props}>{children}</em>
                 ),
                 p: ({node, children, ...props}) => (
-                  <p className="mb-3" {...props}>{children}</p>
+                  <p style={textStyle} className="mb-3" {...props}>{children}</p>
                 ),
                 ul: ({node, children, ...props}) => (
-                  <ul className="list-disc pl-5 mb-3" {...props}>{children}</ul>
+                  <ul style={textStyle} className="list-disc pl-5 mb-3" {...props}>{children}</ul>
                 ),
                 ol: ({node, children, ...props}) => (
-                  <ol className="list-decimal pl-5 mb-3" {...props}>{children}</ol>
+                  <ol style={textStyle} className="list-decimal pl-5 mb-3" {...props}>{children}</ol>
                 ),
                 li: ({node, children, ...props}) => (
-                  <li className="mb-2" {...props}>{children}</li>
+                  <li style={textStyle} className="mb-2" {...props}>{children}</li>
                 )
               }}
             >
