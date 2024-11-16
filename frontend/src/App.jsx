@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material'
 import HomePage from './components/HomePage'
-import TextReader from './components/TextReader'
+import Chat from './components/Chat'
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
       <Container sx={{ mt: 4 }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/reader/:bookId" element={<TextReader />} />
+          <Route path="/chat/:bookId" element={<Chat />} />
         </Routes>
       </Container>
     </Router>
