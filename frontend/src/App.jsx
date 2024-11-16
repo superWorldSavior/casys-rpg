@@ -4,14 +4,15 @@ import {
   RouterProvider,
   createRoutesFromElements,
   Route,
-  Link
+  Link,
+  Outlet
 } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material'
 import HomePage from './components/HomePage'
-import Chat from './components/Chat'
+import TextReader from './components/TextReader'
 
 // Layout component for consistent UI across routes
-const Layout = ({ children }) => (
+const Layout = () => (
   <>
     <AppBar position="static">
       <Toolbar>
@@ -24,27 +25,32 @@ const Layout = ({ children }) => (
       </Toolbar>
     </AppBar>
     <Container sx={{ mt: 4 }}>
-      {children}
+      <Outlet />
     </Container>
   </>
 )
 
-// Create router with future flags enabled
+// Create router with all future flags enabled
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path="/"
-      element={<Layout />}
-    >
+    <Route path="/" element={<Layout />}>
       <Route index element={<HomePage />} />
-      <Route path="chat/:bookId" element={<Chat />} />
-      <Route path="*" element={<div>Page not found</div>} />
+      <Route path="chat/:bookId" element={<TextReader />} />
+      <Route path="*" element={
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          Page non trouvée
+        </div>
+      } />
     </Route>
   ),
   {
     future: {
       v7_startTransition: true,
-      v7_relativeSplatPath: true
+      v7_normalizeFormMethod: true,
+      v7_fetcherPersist: true,
+      v7_partialHydration: true,
+      v7_relativeSplatPath: true,
+      v7_skipActionErrorRevalidation: true
     }
   }
 )

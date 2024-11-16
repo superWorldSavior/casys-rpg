@@ -7,6 +7,7 @@ from replit import db
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
+import fitz  # PyMuPDF
 
 # Add proper MIME type for JavaScript modules
 mimetypes.add_type('application/javascript', '.js')
@@ -25,6 +26,20 @@ CORS(app)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def extract_text_from_pdf(file_path):
+    try:
+        doc = fitz.open(file_path)
+        text_content = []
+        for page in doc:
+            text = page.get_text()
+            if text.strip():  # Only add non-empty pages
+                text_content.append(text)
+        doc.close()
+        return text_content
+    except Exception as e:
+        print(f"Error extracting text from PDF: {e}")
+        return []
+
 @app.route('/api/upload-pdf', methods=['POST'])
 def upload_pdf():
     try:
@@ -41,21 +56,25 @@ def upload_pdf():
         filename = secure_filename(file.filename)
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         
-        # Create basic metadata
+        # Save file locally
+        file.save(file_path)
+        
+        # Extract text content from PDF
+        text_content = extract_text_from_pdf(file_path)
+        
+        # Create metadata
         metadata = {
             "title": os.path.splitext(filename)[0],
             "author": "Unknown",
-            "pages": 0,
+            "pages": len(text_content),
             "filename": filename,
             "id": filename,
             "uploadDate": datetime.now().isoformat()
         }
         
-        # Save file locally
-        file.save(file_path)
-        
-        # Store metadata in database
+        # Store metadata and content in database
         db[f"pdf_{filename}"] = json.dumps(metadata)
+        db[f"content_{filename}"] = json.dumps(text_content)
         
         return jsonify({
             "message": "PDF uploaded successfully",
@@ -72,6 +91,18 @@ def get_book(filename):
     except Exception as e:
         return jsonify({"error": str(e)}), 404
 
+@app.route('/api/books/<filename>/content')
+def get_book_content(filename):
+    try:
+        content_key = f"content_{filename}"
+        if content_key in db:
+            content = json.loads(db[content_key])
+            return jsonify(content)
+        return jsonify({"error": "Book content not found"}), 404
+    except Exception as e:
+        print(f"Error getting book content: {e}")
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/books')
 def get_books():
     try:
@@ -84,10 +115,12 @@ def get_books():
         print(f"Error getting books: {e}")
         return jsonify({"error": str(e)}), 500
 
-# Serve React App - Update routes to handle all paths
+# Serve React App
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    if path.startswith('api/'):
+        return jsonify({"error": "Not found"}), 404
     if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
     return send_from_directory(app.static_folder, 'index.html')

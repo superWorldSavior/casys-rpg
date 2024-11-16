@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
@@ -7,16 +8,18 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true
+        target: 'http://0.0.0.0:5000',
+        changeOrigin: true,
+        secure: false
       }
     }
   },
   build: {
-    outDir: 'dist',
+    outDir: path.resolve(__dirname, 'dist'),
     assetsDir: 'assets',
     emptyOutDir: true,
     sourcemap: true,
+    manifest: true,
     rollupOptions: {
       output: {
         manualChunks: undefined
