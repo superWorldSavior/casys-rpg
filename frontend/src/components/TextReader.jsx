@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import TextDisplay from './TextDisplay'
 import NavigationControls from './NavigationControls'
 import CommandInput from './CommandInput'
@@ -14,11 +15,13 @@ const DEFAULT_THEME = {
 };
 
 function TextReader() {
+  const { bookId } = useParams();
   const [currentSection, setCurrentSection] = useState(-1)
   const [isPaused, setIsPaused] = useState(true)
   const [speed, setSpeed] = useState(5)
   const [textContent, setTextContent] = useState([])
   const [theme, setTheme] = useState(DEFAULT_THEME)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -32,15 +35,19 @@ function TextReader() {
           setTextContent(content)
         } else {
           // Fallback to API if no content in DB
-          const response = await fetch('/api/text')
+          const response = await fetch(`/api/books/${bookId}/content`)
           const data = await response.json()
-          // Store fetched content in Replit DB
-          await Promise.all(
-            data.map((content, index) => 
-              storageService.saveChapter(`chapter_${index + 1}`, content)
+          if (response.ok) {
+            // Store fetched content in Replit DB
+            await Promise.all(
+              data.map((content, index) => 
+                storageService.saveChapter(`book_${bookId}_chapter_${index + 1}`, content)
+              )
             )
-          )
-          setTextContent(data)
+            setTextContent(data)
+          } else {
+            setError('Error loading book content')
+          }
         }
 
         // Load saved theme if exists
@@ -50,16 +57,27 @@ function TextReader() {
         }
       } catch (error) {
         console.error('Error fetching content:', error)
+        setError('Error loading book content')
       }
     }
 
-    fetchContent()
-  }, [])
+    if (bookId) {
+      fetchContent()
+    }
+  }, [bookId])
 
   // Save theme changes to storage
   useEffect(() => {
     storageService.saveChapter('user_theme', theme)
   }, [theme])
+
+  if (error) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        {error}
+      </div>
+    )
+  }
 
   return (
     <div className="row justify-content-center">

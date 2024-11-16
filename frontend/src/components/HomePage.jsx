@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Grid,
@@ -19,6 +20,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
 import PDFPreview from './PDFPreview';
+import TextReader from './TextReader'; // Import TextReader component
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -30,6 +32,7 @@ const HomePage = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBooks();
@@ -91,8 +94,7 @@ const HomePage = () => {
   };
 
   const handleReadBook = (bookId) => {
-    // Redirect to TextFlowNavigator
-    window.location.href = 'https://textflownavigator.superWorldSavior.repl.co';
+    navigate(`/reader/${bookId}`);
   };
 
   const handlePreviewBook = (book) => {
@@ -254,3 +256,18 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+// Add the necessary imports
+import { Routes, Route } from 'react-router-dom';
+
+// The App.jsx component
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/reader/:bookId" element={<TextReader />} /> {/* Uncomment and set up TextReader route */}
+    </Routes>
+  );
+}
+
+export default App;

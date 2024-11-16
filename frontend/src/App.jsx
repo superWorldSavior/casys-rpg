@@ -1,16 +1,8 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material'
 import HomePage from './components/HomePage'
-
-// These will be moved to a separate route later
-// import TextReader from './components/TextReader'
-// import TextDisplay from './components/TextDisplay'
-// import NavigationControls from './components/NavigationControls'
-// import CommandInput from './components/CommandInput'
-// import SpeedControl from './components/SpeedControl'
-// import ThemeControl from './components/ThemeControl'
-// import { storageService } from './utils/storage'
+import TextReader from './components/TextReader'
 
 function App() {
   return (
@@ -23,20 +15,13 @@ function App() {
           <Button color="inherit" component={Link} to="/">
             Accueil
           </Button>
-          {/* Reader button commented out until reader functionality is implemented
-          <Button color="inherit" component={Link} to="/reader">
-            Lecteur
-          </Button>
-          */}
         </Toolbar>
       </AppBar>
 
       <Container sx={{ mt: 4 }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          {/* Reader route temporarily commented out
-          <Route path="/reader" element={<TextReader />} />
-          */}
+          <Route path="/reader/:bookId" element={<TextReader />} />
         </Routes>
       </Container>
     </Router>
