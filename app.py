@@ -25,28 +25,6 @@ CORS(app)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
-# Removed unused code related to object storage
-
 @app.route('/api/upload-pdf', methods=['POST'])
 def upload_pdf():
     try:
@@ -67,9 +45,9 @@ def upload_pdf():
         metadata = {
             "title": os.path.splitext(filename)[0],
             "author": "Unknown",
-            "pages": 0,  # We'll update this later if needed
+            "pages": 0,
             "filename": filename,
-            "id": filename,  # Using filename as ID for now
+            "id": filename,
             "uploadDate": datetime.now().isoformat()
         }
         
@@ -106,23 +84,13 @@ def get_books():
         print(f"Error getting books: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/')
-def serve_index():
-    try:
-        return send_from_directory('frontend/dist', 'index.html')
-    except Exception as e:
-        print(f"Error serving index: {e}")
-        return str(e), 500
-
+# Serve React App - Update routes to handle all paths
+@app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def serve_static(path):
-    try:
-        if os.path.exists(os.path.join('frontend/dist', path)):
-            return send_from_directory('frontend/dist', path)
-        return send_from_directory('frontend/dist', 'index.html')
-    except Exception as e:
-        print(f"Error serving static file: {e}")
-        return str(e), 500
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
