@@ -3,6 +3,7 @@ import TextDisplay from './components/TextDisplay'
 import NavigationControls from './components/NavigationControls'
 import CommandInput from './components/CommandInput'
 import SpeedControl from './components/SpeedControl'
+import { storageService } from './utils/storage'
 
 function App() {
   const [currentSection, setCurrentSection] = useState(-1)
@@ -11,14 +12,33 @@ function App() {
   const [textContent, setTextContent] = useState([])
 
   useEffect(() => {
-    fetch('/api/text')
-      .then(response => response.json())
-      .then(data => {
-        setTextContent(data)
-      })
-      .catch(error => {
+    const fetchContent = async () => {
+      try {
+        // First try to get content from Replit DB
+        const chapters = await storageService.getAllChapters()
+        if (chapters && chapters.length > 0) {
+          const content = await Promise.all(
+            chapters.map(key => storageService.getChapter(key))
+          )
+          setTextContent(content)
+        } else {
+          // Fallback to API if no content in DB
+          const response = await fetch('/api/text')
+          const data = await response.json()
+          // Store fetched content in Replit DB
+          await Promise.all(
+            data.map((content, index) => 
+              storageService.saveChapter(`chapter_${index + 1}`, content)
+            )
+          )
+          setTextContent(data)
+        }
+      } catch (error) {
         console.error('Error fetching text content:', error)
-      })
+      }
+    }
+
+    fetchContent()
   }, [])
 
   return (

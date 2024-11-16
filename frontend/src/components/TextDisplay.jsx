@@ -31,7 +31,7 @@ function TextDisplay({ textContent, currentSection, speed }) {
     }
   }, [currentSection])
 
-  // Progressive text reveal effect
+  // Progressive text reveal effect with improved state updates
   useEffect(() => {
     if (currentSection >= 0 && textContent[currentSection]) {
       const text = textContent[currentSection]
@@ -40,7 +40,7 @@ function TextDisplay({ textContent, currentSection, speed }) {
 
       const revealInterval = setInterval(() => {
         if (currentChar < text.length) {
-          setRevealedText(text.substring(0, currentChar + 1))
+          setRevealedText(prev => text.substring(0, currentChar + 1))
           currentChar++
         } else {
           clearInterval(revealInterval)
@@ -68,29 +68,29 @@ function TextDisplay({ textContent, currentSection, speed }) {
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
               components={{
-                h1: ({node, ...props}) => (
-                  <h1 className="text-4xl font-bold mb-4 text-emphasis" {...props}/>
+                h1: ({node, children, ...props}) => (
+                  <h1 className="text-4xl font-bold mb-4" {...props}>{children}</h1>
                 ),
-                h2: ({node, ...props}) => (
-                  <h2 className="text-2xl font-semibold mb-3 text-emphasis" {...props}/>
+                h2: ({node, children, ...props}) => (
+                  <h2 className="text-2xl font-semibold mb-3" {...props}>{children}</h2>
                 ),
-                strong: ({node, ...props}) => (
-                  <strong className="font-bold text-emphasis" {...props}/>
+                strong: ({node, children, ...props}) => (
+                  <strong className="font-bold" {...props}>{children}</strong>
                 ),
-                em: ({node, ...props}) => (
-                  <em className="italic text-emphasis" {...props}/>
+                em: ({node, children, ...props}) => (
+                  <em className="italic" {...props}>{children}</em>
                 ),
-                p: ({node, ...props}) => (
-                  <p className="mb-3 text-body" {...props}/>
+                p: ({node, children, ...props}) => (
+                  <p className="mb-3" {...props}>{children}</p>
                 ),
-                ul: ({node, ...props}) => (
-                  <ul className="list-disc pl-5 mb-3" {...props}/>
+                ul: ({node, children, ...props}) => (
+                  <ul className="list-disc pl-5 mb-3" {...props}>{children}</ul>
                 ),
-                ol: ({node, ...props}) => (
-                  <ol className="list-decimal pl-5 mb-3" {...props}/>
+                ol: ({node, children, ...props}) => (
+                  <ol className="list-decimal pl-5 mb-3" {...props}>{children}</ol>
                 ),
-                li: ({node, ...props}) => (
-                  <li className="mb-2" {...props}/>
+                li: ({node, children, ...props}) => (
+                  <li className="mb-2" {...props}>{children}</li>
                 )
               }}
             >
