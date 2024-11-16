@@ -8,9 +8,6 @@ import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import fitz  # PyMuPDF
-from pdf_processing.application.pdf_service import PDFService
-from pdf_processing.infrastructure.pdf_processor import MuPDFProcessor
-from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 
 # Add proper MIME type for JavaScript modules
 mimetypes.add_type('application/javascript', '.js')
@@ -26,25 +23,34 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
 
-# Initialize PDF processing services
-pdf_processor = MuPDFProcessor()
-pdf_repository = FileSystemPDFRepository()
-pdf_service = PDFService(pdf_processor, pdf_repository)
-
-def allowed_file(filename: str) -> bool:
+def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def extract_text_from_pdf(file_path):
+    try:
+        doc = fitz.open(file_path)
+        text_content = []
+        for page in doc:
+            text = page.get_text()
+            if text.strip():  # Only add non-empty pages
+                text_content.append(text)
+        doc.close()
+        return text_content
+    except Exception as e:
+        print(f"Error extracting text from PDF: {e}")
+        return []
+
 @app.route('/api/upload-pdf', methods=['POST'])
-async def upload_pdf():
+def upload_pdf():
     try:
         if 'pdf' not in request.files:
             return jsonify({"error": "No PDF file provided"}), 400
             
         file = request.files['pdf']
-        if not file or not file.filename:
+        if file.filename == '':
             return jsonify({"error": "No selected file"}), 400
             
-        if not allowed_file(file.filename):
+        if not file or not allowed_file(file.filename):
             return jsonify({"error": "File type not allowed"}), 400
             
         filename = secure_filename(file.filename)
@@ -53,43 +59,22 @@ async def upload_pdf():
         # Save file locally
         file.save(file_path)
         
-        # Process PDF using our enhanced service
-        processed_pdf = await pdf_service.process_pdf(file_path, "sections")
+        # Extract text content from PDF
+        text_content = extract_text_from_pdf(file_path)
         
-        if processed_pdf.metadata:
-            # Create enhanced metadata
-            metadata = {
-                "title": processed_pdf.metadata.title or os.path.splitext(filename)[0],
-                "author": processed_pdf.metadata.author or "Unknown",
-                "subject": processed_pdf.metadata.subject,
-                "keywords": processed_pdf.metadata.keywords,
-                "creator": processed_pdf.metadata.creator,
-                "producer": processed_pdf.metadata.producer,
-                "creation_date": processed_pdf.metadata.creation_date.isoformat() if processed_pdf.metadata.creation_date else None,
-                "modification_date": processed_pdf.metadata.modification_date.isoformat() if processed_pdf.metadata.modification_date else None,
-                "pages": processed_pdf.metadata.page_count,
-                "file_size": processed_pdf.metadata.file_size,
-                "pdf_version": processed_pdf.metadata.pdf_version,
-                "is_encrypted": processed_pdf.metadata.is_encrypted,
-                "page_dimensions": processed_pdf.metadata.page_dimensions,
-                "filename": filename,
-                "id": filename,
-                "uploadDate": datetime.now().isoformat(),
-                "sections_count": len(processed_pdf.sections),
-                "images_count": len(processed_pdf.images)
-            }
-        else:
-            metadata = {
-                "title": os.path.splitext(filename)[0],
-                "author": "Unknown",
-                "pages": 0,
-                "filename": filename,
-                "id": filename,
-                "uploadDate": datetime.now().isoformat()
-            }
+        # Create metadata
+        metadata = {
+            "title": os.path.splitext(filename)[0],
+            "author": "Unknown",
+            "pages": len(text_content),
+            "filename": filename,
+            "id": filename,
+            "uploadDate": datetime.now().isoformat()
+        }
         
         # Store metadata and content in database
         db[f"pdf_{filename}"] = json.dumps(metadata)
+        db[f"content_{filename}"] = json.dumps(text_content)
         
         return jsonify({
             "message": "PDF uploaded successfully",
@@ -109,12 +94,9 @@ def get_book(filename):
 @app.route('/api/books/<filename>/content')
 def get_book_content(filename):
     try:
-        pdf_folder_name = os.path.splitext(filename)[0]
-        metadata_path = os.path.join('sections', pdf_folder_name, 'section_metadata.json')
-        
-        if os.path.exists(metadata_path):
-            with open(metadata_path, 'r', encoding='utf-8') as f:
-                content = json.load(f)
+        content_key = f"content_{filename}"
+        if content_key in db:
+            content = json.loads(db[content_key])
             return jsonify(content)
         return jsonify({"error": "Book content not found"}), 404
     except Exception as e:
@@ -137,12 +119,11 @@ def get_books():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    static_folder = str(app.static_folder) if app.static_folder else ''
     if path.startswith('api/'):
         return jsonify({"error": "Not found"}), 404
-    if path != "" and os.path.exists(os.path.join(static_folder, path)):
-        return send_from_directory(static_folder, path)
-    return send_from_directory(static_folder, 'index.html')
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
