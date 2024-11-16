@@ -4,6 +4,8 @@ import os
 import mimetypes
 from pathlib import Path
 from replit import db
+from replit.object_storage import Client
+import json
 
 # Add proper MIME type for JavaScript modules
 mimetypes.add_type('application/javascript', '.js')
@@ -11,6 +13,30 @@ mimetypes.add_type('text/css', '.css')
 
 app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
+
+# Initialize Object Storage
+client = Client()
+BUCKET_ID = os.environ.get('REPLIT_BUCKET_ID', 'replit-objstore-f05f56c7-9da7-4fbe-8b1f-ec80f5185697')
+
+def get_chapters_from_storage():
+    try:
+        chapters = []
+        # List all files in the bucket that start with chapter_
+        files = client.list(BUCKET_ID, prefix="chapter_")
+        if not files:
+            return []
+            
+        # Sort files by name to maintain order
+        files.sort(key=lambda x: x.key)
+        
+        for file in files:
+            content = client.download_as_text(BUCKET_ID, file.key)
+            chapters.append(json.loads(content))
+        return chapters
+    except Exception as e:
+        print(f"Error reading from object storage: {e}")
+        # Fallback to database if object storage fails
+        return get_chapters_from_db()
 
 def get_chapters_from_db():
     try:
@@ -28,9 +54,9 @@ def get_chapters_from_db():
 @app.route('/api/text')
 def get_text():
     try:
-        chapter_sections = get_chapters_from_db()
+        chapter_sections = get_chapters_from_storage()
         if not chapter_sections:
-            # Fallback content in case of empty database
+            # Fallback content in case of empty storage
             return jsonify([
                 "# Welcome\n\nWelcome to the interactive text reader.",
                 "## Getting Started\n\nThis is a progressive text display system.",
@@ -50,16 +76,15 @@ def update_content():
         if not content or 'sections' not in content:
             return jsonify({"error": "Invalid content format"}), 400
         
-        # Clear existing content
-        keys = db.prefix("")
-        for key in keys:
-            if key.startswith('chapter_'):
-                del db[key]
-        
-        # Store new content
+        # Store content in Object Storage
         for idx, section in enumerate(content['sections']):
             key = f'chapter_{idx:03d}'
-            db[key] = section
+            client.upload_from_text(
+                BUCKET_ID,
+                key,
+                json.dumps(section),
+                metadata={'index': str(idx)}
+            )
         
         return jsonify({"message": "Content updated successfully"})
     except Exception as e:

@@ -943,7 +943,7 @@ requires-dist = [
     { name = "markdown", specifier = ">=3.7" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "replit", specifier = ">=4.1.0" },
-    { name = "replit-object-storage", specifier = ">=1.0.2" },
+    { name = "replit-object-storage", specifier = "==1.0.2" },
 ]
 
 [[package]]

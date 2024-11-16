@@ -1,15 +1,37 @@
-import Client from "@replit/database";
-
-const db = new Client();
-
+// Storage service for managing text content
 export const storageService = {
   async saveChapter(key, content) {
-    return await db.set(key, content);
+    const response = await fetch('/api/content', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sections: [content],
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to save chapter');
+    }
+    return await response.json();
   },
+
   async getChapter(key) {
-    return await db.get(key);
+    const response = await fetch('/api/text');
+    if (!response.ok) {
+      throw new Error('Failed to get chapter');
+    }
+    const chapters = await response.json();
+    const chapterIndex = parseInt(key.split('_')[1]) - 1;
+    return chapters[chapterIndex];
   },
+
   async getAllChapters() {
-    return await db.list();
+    const response = await fetch('/api/text');
+    if (!response.ok) {
+      throw new Error('Failed to get chapters');
+    }
+    const chapters = await response.json();
+    return chapters.map((_, index) => `chapter_${index + 1}`);
   }
 };
