@@ -35,22 +35,6 @@ export const storageService = {
     return chapters.map((_, index) => `chapter_${index + 1}`);
   },
 
-  async getChapterVersions(chapterId) {
-    const response = await fetch(`/api/content/versions/${chapterId}`);
-    if (!response.ok) {
-      throw new Error('Failed to get chapter versions');
-    }
-    return await response.json();
-  },
-
-  async getSpecificVersion(chapterId, version) {
-    const response = await fetch(`/api/content/${chapterId}/version/${version}`);
-    if (!response.ok) {
-      throw new Error('Failed to get specific version');
-    }
-    return await response.json();
-  },
-
   async uploadImage(file) {
     const formData = new FormData();
     formData.append('image', file);

@@ -26,24 +26,11 @@ BUCKET_ID = os.environ.get('REPLIT_BUCKET_ID', 'replit-objstore-f05f56c7-9da7-4f
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def get_latest_version(key):
-    try:
-        # List all versions of this key
-        files = client.list(BUCKET_ID, prefix=f"{key}_v")
-        if not files:
-            return None
-        # Sort by version number (metadata)
-        files.sort(key=lambda x: int(x.metadata.get('version', 0)), reverse=True)
-        return files[0]
-    except Exception as e:
-        print(f"Error getting latest version: {e}")
-        return None
-
 def get_chapters_from_storage():
     try:
         chapters = []
-        # List all base chapter files
-        files = [f for f in client.list(BUCKET_ID) if f.key.startswith("chapter_") and "_v" not in f.key]
+        # List all chapter files
+        files = [f for f in client.list(BUCKET_ID) if f.key.startswith("chapter_")]
         if not files:
             return []
             
@@ -51,11 +38,8 @@ def get_chapters_from_storage():
         files.sort(key=lambda x: int(x.metadata.get('index', 0)))
         
         for file in files:
-            # Get the latest version of this chapter
-            latest = get_latest_version(file.key)
-            if latest:
-                content = client.download_as_text(BUCKET_ID, latest.key)
-                chapters.append(json.loads(content))
+            content = client.download_as_text(BUCKET_ID, file.key)
+            chapters.append(json.loads(content))
         return chapters
     except Exception as e:
         print(f"Error reading from object storage: {e}")
@@ -95,82 +79,19 @@ def update_content():
         if not content or 'sections' not in content:
             return jsonify({"error": "Invalid content format"}), 400
         
-        # Store content in Object Storage with versioning
+        # Store content directly in Object Storage
         for idx, section in enumerate(content['sections']):
-            base_key = f'chapter_{idx:03d}'
-            
-            # Get current version number
-            latest = get_latest_version(base_key)
-            version = int(latest.metadata.get('version', 0)) + 1 if latest else 1
-            
-            # Create versioned key
-            versioned_key = f"{base_key}_v{version}"
-            
-            # Store the content with version metadata
-            timestamp = datetime.utcnow().isoformat()
+            key = f'chapter_{idx:03d}'
             client.upload_from_text(
                 BUCKET_ID,
-                versioned_key,
+                key,
                 json.dumps(section),
-                metadata={
-                    'index': str(idx),
-                    'version': str(version),
-                    'timestamp': timestamp,
-                    'base_key': base_key
-                }
-            )
-            
-            # Update base file reference
-            client.upload_from_text(
-                BUCKET_ID,
-                base_key,
-                json.dumps({'latest_version': version}),
                 metadata={'index': str(idx)}
             )
         
-        return jsonify({
-            "message": "Content updated successfully",
-            "version": version
-        })
+        return jsonify({"message": "Content updated successfully"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-@app.route('/api/content/versions/<chapter_id>', methods=['GET'])
-def get_versions(chapter_id):
-    try:
-        base_key = f'chapter_{int(chapter_id):03d}'
-        files = [f for f in client.list(BUCKET_ID) if f.key.startswith(f"{base_key}_v")]
-        
-        if not files:
-            return jsonify({"error": "No versions found"}), 404
-            
-        versions = [{
-            'version': int(f.metadata.get('version', 0)),
-            'timestamp': f.metadata.get('timestamp'),
-            'key': f.key
-        } for f in files]
-        
-        # Sort by version number
-        versions.sort(key=lambda x: x['version'], reverse=True)
-        return jsonify(versions)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/content/<chapter_id>/version/<version>', methods=['GET'])
-def get_specific_version(chapter_id, version):
-    try:
-        base_key = f'chapter_{int(chapter_id):03d}'
-        versioned_key = f"{base_key}_v{version}"
-        
-        content = client.download_as_text(BUCKET_ID, versioned_key)
-        metadata = client.get_metadata(BUCKET_ID, versioned_key)
-        
-        return jsonify({
-            'content': json.loads(content),
-            'metadata': metadata
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 404
 
 @app.route('/api/images/<path:filename>')
 def get_image(filename):

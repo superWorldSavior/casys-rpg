@@ -2,7 +2,6 @@ from replit import db
 from replit.object_storage import Client
 import os
 import json
-from datetime import datetime
 
 def migrate_to_storage():
     print("Starting migration to Object Storage...")
@@ -22,36 +21,18 @@ def migrate_to_storage():
         
         print(f"Found {len(chapter_keys)} chapters to migrate.")
         
-        # Migrate each chapter to Object Storage with versioning
+        # Simple direct storage for each chapter
         for key in chapter_keys:
             content = db[key]
-            timestamp = datetime.utcnow().isoformat()
             
-            # Create versioned key for initial version
-            versioned_key = f"{key}_v1"
-            
-            # Upload the content with version metadata
+            # Upload the content directly
             client.upload_from_text(
                 BUCKET_ID,
-                versioned_key,
-                json.dumps(content),
-                metadata={
-                    'index': key.split('_')[1],
-                    'version': '1',
-                    'timestamp': timestamp,
-                    'base_key': key
-                }
+                key,  # use original filename
+                json.dumps(content),  # direct content storage
+                metadata={'index': key.split('_')[1]}  # keep simple indexing
             )
-            
-            # Store base reference file
-            client.upload_from_text(
-                BUCKET_ID,
-                key,  # base key without version
-                json.dumps({'latest_version': 1}),
-                metadata={'index': key.split('_')[1]}
-            )
-            
-            print(f"Migrated {key} with initial version")
+            print(f"Migrated {key}")
         
         print("Migration completed successfully!")
         
