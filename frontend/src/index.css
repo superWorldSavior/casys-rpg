@@ -53,6 +53,64 @@ body {
   }
 }
 
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-180deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0);
+  }
+}
+
+@keyframes flipIn {
+  from {
+    opacity: 0;
+    transform: perspective(400px) rotateX(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(400px) rotateX(0);
+  }
+}
+
+@keyframes swingIn {
+  0% {
+    opacity: 0;
+    transform: rotateZ(-15deg);
+  }
+  50% {
+    transform: rotateZ(10deg);
+  }
+  70% {
+    transform: rotateZ(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateZ(0);
+  }
+}
+
 .text-section {
   opacity: 0;
   display: none;
@@ -76,6 +134,24 @@ body {
 
 .text-section.active.zoom-in {
   animation: zoomIn 0.8s ease-out forwards;
+}
+
+.text-section.active.bounce-in {
+  animation: bounceIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.text-section.active.rotate-in {
+  animation: rotateIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.text-section.active.flip-in {
+  animation: flipIn 0.8s ease-out forwards;
+  backface-visibility: visible !important;
+}
+
+.text-section.active.swing-in {
+  animation: swingIn 1s ease-out forwards;
+  transform-origin: top center;
 }
 
 .text-section.active.typewriter {

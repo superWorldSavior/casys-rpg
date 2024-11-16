@@ -1,7 +1,6 @@
 from flask import Flask, render_template, jsonify, send_from_directory
 import os
 import mimetypes
-import markdown
 from pathlib import Path
 
 # Add proper MIME type for JavaScript modules
@@ -14,19 +13,25 @@ def read_markdown_files():
     content_dir = Path('content')
     chapters = []
     
-    # Read and parse each markdown file
+    # Read each markdown file
     for chapter_file in sorted(content_dir.glob('*.md')):
         with open(chapter_file, 'r', encoding='utf-8') as f:
             md_content = f.read()
-            # Convert markdown to HTML
-            html_content = markdown.markdown(md_content)
-            # Split content by headers to create sections
-            sections = html_content.split('<h2>')
-            # Process each section
-            for section in sections[1:]:  # Skip the first split if it's empty
-                # Reconstruct the h2 tag and clean up the section
-                clean_section = f'<h2>{section}'.strip()
-                chapters.append(clean_section)
+            # Split content by headers using markdown syntax
+            sections = md_content.split('\n## ')
+            
+            # Process first section (if it exists)
+            if sections[0].startswith('# '):
+                first_content = sections[0].split('\n', 1)[1] if '\n' in sections[0] else ''
+                if first_content.strip():
+                    chapters.append(first_content.strip())
+            
+            # Process remaining sections
+            for section in sections[1:]:
+                if section.strip():
+                    # Reconstruct the section with its header
+                    clean_section = f'## {section.strip()}'
+                    chapters.append(clean_section)
     
     return chapters
 
@@ -39,23 +44,31 @@ def get_text():
         print(f"Error reading markdown files: {e}")
         # Fallback content in case of error
         return jsonify([
-            "Welcome to the interactive text reader.",
-            "This is a progressive text display system.",
-            "You can control the speed and navigation.",
-            "Try using the spacebar to pause/resume.",
-            "Type 'commencer' in the command box to begin."
+            "# Welcome\n\nWelcome to the interactive text reader.",
+            "## Getting Started\n\nThis is a progressive text display system.",
+            "## Navigation\n\nYou can control the speed and navigation.",
+            "## Controls\n\nTry using the spacebar to pause/resume.",
+            "## Start\n\nType 'commencer' in the command box to begin."
         ])
 
 @app.route('/')
 def serve_index():
-    return send_from_directory(app.static_folder, 'index.html')
+    if app.static_folder:
+        return send_from_directory(app.static_folder, 'index.html')
+    return "Error: Static folder not configured", 500
 
 @app.route('/assets/<path:filename>')
 def serve_assets(filename):
-    return send_from_directory(os.path.join(app.static_folder, 'assets'), filename)
+    if app.static_folder:
+        assets_dir = os.path.join(app.static_folder, 'assets')
+        if isinstance(assets_dir, str):
+            return send_from_directory(assets_dir, filename)
+    return "Error: Static folder not configured", 500
 
 @app.route('/<path:path>')
 def serve_static(path):
-    if os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, 'index.html')
+    if app.static_folder:
+        if os.path.exists(os.path.join(app.static_folder, path)):
+            return send_from_directory(app.static_folder, path)
+        return send_from_directory(app.static_folder, 'index.html')
+    return "Error: Static folder not configured", 500

@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 
-const ANIMATION_STYLES = ['fade-in', 'slide-right', 'slide-up', 'zoom-in', 'typewriter']
+const ANIMATION_STYLES = [
+  'fade-in',
+  'slide-right',
+  'slide-up',
+  'zoom-in',
+  'typewriter',
+  'bounce-in',
+  'rotate-in',
+  'flip-in',
+  'swing-in'
+]
 
 function TextDisplay({ textContent, currentSection }) {
   const [currentAnimation, setCurrentAnimation] = useState(0)
 
   useEffect(() => {
-    // Cycle through animation styles
     if (currentSection >= 0) {
       setCurrentAnimation((prev) => (prev + 1) % ANIMATION_STYLES.length)
     }
@@ -16,7 +26,7 @@ function TextDisplay({ textContent, currentSection }) {
     <div id="text-display" className="mb-4">
       <div className="text-content">
         {textContent.map((text, index) => (
-          <p
+          <div
             key={index}
             className={`text-section ${
               index === currentSection
@@ -25,8 +35,8 @@ function TextDisplay({ textContent, currentSection }) {
             }`}
             style={{ display: index === currentSection ? 'block' : 'none' }}
           >
-            {text}
-          </p>
+            <ReactMarkdown>{text}</ReactMarkdown>
+          </div>
         ))}
       </div>
     </div>
