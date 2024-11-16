@@ -21,7 +21,7 @@ CORS(app)
 
 # Initialize Object Storage
 client = Client()
-BUCKET_ID = os.environ.get('REPLIT_BUCKET_ID', 'replit-objstore-f05f56c7-9da7-4fbe-8b1f-ec80f5185697')
+BUCKET_ID = os.environ.get('REPLIT_BUCKET_ID')
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -29,17 +29,17 @@ def allowed_file(filename):
 def get_chapters_from_storage():
     try:
         chapters = []
-        # List all chapter files
-        files = [f for f in client.list(BUCKET_ID) if f.key.startswith("chapter_")]
+        # List all markdown files
+        files = [f for f in client.list() if f.endswith('.md') and not f.endswith('_v.md')]
         if not files:
             return []
             
-        # Sort files by chapter index
-        files.sort(key=lambda x: int(x.metadata.get('index', 0)))
+        # Sort files by chapter number
+        files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
         
         for file in files:
-            content = client.download_as_text(BUCKET_ID, file.key)
-            chapters.append(json.loads(content))
+            content = client.download_as_text(file)
+            chapters.append(content)
         return chapters
     except Exception as e:
         print(f"Error reading from object storage: {e}")
@@ -57,24 +57,30 @@ def get_chapters_from_db():
 
 def get_chapter_versions(chapter_id):
     try:
-        # List all versions for a specific chapter
-        files = [f for f in client.list(BUCKET_ID) 
-                if f.key.startswith(f"{chapter_id}_v")]
-        
-        if not files:
-            return []
-        
+        base_name = f"{chapter_id}.md"
         versions = []
-        for file in files:
-            version_info = {
-                'version': file.metadata.get('version', '1'),
-                'timestamp': file.metadata.get('timestamp'),
-                'key': file.key
-            }
-            versions.append(version_info)
         
-        # Sort by version number
-        versions.sort(key=lambda x: int(x['version']))
+        # Get all versions for this chapter
+        all_files = client.list()
+        version_files = [f for f in all_files if f.startswith(f"{chapter_id}_v") and f.endswith('.md')]
+        
+        # Get base version
+        if base_name in all_files:
+            versions.append({
+                'version': '1',
+                'timestamp': datetime.utcnow().isoformat(),
+                'key': base_name
+            })
+        
+        # Add all other versions
+        for vfile in sorted(version_files, key=lambda x: int(x.split('_v')[1].split('.')[0])):
+            version_num = vfile.split('_v')[1].split('.')[0]
+            versions.append({
+                'version': version_num,
+                'timestamp': datetime.utcnow().isoformat(),
+                'key': vfile
+            })
+            
         return versions
     except Exception as e:
         print(f"Error getting chapter versions: {e}")
@@ -108,9 +114,12 @@ def get_versions(chapter_id):
 @app.route('/api/content/<chapter_id>/version/<version>')
 def get_specific_version(chapter_id, version):
     try:
-        key = f"{chapter_id}_v{version}"
-        content = client.download_as_text(BUCKET_ID, key)
-        return jsonify(json.loads(content))
+        if version == '1':
+            key = f"{chapter_id}.md"
+        else:
+            key = f"{chapter_id}_v{version}.md"
+        content = client.download_as_text(key)
+        return jsonify({"content": content})
     except Exception as e:
         return jsonify({"error": str(e)}), 404
 
@@ -124,36 +133,18 @@ def update_content():
         # Store content with versioning
         for idx, section in enumerate(content['sections']):
             chapter_id = f'chapter_{idx:03d}'
+            base_name = f"{chapter_id}.md"
             
             # Get existing versions
             versions = get_chapter_versions(chapter_id)
             new_version = str(len(versions) + 1)
-            timestamp = datetime.utcnow().isoformat()
             
             # Store new version
-            version_key = f"{chapter_id}_v{new_version}"
-            client.upload_from_text(
-                BUCKET_ID,
-                version_key,
-                json.dumps(section),
-                metadata={
-                    'index': str(idx),
-                    'version': new_version,
-                    'timestamp': timestamp
-                }
-            )
+            version_key = f"{chapter_id}_v{new_version}.md"
+            client.upload_from_text(version_key, section)
             
             # Update current version
-            client.upload_from_text(
-                BUCKET_ID,
-                chapter_id,
-                json.dumps(section),
-                metadata={
-                    'index': str(idx),
-                    'current_version': new_version,
-                    'timestamp': timestamp
-                }
-            )
+            client.upload_from_text(base_name, section)
         
         return jsonify({"message": "Content updated successfully"})
     except Exception as e:
@@ -162,7 +153,7 @@ def update_content():
 @app.route('/api/images/<path:filename>')
 def get_image(filename):
     try:
-        image_data = client.download(BUCKET_ID, f"images/{filename}")
+        image_data = client.download(f"images/{filename}")
         
         temp_dir = Path('temp_images')
         temp_dir.mkdir(exist_ok=True)
@@ -192,10 +183,8 @@ def upload_image():
         filename = secure_filename(file.filename)
         
         client.upload(
-            BUCKET_ID,
             f"images/{filename}",
-            file.read(),
-            metadata={'content-type': file.content_type}
+            file.read()
         )
         
         return jsonify({
