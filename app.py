@@ -228,9 +228,14 @@ def upload_pdf():
         
         # Upload PDF to object storage
         with open(temp_path, 'rb') as f:
-            client.put(
-                f"pdfs/{filename}",
-                f.read()
+            # Read the file into memory first
+            pdf_data = f.read()
+            
+            # Store in Replit Object Storage using store() method
+            client.store(
+                key=f"pdfs/{filename}",
+                value=pdf_data,
+                content_type="application/pdf"
             )
         
         # Clean up temporary file
@@ -246,6 +251,14 @@ def upload_pdf():
     except Exception as e:
         print(f"Error uploading PDF: {e}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/books/<filename>')
+def get_book(filename):
+    try:
+        pdf_data = client.get(f"pdfs/{filename}")
+        return pdf_data, 200, {'Content-Type': 'application/pdf'}
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
 
 @app.route('/api/books')
 def get_books():
