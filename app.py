@@ -29,21 +29,13 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def verify_file_exists(filename):
-    # Check if PDF exists in uploads folder
-    pdf_path = os.path.join(UPLOAD_FOLDER, filename)
-    pdf_exists = os.path.exists(pdf_path)
-    
-    # Check if section content exists
+    # Only check if sections exist in the SECTIONS_FOLDER
     base_name = os.path.splitext(filename)[0]
     section_path = os.path.join(SECTIONS_FOLDER, f"{base_name}_section_1.txt")
     sections_exist = os.path.exists(section_path)
     
-    # Return tuple of existence status and detailed status message
-    if not pdf_exists:
-        return False, "file_missing"
-    elif not sections_exist:
-        return False, "sections_missing"
-    return True, "available"
+    # Return tuple of existence status and status message
+    return sections_exist, "available" if sections_exist else "sections_missing"
 
 def extract_text_from_pdf(file_path):
     try:
@@ -91,7 +83,7 @@ def upload_pdf():
         # Extract text content from PDF and create sections
         text_content, processing_success = extract_text_from_pdf(file_path)
         
-        # Verify both PDF and sections exist
+        # Verify sections exist
         is_available, status = verify_file_exists(filename)
         
         # Create metadata
@@ -129,7 +121,7 @@ def get_book(filename):
             
         metadata = json.loads(db[metadata_key])
         
-        # Verify both PDF and sections exist
+        # Verify sections exist
         is_available, status = verify_file_exists(filename)
         
         # Update metadata if availability has changed
@@ -155,7 +147,7 @@ def get_book_content(filename):
             
         metadata = json.loads(db[metadata_key])
         
-        # Verify both PDF and sections exist
+        # Verify sections exist
         is_available, status = verify_file_exists(filename)
         
         # Update metadata if availability has changed
@@ -182,7 +174,7 @@ def get_books():
         books = []
         for key in db.prefix("pdf_"):
             metadata = json.loads(db[key])
-            # Verify both PDF and sections exist
+            # Verify sections exist
             filename = metadata.get('filename')
             if filename:
                 is_available, status = verify_file_exists(filename)
