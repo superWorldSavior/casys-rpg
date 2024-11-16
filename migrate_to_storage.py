@@ -25,12 +25,11 @@ def migrate_to_storage():
         for key in chapter_keys:
             content = db[key]
             
-            # Upload the content directly
+            # Upload the content directly without metadata
             client.upload_from_text(
                 BUCKET_ID,
                 key,  # use original filename
-                json.dumps(content),  # direct content storage
-                metadata={'index': key.split('_')[1]}  # keep simple indexing
+                json.dumps(content)  # direct content storage
             )
             print(f"Migrated {key}")
         
