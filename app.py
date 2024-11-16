@@ -22,7 +22,6 @@ CORS(app)
 
 # Initialize Object Storage
 client = Client()
-BUCKET_ID = os.environ.get('REPLIT_BUCKET_ID')
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -39,7 +38,7 @@ def get_chapters_from_storage():
         files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
         
         for file in files:
-            content = client.get_string(file)
+            content = client.get(file).decode('utf-8')
             chapters.append(content)
         return chapters
     except Exception as e:
@@ -119,7 +118,7 @@ def get_specific_version(chapter_id, version):
             key = f"{chapter_id}.md"
         else:
             key = f"{chapter_id}_v{version}.md"
-        content = client.get_string(key)
+        content = client.get(key).decode('utf-8')
         return jsonify({"content": content})
     except Exception as e:
         return jsonify({"error": str(e)}), 404
@@ -142,16 +141,10 @@ def update_content():
             
             # Store new version
             version_key = f"{chapter_id}_v{new_version}.md"
-            client.upload_string(
-                key=version_key,
-                value=section
-            )
+            client.put(version_key, section.encode('utf-8'))
             
             # Update current version
-            client.upload_string(
-                key=base_name,
-                value=section
-            )
+            client.put(base_name, section.encode('utf-8'))
         
         return jsonify({"message": "Content updated successfully"})
     except Exception as e:
@@ -160,7 +153,7 @@ def update_content():
 @app.route('/api/images/<path:filename>')
 def get_image(filename):
     try:
-        image_data = client.get_bytes(f"images/{filename}")
+        image_data = client.get(f"images/{filename}")
         
         temp_dir = Path('temp_images')
         temp_dir.mkdir(exist_ok=True)
@@ -189,10 +182,7 @@ def upload_image():
             
         filename = secure_filename(file.filename)
         
-        client.upload_bytes(
-            key=f"images/{filename}",
-            value=file.read()
-        )
+        client.put(f"images/{filename}", file.read())
         
         return jsonify({
             "message": "Image uploaded successfully",
@@ -237,11 +227,8 @@ def upload_pdf():
             # Read the file into memory first
             pdf_data = f.read()
             
-            # Store in Replit Object Storage using upload_bytes method
-            client.upload_bytes(
-                key=f"pdfs/{filename}",
-                value=pdf_data
-            )
+            # Store in Replit Object Storage
+            client.put(f"pdfs/{filename}", pdf_data)
         
         # Clean up temporary file
         temp_path.unlink()
@@ -260,7 +247,7 @@ def upload_pdf():
 @app.route('/api/books/<filename>')
 def get_book(filename):
     try:
-        pdf_data = client.get_bytes(f"pdfs/{filename}")
+        pdf_data = client.get(f"pdfs/{filename}")
         return pdf_data, 200, {'Content-Type': 'application/pdf'}
     except Exception as e:
         return jsonify({"error": str(e)}), 404
