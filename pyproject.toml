@@ -11,4 +11,5 @@ dependencies = [
     "markdown>=3.7",
     "replit>=4.1.0",
     "flask-cors>=5.0.0",
+    "replit-object-storage>=1.0.2",
 ]
