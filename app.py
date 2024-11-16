@@ -231,10 +231,11 @@ def upload_pdf():
             # Read the file into memory first
             pdf_data = f.read()
             
-            # Store in Replit Object Storage using set_data() method
-            client.set_data(
-                f"pdfs/{filename}",
-                pdf_data
+            # Store in Replit Object Storage using put_object method
+            client.put_object(
+                bucket_id=BUCKET_ID,
+                key=f"pdfs/{filename}",
+                value=pdf_data
             )
         
         # Clean up temporary file
@@ -254,7 +255,10 @@ def upload_pdf():
 @app.route('/api/books/<filename>')
 def get_book(filename):
     try:
-        pdf_data = client.get_data(f"pdfs/{filename}")
+        pdf_data = client.get_object(
+            bucket_id=BUCKET_ID,
+            key=f"pdfs/{filename}"
+        )
         return pdf_data, 200, {'Content-Type': 'application/pdf'}
     except Exception as e:
         return jsonify({"error": str(e)}), 404
