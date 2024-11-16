@@ -27,7 +27,6 @@ function TextDisplay({ textContent, currentSection, speed }) {
   useEffect(() => {
     if (currentSection >= 0) {
       setCurrentAnimation((prev) => (prev + 1) % ANIMATION_STYLES.length)
-      // Reset text reveal when section changes
       setRevealedText('')
       setIsRevealing(true)
     }
@@ -41,13 +40,13 @@ function TextDisplay({ textContent, currentSection, speed }) {
 
       const revealInterval = setInterval(() => {
         if (currentChar < text.length) {
-          setRevealedText(text.slice(0, currentChar + 1))
+          setRevealedText(text.substring(0, currentChar + 1))
           currentChar++
         } else {
           setIsRevealing(false)
           clearInterval(revealInterval)
         }
-      }, revealSpeed * 30) // Adjust base speed (30ms) by user speed setting
+      }, revealSpeed * 30)
 
       return () => clearInterval(revealInterval)
     }
@@ -55,7 +54,7 @@ function TextDisplay({ textContent, currentSection, speed }) {
 
   return (
     <div id="text-display" className="mb-4">
-      <div className="text-content">
+      <div className="text-content markdown-content">
         {textContent.map((text, index) => (
           <div
             key={index}
@@ -66,11 +65,21 @@ function TextDisplay({ textContent, currentSection, speed }) {
             }`}
             style={{ display: index === currentSection ? 'block' : 'none' }}
           >
-            <ReactMarkdown 
+            <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
+              components={{
+                h1: ({node, ...props}) => <h1 className="mb-4" {...props}/>,
+                h2: ({node, ...props}) => <h2 className="mb-3" {...props}/>,
+                strong: ({node, ...props}) => <strong className="fw-bold" {...props}/>,
+                em: ({node, ...props}) => <em className="fst-italic" {...props}/>,
+                p: ({node, ...props}) => <p className="mb-3" {...props}/>,
+                ul: ({node, ...props}) => <ul className="list-unstyled mb-3" {...props}/>,
+                ol: ({node, ...props}) => <ol className="mb-3" {...props}/>,
+                li: ({node, ...props}) => <li className="mb-2" {...props}/>
+              }}
             >
-              {index === currentSection && isRevealing ? revealedText : text}
+              {index === currentSection ? revealedText : text}
             </ReactMarkdown>
           </div>
         ))}
