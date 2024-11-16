@@ -18,7 +18,6 @@ import {
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
-import { useNavigate } from 'react-router-dom';
 import PDFPreview from './PDFPreview';
 
 const HomePage = () => {
@@ -29,7 +28,6 @@ const HomePage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
-  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -93,7 +91,8 @@ const HomePage = () => {
   };
 
   const handleReadBook = (bookId) => {
-    navigate(`/chat/${bookId}`);  // Updated to navigate to chat interface
+    // Redirect to TextFlowNavigator
+    window.location.href = 'https://textflownavigator.superWorldSavior.repl.co';
   };
 
   const handlePreviewBook = (book) => {
