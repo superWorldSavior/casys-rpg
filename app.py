@@ -48,19 +48,23 @@ def get_books():
         print("Request received at /api/books")
         books = []
         for key in db.prefix("pdf_"):
-            metadata = json.loads(db[key])
-            base_name = os.path.splitext(metadata.get('filename', ''))[0]
-            sections_path = os.path.join(SECTIONS_FOLDER, base_name)
-            
-            if (metadata.get('processing_status') == 'completed' and 
-                os.path.exists(sections_path)):
-                books.append(metadata)
-        print(f"Returning {len(books)} completed books")
+            try:
+                metadata = json.loads(db[key])
+                base_name = os.path.splitext(metadata.get('filename', ''))[0]
+                progress_file = os.path.join(SECTIONS_FOLDER, base_name, 'metadata', 'progress.json')
+                
+                if os.path.exists(progress_file):
+                    with open(progress_file, 'r') as f:
+                        progress_data = json.load(f)
+                        if progress_data.get('status') == 'completed':
+                            metadata['available'] = True
+                            books.append(metadata)
+            except Exception as e:
+                print(f"Error processing book {key}: {str(e)}")
+                continue
         return jsonify(books)
     except Exception as e:
         print(f"Error getting books: {str(e)}")
-        print(f"Error type: {type(e)}")
-        print(f"Error traceback: {traceback.format_exc()}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/upload-pdf', methods=['POST'])

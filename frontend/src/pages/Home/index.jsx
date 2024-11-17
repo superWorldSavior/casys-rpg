@@ -39,7 +39,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchBooks();
     const interval = setInterval(() => {
-      if (books.some(book => book.processing_status === 'processing')) {
+      if (books?.some(book => book?.processing_status === 'processing')) {
         fetchBooks();
       }
     }, 5000);
@@ -47,21 +47,15 @@ const HomePage = () => {
   }, [books]);
 
   const fetchBooks = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       const response = await fetch('/api/books');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error('Failed to fetch books');
       const data = await response.json();
-      setBooks(data);
+      setBooks(data || []);
     } catch (error) {
-      console.error('Error fetching books:', {
-        message: error.message,
-        stack: error.stack,
-        type: error.name
-      });
-      setError(`Error connecting to server: ${error.message}`);
+      console.error('Error fetching books:', error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -110,7 +104,7 @@ const HomePage = () => {
   };
 
   const handleReadBook = (book) => {
-    if (!book.available) {
+    if (!book?.available) {
       setError('This book is not yet available for reading');
       return;
     }
@@ -118,7 +112,7 @@ const HomePage = () => {
   };
 
   const handlePreviewBook = (book) => {
-    if (!book.available) {
+    if (!book?.available) {
       setError('This book is not yet available for preview');
       return;
     }
@@ -127,7 +121,7 @@ const HomePage = () => {
   };
 
   const getProcessingInfo = (book) => {
-    if (book.processing_status === 'processing') {
+    if (book?.processing_status === 'processing') {
       return {
         progress: book.progress || 0,
         currentPage: book.current_page || 0,
@@ -138,7 +132,7 @@ const HomePage = () => {
   };
 
   const getStatusChip = (book) => {
-    if (book.available) {
+    if (book?.available) {
       return (
         <Chip
           icon={<CheckCircleIcon />}
@@ -149,7 +143,7 @@ const HomePage = () => {
         />
       );
     }
-    if (book.processing_status === 'processing') {
+    if (book?.processing_status === 'processing') {
       const info = getProcessingInfo(book);
       return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -163,7 +157,7 @@ const HomePage = () => {
     return (
       <Chip
         icon={<ErrorIcon />}
-        label={book.processing_status === 'failed' ? 'Processing failed' : 'Not available'}
+        label={book?.processing_status === 'failed' ? 'Processing failed' : 'Not available'}
         color="error"
         size="small"
         sx={{ mb: 1 }}
@@ -228,8 +222,8 @@ const HomePage = () => {
         </Box>
       ) : (
         <Grid container spacing={3}>
-          {books.map((book, index) => (
-            <Grid item xs={12} sm={6} md={4} key={book.id || index}>
+          {books?.filter(book => book)?.map((book, index) => (
+            <Grid item xs={12} sm={6} md={4} key={book?.id || index}>
               <Card 
                 sx={{ 
                   height: '100%', 
@@ -237,24 +231,24 @@ const HomePage = () => {
                   flexDirection: 'column',
                   transition: 'transform 0.2s',
                   '&:hover': {
-                    transform: book.available ? 'translateY(-4px)' : 'none',
-                    boxShadow: book.available ? 4 : 1,
+                    transform: book?.available ? 'translateY(-4px)' : 'none',
+                    boxShadow: book?.available ? 4 : 1,
                   },
-                  opacity: book.available ? 1 : 0.7,
+                  opacity: book?.available ? 1 : 0.7,
                 }}
               >
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    {book.title || 'Untitled Book'}
+                    {book?.title || 'Untitled Book'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Author: {book.author || 'Unknown'}
+                    Author: {book?.author || 'Unknown'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Pages: {book.pages || '?'}
+                    Pages: {book?.pages || '?'}
                   </Typography>
                   {getStatusChip(book)}
-                  {book.processing_status === 'processing' && (
+                  {book?.processing_status === 'processing' && (
                     <LinearProgress 
                       variant="determinate" 
                       value={getProcessingInfo(book)?.progress || 0}
@@ -275,7 +269,7 @@ const HomePage = () => {
                     color="primary"
                     startIcon={<PreviewIcon />}
                     onClick={() => handlePreviewBook(book)}
-                    disabled={!book.available}
+                    disabled={!book?.available}
                   >
                     Preview
                   </Button>
@@ -285,7 +279,7 @@ const HomePage = () => {
                     color="primary"
                     startIcon={<MenuBookIcon />}
                     onClick={() => handleReadBook(book)}
-                    disabled={!book.available}
+                    disabled={!book?.available}
                   >
                     Read
                   </Button>
@@ -296,7 +290,7 @@ const HomePage = () => {
         </Grid>
       )}
 
-      {!isLoading && books.length === 0 && (
+      {!isLoading && books?.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
             No books in the library
@@ -315,7 +309,7 @@ const HomePage = () => {
             setSelectedBook(null);
           }}
           pdfUrl={`/api/books/${selectedBook.filename}`}
-          bookTitle={selectedBook.title}
+          bookTitle={selectedBook?.title}
         />
       )}
     </Container>
