@@ -42,7 +42,6 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchBooks();
-    // Poll for updates every 5 seconds if there are processing books
     const interval = setInterval(() => {
       if (books.some(book => ['queued', 'processing'].includes(book.processing_status))) {
         fetchBooks();
@@ -61,7 +60,6 @@ const HomePage = () => {
       const data = await response.json();
       setBooks(data);
       
-      // Update processing books set
       const currentlyProcessing = new Set(
         data
           .filter(book => book.processing_status === 'processing')
@@ -80,46 +78,18 @@ const HomePage = () => {
     }
   };
 
-  const handleFileUpload = async (formData, onProgress) => {
+  const handleFileUpload = async (uploadedFiles) => {
     try {
-      const xhr = new XMLHttpRequest();
-      
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded * 100) / event.total);
-          // Update progress for all files since we're sending them together
-          Array.from(formData.getAll('pdfs')).forEach(file => {
-            onProgress(file.name, progress);
-          });
-        }
-      };
-
-      const uploadPromise = new Promise((resolve, reject) => {
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            const result = JSON.parse(xhr.responseText);
-            resolve(result);
-          } else {
-            reject(new Error(`Upload failed with status ${xhr.status}`));
-          }
-        };
-        xhr.onerror = () => reject(new Error('Upload failed'));
-      });
-
-      xhr.open('POST', '/api/upload-pdfs');
-      xhr.send(formData);
-
-      const result = await uploadPromise;
-      setBooks(prevBooks => [...prevBooks, ...result.files]);
-      setSuccessMessage(`${result.files.length} file(s) uploaded successfully`);
-      await fetchBooks(); // Refresh the book list
+      setBooks(prevBooks => [...prevBooks, ...uploadedFiles]);
+      setSuccessMessage(`${uploadedFiles.length} file(s) uploaded successfully`);
+      await fetchBooks(); // Refresh book list to get latest status
     } catch (error) {
-      console.error('Error uploading PDFs:', {
+      console.error('Error processing uploaded files:', {
         message: error.message,
         stack: error.stack,
         type: error.name
       });
-      throw new Error(`Upload failed: ${error.message}`);
+      setError(`Error processing files: ${error.message}`);
     }
   };
 

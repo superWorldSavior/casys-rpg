@@ -96,15 +96,33 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
     if (selectedFiles.length === 0 || isUploading) return;
 
     setIsUploading(true);
+    setErrors({});
+
     const formData = new FormData();
-    selectedFiles.forEach(file => formData.append('pdfs', file));
+    selectedFiles.forEach(file => {
+      formData.append('pdfs', file);
+    });
 
     try {
-      await onUpload(formData, (fileName, progress) => {
-        setUploadProgress(prev => ({ ...prev, [fileName]: progress }));
+      const response = await fetch('/api/upload-pdfs', {
+        method: 'POST',
+        body: formData,
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      onUpload(result.files);
       handleClose();
     } catch (error) {
+      console.error('Error uploading PDFs:', {
+        message: error.message,
+        stack: error.stack,
+        type: error.name
+      });
       setErrors(prev => ({
         ...prev,
         general: error.message || 'Failed to upload files'
@@ -122,9 +140,6 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
       onClose();
     }
   };
-
-  const allFilesComplete = selectedFiles.length > 0 && 
-    selectedFiles.every(file => uploadProgress[file.name] === 100);
 
   return (
     <Dialog 
@@ -219,11 +234,11 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
           onClick={handleClose}
           disabled={isUploading}
         >
-          {allFilesComplete ? 'Close' : 'Cancel'}
+          Cancel
         </Button>
         <Button
           onClick={handleUpload}
-          disabled={selectedFiles.length === 0 || isUploading || allFilesComplete}
+          disabled={selectedFiles.length === 0 || isUploading}
           variant="contained"
         >
           {isUploading ? 'Uploading...' : 'Upload'}
