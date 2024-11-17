@@ -15,6 +15,7 @@ import {
   useTheme,
   useMediaQuery,
   Chip,
+  CircularProgress,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -24,6 +25,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PDFPreview from '../../components/features/books/PDFPreview';
 
+const MAX_CONCURRENT_PROCESSING = 3; // Maximum number of PDFs to process concurrently
+
 const HomePage = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,15 +35,16 @@ const HomePage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [processingBooks, setProcessingBooks] = useState(new Set());
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchBooks();
-    // Poll for updates every 5 seconds if there are queued books
+    // Poll for updates every 5 seconds if there are queued or processing books
     const interval = setInterval(() => {
-      if (books.some(book => book.processing_status === 'queued')) {
+      if (books.some(book => ['queued', 'processing'].includes(book.processing_status))) {
         fetchBooks();
       }
     }, 5000);
@@ -51,15 +55,26 @@ const HomePage = () => {
     try {
       setIsLoading(true);
       const response = await fetch('/api/books');
-      if (response.ok) {
-        const data = await response.json();
-        setBooks(data);
-      } else {
-        setError('Erreur lors du chargement des livres');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      const data = await response.json();
+      setBooks(data);
+      
+      // Update processing books set
+      const currentlyProcessing = new Set(
+        data
+          .filter(book => book.processing_status === 'processing')
+          .map(book => book.id)
+      );
+      setProcessingBooks(currentlyProcessing);
     } catch (error) {
-      console.error('Error fetching books:', error);
-      setError('Erreur de connexion au serveur');
+      console.error('Error fetching books:', {
+        message: error.message,
+        stack: error.stack,
+        type: error.name
+      });
+      setError(`Erreur de connexion au serveur: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -88,18 +103,21 @@ const HomePage = () => {
         body: formData,
       });
       
-      if (response.ok) {
-        const result = await response.json();
-        setBooks(prevBooks => [...prevBooks, ...result.files]);
-        setSuccessMessage(result.message);
-        event.target.value = '';
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Erreur lors du téléchargement des PDFs');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const result = await response.json();
+      setBooks(prevBooks => [...prevBooks, ...result.files]);
+      setSuccessMessage(`${files.length} fichier(s) téléchargé(s) avec succès`);
+      event.target.value = '';
     } catch (error) {
-      console.error('Error uploading PDFs:', error);
-      setError('Erreur lors du téléchargement des fichiers');
+      console.error('Error uploading PDFs:', {
+        message: error.message,
+        stack: error.stack,
+        type: error.name
+      });
+      setError(`Erreur lors du téléchargement des fichiers: ${error.message}`);
     } finally {
       setUploading(false);
     }
@@ -122,6 +140,17 @@ const HomePage = () => {
     setPreviewOpen(true);
   };
 
+  const getProcessingInfo = (book) => {
+    if (book.processing_status === 'processing') {
+      return {
+        progress: book.progress || 0,
+        currentPage: book.current_page || 0,
+        totalPages: book.total_pages || '?'
+      };
+    }
+    return null;
+  };
+
   const getStatusChip = (book) => {
     if (book.available) {
       return (
@@ -134,15 +163,34 @@ const HomePage = () => {
         />
       );
     }
-    if (book.processing_status === 'queued') {
+    if (book.processing_status === 'processing') {
+      const info = getProcessingInfo(book);
       return (
-        <Chip
-          icon={<HourglassEmptyIcon />}
-          label="En attente"
-          color="warning"
-          size="small"
-          sx={{ mb: 1 }}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <CircularProgress size={20} />
+          <Chip
+            label={`Traitement (${info?.currentPage || 0}/${info?.totalPages || '?'})`}
+            color="primary"
+            size="small"
+          />
+        </Box>
+      );
+    }
+    if (book.processing_status === 'queued') {
+      const queuePosition = books.filter(b => 
+        b.processing_status === 'queued' && 
+        b.upload_time < book.upload_time
+      ).length + 1;
+      
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <HourglassEmptyIcon fontSize="small" />
+          <Chip
+            label={`En attente (#${queuePosition})`}
+            color="warning"
+            size="small"
+          />
+        </Box>
       );
     }
     return (
@@ -193,6 +241,12 @@ const HomePage = () => {
             onChange={handleFileUpload}
           />
         </Button>
+
+        {processingBooks.size > 0 && (
+          <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+            {processingBooks.size}/{MAX_CONCURRENT_PROCESSING} traitement(s) en cours
+          </Typography>
+        )}
       </Box>
 
       {error && (
@@ -240,6 +294,13 @@ const HomePage = () => {
                     Pages: {book.pages || '?'}
                   </Typography>
                   {getStatusChip(book)}
+                  {book.processing_status === 'processing' && (
+                    <LinearProgress 
+                      variant="determinate" 
+                      value={getProcessingInfo(book)?.progress || 0}
+                      sx={{ mt: 1 }}
+                    />
+                  )}
                 </CardContent>
                 <CardActions sx={{ 
                   padding: 2,
