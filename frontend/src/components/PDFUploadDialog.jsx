@@ -115,7 +115,12 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
     });
 
     try {
-      console.log("Sending request to /api/upload-pdfs");
+      console.log('Request method:', 'POST');
+      console.log('Request URL:', '/api/upload-pdfs');
+      console.log('Request headers:', {
+        // No custom headers needed as FormData sets the correct Content-Type
+      });
+      
       const response = await fetch('/api/upload-pdfs', {
         method: 'POST',
         body: formData,
