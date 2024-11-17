@@ -23,18 +23,19 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PDFPreview from './PDFPreview';
+import PDFUploadDialog from './PDFUploadDialog';
 
 const MAX_CONCURRENT_PROCESSING = 3;
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [processingBooks, setProcessingBooks] = useState(new Set());
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -73,52 +74,52 @@ const HomePage = () => {
         stack: error.stack,
         type: error.name
       });
-      setError(`Erreur de connexion au serveur: ${error.message}`);
+      setError(`Error connecting to server: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleFileUpload = async (event) => {
-    const files = Array.from(event.target.files);
-    if (!files.length) return;
-
-    // Validate files
-    const invalidFiles = files.filter(file => file.type !== 'application/pdf');
-    if (invalidFiles.length > 0) {
-      setError(`Les fichiers suivants ne sont pas des PDFs valides: ${invalidFiles.map(f => f.name).join(', ')}`);
-      return;
-    }
-
-    const formData = new FormData();
-    files.forEach(file => formData.append('pdfs', file));
-
+  const handleFileUpload = async (formData, onProgress) => {
     try {
-      setUploading(true);
-      setError(null);
-      const response = await fetch('/api/upload-pdfs', {
-        method: 'POST',
-        body: formData,
-      });
+      const xhr = new XMLHttpRequest();
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Erreur HTTP: ${response.status}`);
-      }
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded * 100) / event.total);
+          // Update progress for all files since we're sending them together
+          Array.from(formData.getAll('pdfs')).forEach(file => {
+            onProgress(file.name, progress);
+          });
+        }
+      };
 
-      const result = await response.json();
+      const uploadPromise = new Promise((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            const result = JSON.parse(xhr.responseText);
+            resolve(result);
+          } else {
+            reject(new Error(`Upload failed with status ${xhr.status}`));
+          }
+        };
+        xhr.onerror = () => reject(new Error('Upload failed'));
+      });
+
+      xhr.open('POST', '/api/upload-pdfs');
+      xhr.send(formData);
+
+      const result = await uploadPromise;
       setBooks(prevBooks => [...prevBooks, ...result.files]);
-      setSuccessMessage(`${files.length} fichier(s) téléchargé(s) avec succès`);
-      event.target.value = '';
+      setSuccessMessage(`${result.files.length} file(s) uploaded successfully`);
+      await fetchBooks(); // Refresh the book list
     } catch (error) {
       console.error('Error uploading PDFs:', {
         message: error.message,
         stack: error.stack,
         type: error.name
       });
-      setError(`Erreur lors du téléchargement: ${error.message}`);
-    } finally {
-      setUploading(false);
+      throw new Error(`Upload failed: ${error.message}`);
     }
   };
 
@@ -150,7 +151,7 @@ const HomePage = () => {
           sx={{ mb: 1 }}
           variant="outlined"
         >
-          Échec du traitement
+          Processing failed
         </Alert>
       );
     }
@@ -160,7 +161,7 @@ const HomePage = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
           <CircularProgress size={20} />
           <Typography variant="body2" color="text.secondary">
-            Traitement ({info?.currentPage || 0}/{info?.totalPages || '?'})
+            Processing ({info?.currentPage || 0}/{info?.totalPages || '?'})
           </Typography>
         </Box>
       );
@@ -175,7 +176,7 @@ const HomePage = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
           <HourglassEmptyIcon fontSize="small" />
           <Typography variant="body2" color="text.secondary">
-            En attente (Position #{queuePosition})
+            Queued (Position #{queuePosition})
           </Typography>
         </Box>
       );
@@ -192,40 +193,30 @@ const HomePage = () => {
           gutterBottom
           sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}
         >
-          Bibliothèque Numérique
+          Digital Library
         </Typography>
         
-        <Tooltip title="Maintenez Ctrl (Cmd sur Mac) pour sélectionner plusieurs fichiers">
-          <Button
-            variant="contained"
-            component="label"
-            startIcon={<CloudUploadIcon />}
-            sx={{ 
-              mt: 2,
-              px: 3,
-              py: 1.5,
-              borderRadius: 2,
-              backgroundColor: theme.palette.primary.main,
-              '&:hover': {
-                backgroundColor: theme.palette.primary.dark,
-              }
-            }}
-            disabled={uploading}
-          >
-            {uploading ? 'Téléchargement...' : 'Ajouter un ou plusieurs PDFs'}
-            <input
-              type="file"
-              hidden
-              accept=".pdf"
-              multiple
-              onChange={handleFileUpload}
-            />
-          </Button>
-        </Tooltip>
+        <Button
+          variant="contained"
+          onClick={() => setUploadDialogOpen(true)}
+          startIcon={<CloudUploadIcon />}
+          sx={{ 
+            mt: 2,
+            px: 3,
+            py: 1.5,
+            borderRadius: 2,
+            backgroundColor: theme.palette.primary.main,
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+            }
+          }}
+        >
+          Upload PDFs
+        </Button>
 
         {processingBooks.size > 0 && (
           <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-            {processingBooks.size}/{MAX_CONCURRENT_PROCESSING} traitement(s) en cours
+            {processingBooks.size}/{MAX_CONCURRENT_PROCESSING} processing in progress
           </Typography>
         )}
       </Box>
@@ -265,10 +256,10 @@ const HomePage = () => {
               >
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    {book.title || 'Livre sans titre'}
+                    {book.title || 'Untitled Book'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Auteur: {book.author || 'Inconnu'}
+                    Author: {book.author || 'Unknown'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Pages: {book.pages || '?'}
@@ -304,7 +295,7 @@ const HomePage = () => {
                       }
                     }}
                   >
-                    Aperçu
+                    Preview
                   </Button>
                   <Button
                     variant="contained"
@@ -320,7 +311,7 @@ const HomePage = () => {
                       }
                     }}
                   >
-                    Lire
+                    Read
                   </Button>
                 </CardActions>
               </Card>
@@ -332,13 +323,19 @@ const HomePage = () => {
       {!isLoading && books.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
-            Aucun livre dans la bibliothèque
+            No books in the library
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-            Commencez par télécharger un PDF
+            Start by uploading a PDF
           </Typography>
         </Box>
       )}
+
+      <PDFUploadDialog
+        open={uploadDialogOpen}
+        onClose={() => setUploadDialogOpen(false)}
+        onUpload={handleFileUpload}
+      />
 
       {selectedBook && (
         <PDFPreview
