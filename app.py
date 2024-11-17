@@ -61,6 +61,32 @@ def extract_text_from_pdf(file_path):
         print(f"Error extracting text from PDF: {e}")
         return [], False
 
+@app.route('/api/books')
+def get_books():
+    try:
+        # First get list of available sections
+        available_sections = set()
+        for file in os.listdir(SECTIONS_FOLDER):
+            if file.endswith('_section_1.txt'):
+                book_name = file.replace('_section_1.txt', '.pdf')
+                available_sections.add(book_name)
+        
+        books = []
+        # Only process books that have sections
+        for key in db.prefix("pdf_"):
+            metadata = json.loads(db[key])
+            filename = metadata.get('filename')
+            if filename and filename in available_sections:
+                metadata['available'] = True
+                metadata['processing_status'] = 'available'
+                db[key] = json.dumps(metadata)
+                books.append(metadata)
+            
+        return jsonify(books)
+    except Exception as e:
+        print(f"Error getting books: {e}")
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/upload-pdf', methods=['POST'])
 def upload_pdf():
     try:
@@ -166,27 +192,6 @@ def get_book_content(filename):
         return jsonify({"error": "Book content not found"}), 404
     except Exception as e:
         print(f"Error getting book content: {e}")
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/books')
-def get_books():
-    try:
-        books = []
-        for key in db.prefix("pdf_"):
-            metadata = json.loads(db[key])
-            # Verify sections exist
-            filename = metadata.get('filename')
-            if filename:
-                is_available, status = verify_file_exists(filename)
-                # Update metadata if availability has changed
-                if metadata.get('available', False) != is_available or metadata.get('processing_status') != status:
-                    metadata['available'] = is_available
-                    metadata['processing_status'] = status
-                    db[key] = json.dumps(metadata)
-            books.append(metadata)
-        return jsonify(books)
-    except Exception as e:
-        print(f"Error getting books: {e}")
         return jsonify({"error": str(e)}), 500
 
 # Serve React App
