@@ -56,12 +56,9 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {
-    console.log("Files dropped:", acceptedFiles);
     const pdfFiles = acceptedFiles.filter(file => file.type === 'application/pdf');
-    console.log("PDF files:", pdfFiles);
     
     if (pdfFiles.length !== acceptedFiles.length) {
-      console.warn("Some files were rejected due to invalid type");
       setErrors(prev => ({
         ...prev,
         format: 'Some files were rejected. Only PDF files are allowed.'
@@ -72,7 +69,6 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
       const newFiles = pdfFiles.filter(file => 
         !prev.some(existing => existing.name === file.name)
       );
-      console.log("New files to be added:", newFiles);
       return [...prev, ...newFiles];
     });
   }, []);
@@ -86,7 +82,6 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   });
 
   const removeFile = (fileName) => {
-    console.log("Removing file:", fileName);
     setSelectedFiles(prev => prev.filter(file => file.name !== fileName));
     setUploadProgress(prev => {
       const newProgress = { ...prev };
@@ -103,35 +98,48 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const handleUpload = async () => {
     if (selectedFiles.length === 0 || isUploading) return;
 
-    console.log('Starting batch upload...');
     setIsUploading(true);
     setErrors({});
 
     const formData = new FormData();
     selectedFiles.forEach(file => {
-      console.log(`Adding file to FormData: ${file.name}`);
       formData.append('files', file);
     });
 
     try {
-      console.log(`Uploading ${selectedFiles.length} files`);
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       });
       
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Upload failed:', errorData);
-        throw new Error(errorData.error || 'Upload failed');
+        let errorMessage = 'Upload failed';
+        
+        switch (response.status) {
+          case 400:
+            errorMessage = data.error || 'Invalid request. Please check your files.';
+            break;
+          case 413:
+            errorMessage = 'Files are too large. Please try smaller files.';
+            break;
+          case 415:
+            errorMessage = 'Unsupported file type. Only PDF files are allowed.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later.';
+            break;
+          default:
+            errorMessage = data.error || 'Failed to upload files. Please try again.';
+        }
+        
+        throw new Error(errorMessage);
       }
 
-      const result = await response.json();
-      console.log('Upload successful:', result);
-      
-      if (result.errors) {
+      if (data.errors && data.errors.length > 0) {
         // Handle partial success
-        result.errors.forEach(error => {
+        data.errors.forEach(error => {
           setErrors(prev => ({
             ...prev,
             [error.filename]: error.error
@@ -139,15 +147,16 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
         });
       }
       
-      if (result.files && result.files.length > 0) {
-        onUpload(result.files);
+      if (data.files && data.files.length > 0) {
+        onUpload(data.files);
         handleClose();
+      } else {
+        throw new Error('No files were successfully processed');
       }
     } catch (error) {
-      console.error('Error uploading PDF:', error);
       setErrors(prev => ({
         ...prev,
-        general: error.message || 'Failed to upload files'
+        general: error.message || 'Failed to upload files. Please try again.'
       }));
     } finally {
       setIsUploading(false);
@@ -156,7 +165,6 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
 
   const handleClose = () => {
     if (!isUploading) {
-      console.log("Closing upload dialog");
       setSelectedFiles([]);
       setUploadProgress({});
       setErrors({});
