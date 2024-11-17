@@ -165,22 +165,17 @@ const HomePage = () => {
   const getProgressInfo = (book) => {
     if (!book) return null;
 
-    const progressPercentage = book.total_pages > 0
-      ? Math.round((book.current_page / book.total_pages) * 100)
-      : 0;
-
     return (
       <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-        <Tooltip title="Processing Progress">
+        <Tooltip title="Pages Progress">
           <Chip
             icon={<ArticleIcon />}
-            label={`${progressPercentage}% (${book.current_page}/${book.total_pages} pages)`}
+            label={`${book.current_page}/${book.total_pages} pages`}
             size="small"
             variant="outlined"
-            color={progressPercentage === 100 ? "success" : "primary"}
           />
         </Tooltip>
-        <Tooltip title="Processed Images">
+        <Tooltip title="Images">
           <Chip
             icon={<ImageIcon />}
             label={`${book.processed_images} images`}
@@ -194,42 +189,12 @@ const HomePage = () => {
 
   const getStatusChip = (book) => {
     if (!book) return null;
-
-    // Use the exact status from the backend
-    const statusConfig = {
-      completed: {
-        icon: <CheckCircleIcon />,
-        label: 'Ready to Read',
-        color: 'success',
-        tooltip: 'Book is ready for reading'
-      },
-      processing: {
-        icon: <HourglassEmptyIcon />,
-        label: 'Processing',
-        color: 'warning',
-        tooltip: `Processing in progress - ${book.current_page}/${book.total_pages} pages`
-      },
-      failed: {
-        icon: <ErrorIcon />,
-        label: 'Failed',
-        color: 'error',
-        tooltip: book.error_message || 'Processing failed'
-      }
-    };
-
-    const config = statusConfig[book.status] || {
-      icon: <HourglassEmptyIcon />,
-      label: book.status || 'Unknown',
-      color: 'default',
-      tooltip: `Status: ${book.status || 'Unknown'}`
-    };
-
+    
     return (
-      <Tooltip title={config.tooltip}>
+      <Tooltip title={`Status: ${book.status}`}>
         <Chip
-          icon={config.icon}
-          label={config.label}
-          color={config.color}
+          label={book.status}
+          color={book.status === 'completed' ? 'success' : 'default'}
           size="small"
           sx={{ mb: 1 }}
         />
