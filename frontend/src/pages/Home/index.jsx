@@ -25,7 +25,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PDFPreview from '../../components/features/books/PDFPreview';
 
-const MAX_CONCURRENT_PROCESSING = 3; // Maximum number of PDFs to process concurrently
+const MAX_CONCURRENT_PROCESSING = 3;
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -42,7 +42,6 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchBooks();
-    // Poll for updates every 5 seconds if there are queued or processing books
     const interval = setInterval(() => {
       if (books.some(book => ['queued', 'processing'].includes(book.processing_status))) {
         fetchBooks();
@@ -61,7 +60,6 @@ const HomePage = () => {
       const data = await response.json();
       setBooks(data);
       
-      // Update processing books set
       const currentlyProcessing = new Set(
         data
           .filter(book => book.processing_status === 'processing')
@@ -74,7 +72,7 @@ const HomePage = () => {
         stack: error.stack,
         type: error.name
       });
-      setError(`Erreur de connexion au serveur: ${error.message}`);
+      setError(`Error connecting to server: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -86,30 +84,32 @@ const HomePage = () => {
 
     const invalidFiles = files.filter(file => file.type !== 'application/pdf');
     if (invalidFiles.length > 0) {
-      setError('Certains fichiers ne sont pas au format PDF valide');
+      setError('Some files are not valid PDF documents');
       return;
     }
 
     const formData = new FormData();
     files.forEach(file => {
-      formData.append('pdf', file);
+      formData.append('pdfs', file);
     });
 
     try {
       setUploading(true);
       setError(null);
-      const response = await fetch('/api/upload-pdf', {
+      const response = await fetch('/api/upload-pdfs', {
         method: 'POST',
         body: formData,
       });
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
       }
 
       const result = await response.json();
       setBooks(prevBooks => [...prevBooks, ...result.files]);
-      setSuccessMessage(`${files.length} fichier(s) téléchargé(s) avec succès`);
+      setSuccessMessage(`${files.length} file(s) uploaded successfully`);
+      await fetchBooks(); // Refresh book list to get latest status
       event.target.value = '';
     } catch (error) {
       console.error('Error uploading PDFs:', {
@@ -117,7 +117,7 @@ const HomePage = () => {
         stack: error.stack,
         type: error.name
       });
-      setError(`Erreur lors du téléchargement des fichiers: ${error.message}`);
+      setError(`Error uploading files: ${error.message}`);
     } finally {
       setUploading(false);
     }
@@ -125,7 +125,7 @@ const HomePage = () => {
 
   const handleReadBook = (book) => {
     if (!book.available) {
-      setError('Ce livre n\'est pas disponible pour la lecture');
+      setError('This book is not yet available for reading');
       return;
     }
     navigate(`/reader/${book.id}`);
@@ -133,7 +133,7 @@ const HomePage = () => {
 
   const handlePreviewBook = (book) => {
     if (!book.available) {
-      setError('Ce livre n\'est pas disponible pour l\'aperçu');
+      setError('This book is not yet available for preview');
       return;
     }
     setSelectedBook(book);
