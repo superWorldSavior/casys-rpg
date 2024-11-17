@@ -162,15 +162,15 @@ def get_books():
                 if os.path.exists(progress_file):
                     with open(progress_file, 'r') as f:
                         progress_data = json.load(f)
+                        # Auto-determine status based on progress
+                        if progress_data.get('current_page', 0) == progress_data.get('total_pages', 0) and progress_data.get('total_pages', 0) > 0:
+                            progress_data['status'] = 'completed'
+                        elif progress_data.get('error_message'):
+                            progress_data['status'] = 'failed'
+                        else:
+                            progress_data['status'] = 'processing'
                         # Update metadata with all progress fields
-                        metadata.update({
-                            'status': progress_data.get('status', 'processing'),
-                            'current_page': progress_data.get('current_page', 0),
-                            'total_pages': progress_data.get('total_pages', 0),
-                            'processed_sections': progress_data.get('processed_sections', 0),
-                            'processed_images': progress_data.get('processed_images', 0),
-                            'error_message': progress_data.get('error_message')
-                        })
+                        metadata.update(progress_data)
                         books.append(metadata)
             except Exception as e:
                 continue

@@ -165,14 +165,19 @@ const HomePage = () => {
   const getProgressInfo = (book) => {
     if (!book) return null;
 
+    const progressPercentage = book.total_pages > 0
+      ? Math.round((book.current_page / book.total_pages) * 100)
+      : 0;
+
     return (
       <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-        <Tooltip title="Processed Pages">
+        <Tooltip title="Processing Progress">
           <Chip
             icon={<ArticleIcon />}
-            label={`${book.current_page}/${book.total_pages} pages`}
+            label={`${progressPercentage}% (${book.current_page}/${book.total_pages} pages)`}
             size="small"
             variant="outlined"
+            color={progressPercentage === 100 ? "success" : "primary"}
           />
         </Tooltip>
         <Tooltip title="Processed Images">
@@ -190,6 +195,7 @@ const HomePage = () => {
   const getStatusChip = (book) => {
     if (!book) return null;
 
+    // Use the exact status from the backend
     const statusConfig = {
       completed: {
         icon: <CheckCircleIcon />,
@@ -201,7 +207,7 @@ const HomePage = () => {
         icon: <HourglassEmptyIcon />,
         label: 'Processing',
         color: 'warning',
-        tooltip: 'Book is being processed'
+        tooltip: `Processing in progress - ${book.current_page}/${book.total_pages} pages`
       },
       failed: {
         icon: <ErrorIcon />,
@@ -215,7 +221,7 @@ const HomePage = () => {
       icon: <HourglassEmptyIcon />,
       label: book.status || 'Unknown',
       color: 'default',
-      tooltip: 'Unknown status'
+      tooltip: `Status: ${book.status || 'Unknown'}`
     };
 
     return (
