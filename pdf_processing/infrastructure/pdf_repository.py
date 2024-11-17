@@ -16,31 +16,26 @@ class FileSystemPDFRepository(PDFRepository):
         # The actual image saving is handled by the processor
 
     async def save_metadata(self, processed_pdf: ProcessedPDF) -> None:
-        metadata = {
-            'sections': [
-                {
-                    'section_number': section.number,
-                    'file_path': os.path.relpath(section.file_path, processed_pdf.base_path),
-                    'pdf_name': section.pdf_name,
-                    'page_number': section.page_number
-                }
-                for section in processed_pdf.sections
-            ],
-            'images': [
-                {
-                    'page_number': img.page_number,
-                    'image_path': os.path.relpath(img.image_path, processed_pdf.base_path),
-                    'pdf_name': img.pdf_name
-                }
-                for img in processed_pdf.images
-            ]
-        }
-        
-        metadata_path = os.path.join(
+        # Create metadata directory
+        metadata_dir = os.path.join(
             processed_pdf.base_path,
             processed_pdf.pdf_name,
-            'section_metadata.json'
+            'metadata'
         )
-        os.makedirs(os.path.dirname(metadata_path), exist_ok=True)
-        with open(metadata_path, 'w', encoding='utf-8') as f:
-            json.dump(metadata, f, ensure_ascii=False, indent=4)
+        os.makedirs(metadata_dir, exist_ok=True)
+
+        # Prepare sections metadata
+        sections_metadata = [
+            {
+                'section_number': section.number,
+                'file_path': os.path.relpath(section.file_path, processed_pdf.base_path),
+                'pdf_name': section.pdf_name,
+                'page_number': section.page_number
+            }
+            for section in processed_pdf.sections
+        ]
+
+        # Save sections metadata
+        sections_metadata_path = os.path.join(metadata_dir, 'sections.json')
+        with open(sections_metadata_path, 'w', encoding='utf-8') as f:
+            json.dump(sections_metadata, f, ensure_ascii=False, indent=2)

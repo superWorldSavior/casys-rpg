@@ -14,6 +14,9 @@ class PDFImage:
     page_number: int
     image_path: str
     pdf_name: str
+    width: int
+    height: int
+    section_number: Optional[int] = None
 
 @dataclass
 class ProcessedPDF:
