@@ -102,7 +102,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const handleUpload = async () => {
     if (selectedFiles.length === 0 || isUploading) return;
 
-    console.log("Starting file upload...");
+    console.log("Starting upload process");
     console.log("Selected files:", selectedFiles);
     
     setIsUploading(true);
@@ -113,6 +113,8 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
       console.log(`Adding file to FormData: ${file.name}`);
       formData.append('pdfs', file);
     });
+
+    console.log('FormData contents:', Array.from(formData.entries()));
 
     try {
       console.log('Request method:', 'POST');

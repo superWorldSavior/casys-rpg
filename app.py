@@ -48,49 +48,20 @@ def allowed_file(filename: str) -> bool:
 
 @app.errorhandler(405)
 def method_not_allowed(e):
+    print(f"Method not allowed error:")
+    print(f"Path: {request.path}")
+    print(f"Method: {request.method}")
+    print(f"Headers: {dict(request.headers)}")
     return jsonify({"error": "Method not allowed"}), 405
-
-@app.route('/api/books')
-def get_books():
-    try:
-        print("Request received at /api/books")
-        books = []
-        for key in db.prefix("pdf_"):
-            try:
-                print(f"Processing book key: {key}")
-                metadata = json.loads(db[key])
-                print(f"Book metadata: {json.dumps(metadata, indent=2)}")
-                
-                base_name = os.path.splitext(metadata.get('filename', ''))[0]
-                progress_file = os.path.join(SECTIONS_FOLDER, base_name, 'metadata', 'progress.json')
-                
-                print(f"Checking progress file: {progress_file}")
-                if os.path.exists(progress_file):
-                    with open(progress_file, 'r') as f:
-                        progress_data = json.load(f)
-                        print(f"Progress data: {json.dumps(progress_data, indent=2)}")
-                        if progress_data.get('status') == 'completed':
-                            metadata['available'] = True
-                            books.append(metadata)
-                            print(f"Added book: {metadata.get('title', 'Untitled')}")
-            except Exception as e:
-                print(f"Error processing book {key}: {str(e)}")
-                print(f"Error traceback: {traceback.format_exc()}")
-                continue
-        
-        print(f"Returning {len(books)} books")
-        return jsonify(books)
-    except Exception as e:
-        print(f"Error in get_books: {str(e)}")
-        print(f"Error traceback: {traceback.format_exc()}")
-        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/upload-pdfs', methods=['POST'])
 async def upload_pdfs():
     try:
-        print(f"Request received: {request.method} {request.path}")
+        print(f"Request received at: {request.path}")
+        print(f"Request method: {request.method}")
         print(f"Request headers: {dict(request.headers)}")
         print(f"Request files: {request.files}")
+        print(f"Form data: {request.form}")
         
         if 'pdfs' not in request.files:
             print("No PDF files in request")
@@ -157,6 +128,41 @@ async def upload_pdfs():
 
     except Exception as e:
         print(f"Error in upload_pdfs: {str(e)}")
+        print(f"Error traceback: {traceback.format_exc()}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/books')
+def get_books():
+    try:
+        print("Request received at /api/books")
+        books = []
+        for key in db.prefix("pdf_"):
+            try:
+                print(f"Processing book key: {key}")
+                metadata = json.loads(db[key])
+                print(f"Book metadata: {json.dumps(metadata, indent=2)}")
+                
+                base_name = os.path.splitext(metadata.get('filename', ''))[0]
+                progress_file = os.path.join(SECTIONS_FOLDER, base_name, 'metadata', 'progress.json')
+                
+                print(f"Checking progress file: {progress_file}")
+                if os.path.exists(progress_file):
+                    with open(progress_file, 'r') as f:
+                        progress_data = json.load(f)
+                        print(f"Progress data: {json.dumps(progress_data, indent=2)}")
+                        if progress_data.get('status') == 'completed':
+                            metadata['available'] = True
+                            books.append(metadata)
+                            print(f"Added book: {metadata.get('title', 'Untitled')}")
+            except Exception as e:
+                print(f"Error processing book {key}: {str(e)}")
+                print(f"Error traceback: {traceback.format_exc()}")
+                continue
+        
+        print(f"Returning {len(books)} books")
+        return jsonify(books)
+    except Exception as e:
+        print(f"Error in get_books: {str(e)}")
         print(f"Error traceback: {traceback.format_exc()}")
         return jsonify({"error": str(e)}), 500
 
