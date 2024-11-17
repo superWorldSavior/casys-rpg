@@ -55,17 +55,23 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {
+    console.log("Files dropped:", acceptedFiles);
     const pdfFiles = acceptedFiles.filter(file => file.type === 'application/pdf');
+    console.log("PDF files:", pdfFiles);
+    
     if (pdfFiles.length !== acceptedFiles.length) {
+      console.warn("Some files were rejected due to invalid type");
       setErrors(prev => ({
         ...prev,
         format: 'Some files were rejected. Only PDF files are allowed.'
       }));
     }
+    
     setSelectedFiles(prev => {
       const newFiles = pdfFiles.filter(file => 
         !prev.some(existing => existing.name === file.name)
       );
+      console.log("New files to be added:", newFiles);
       return [...prev, ...newFiles];
     });
   }, []);
@@ -79,6 +85,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   });
 
   const removeFile = (fileName) => {
+    console.log("Removing file:", fileName);
     setSelectedFiles(prev => prev.filter(file => file.name !== fileName));
     setUploadProgress(prev => {
       const newProgress = { ...prev };
@@ -95,30 +102,38 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const handleUpload = async () => {
     if (selectedFiles.length === 0 || isUploading) return;
 
+    console.log("Starting file upload...");
+    console.log("Selected files:", selectedFiles);
+    
     setIsUploading(true);
     setErrors({});
 
     const formData = new FormData();
     selectedFiles.forEach(file => {
+      console.log(`Adding file to FormData: ${file.name}`);
       formData.append('pdfs', file);
     });
 
     try {
+      console.log("Sending request to /api/upload-pdfs");
       const response = await fetch('/api/upload-pdfs', {
         method: 'POST',
         body: formData,
       });
 
+      console.log("Response received:", response.status);
+      
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || `Upload failed with status ${response.status}`);
       }
 
       const result = await response.json();
+      console.log("Upload successful:", result);
       onUpload(result.files);
       handleClose();
     } catch (error) {
-      console.error('Error uploading PDFs:', {
+      console.error("Upload error:", {
         message: error.message,
         stack: error.stack,
         type: error.name
@@ -134,6 +149,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
 
   const handleClose = () => {
     if (!isUploading) {
+      console.log("Closing upload dialog");
       setSelectedFiles([]);
       setUploadProgress({});
       setErrors({});
