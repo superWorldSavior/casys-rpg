@@ -80,16 +80,15 @@ const HomePage = () => {
 
   const handleFileUpload = async (uploadedFiles) => {
     try {
+      if (!Array.isArray(uploadedFiles)) {
+        throw new Error('Invalid upload response');
+      }
       setBooks(prevBooks => [...prevBooks, ...uploadedFiles]);
       setSuccessMessage(`${uploadedFiles.length} file(s) uploaded successfully`);
       await fetchBooks(); // Refresh book list to get latest status
     } catch (error) {
-      console.error('Error processing uploaded files:', {
-        message: error.message,
-        stack: error.stack,
-        type: error.name
-      });
-      setError(`Error processing files: ${error.message}`);
+      console.error('Error processing uploaded files:', error);
+      setError(error.message || 'Failed to process files');
     }
   };
 

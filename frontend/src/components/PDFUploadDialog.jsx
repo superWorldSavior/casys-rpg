@@ -117,34 +117,21 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
     console.log('FormData contents:', Array.from(formData.entries()));
 
     try {
-      console.log('Request method:', 'POST');
-      console.log('Request URL:', '/api/upload-pdfs');
-      console.log('Request headers:', {
-        // No custom headers needed as FormData sets the correct Content-Type
-      });
-      
       const response = await fetch('/api/upload-pdfs', {
         method: 'POST',
         body: formData,
       });
 
-      console.log("Response received:", response.status);
-      
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
         throw new Error(errorData.error || `Upload failed with status ${response.status}`);
       }
 
       const result = await response.json();
-      console.log("Upload successful:", result);
-      onUpload(result.files);
+      onUpload(result.files || []);
       handleClose();
     } catch (error) {
-      console.error("Upload error:", {
-        message: error.message,
-        stack: error.stack,
-        type: error.name
-      });
+      console.error("Upload error:", error);
       setErrors(prev => ({
         ...prev,
         general: error.message || 'Failed to upload files'
