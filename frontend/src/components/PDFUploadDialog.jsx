@@ -13,7 +13,8 @@ import {
   LinearProgress,
   Alert,
   IconButton,
-  styled
+  styled,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -102,7 +103,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const handleUpload = async () => {
     if (selectedFiles.length === 0 || isUploading) return;
 
-    console.log('Starting upload...');
+    console.log('Starting batch upload...');
     setIsUploading(true);
     setErrors({});
 
@@ -113,20 +114,15 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
     });
 
     try {
-      // Use different endpoints based on number of files
-      const endpoint = selectedFiles.length === 1 ? '/api/upload-pdf' : '/api/upload-pdfs';
-      console.log(`Using endpoint: ${endpoint}`);
-      
-      const response = await fetch(endpoint, {
+      console.log(`Uploading ${selectedFiles.length} files`);
+      const response = await fetch('/api/upload-pdfs', {
         method: 'POST',
         body: formData
       });
-      console.log('Response status:', response.status);
       
       if (!response.ok) {
-        console.error('Upload failed:', response);
         const errorText = await response.text();
-        console.error('Error response:', errorText);
+        console.error('Upload failed:', errorText);
         let errorMessage = 'Upload failed';
         try {
           const errorData = JSON.parse(errorText);
@@ -139,10 +135,23 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
 
       const result = await response.json();
       console.log('Upload successful:', result);
-      onUpload(result.files || []);
-      handleClose();
+      
+      if (result.errors) {
+        // Handle partial success
+        result.errors.forEach(error => {
+          setErrors(prev => ({
+            ...prev,
+            [error.filename]: error.error
+          }));
+        });
+      }
+      
+      if (result.files && result.files.length > 0) {
+        onUpload(result.files);
+        handleClose();
+      }
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error('Upload error:', error);
       setErrors(prev => ({
         ...prev,
         general: error.message || 'Failed to upload files'
@@ -184,10 +193,10 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
           <Typography variant="body1">
             {isDragActive
               ? 'Drop the PDF files here...'
-              : 'Drag and drop PDF files here, or click to select files'}
+              : 'Drag and drop multiple PDF files here, or click to select files'}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            You can select multiple files at once
+            All files will be processed in batch
           </Typography>
         </DropZone>
 
@@ -208,9 +217,12 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
             {selectedFiles.map((file) => (
               <FileItem key={file.name}>
                 <FileHeader>
-                  <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
-                    {file.name}
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    {isUploading && <CircularProgress size={16} />}
+                    <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
+                      {file.name}
+                    </Typography>
+                  </Box>
                   <IconButton 
                     size="small" 
                     onClick={() => removeFile(file.name)}
@@ -219,23 +231,6 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </FileHeader>
-                <Box sx={{ width: '100%', position: 'relative' }}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={uploadProgress[file.name] || 0}
-                    sx={{ height: 8, borderRadius: 4 }}
-                  />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      position: 'absolute',
-                      right: 0,
-                      top: -18,
-                    }}
-                  >
-                    {uploadProgress[file.name] || 0}%
-                  </Typography>
-                </Box>
                 {errors[file.name] && (
                   <Alert severity="error" sx={{ width: '100%' }}>
                     {errors[file.name]}
@@ -262,7 +257,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
           disabled={selectedFiles.length === 0 || isUploading}
           variant="contained"
         >
-          {isUploading ? 'Uploading...' : 'Upload'}
+          {isUploading ? `Uploading ${selectedFiles.length} files...` : 'Upload All'}
         </Button>
       </DialogActions>
     </Dialog>
