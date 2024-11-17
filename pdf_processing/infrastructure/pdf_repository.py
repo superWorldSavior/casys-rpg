@@ -2,7 +2,7 @@ import os
 import json
 from typing import List
 from ..domain.ports import PDFRepository
-from ..domain.entities import Section, PDFImage, ProcessedPDF
+from ..domain.entities import Section, PDFImage, ProcessedPDF, ProcessingStatus
 
 class FileSystemPDFRepository(PDFRepository):
     async def save_section(self, section: Section) -> None:
@@ -39,3 +39,32 @@ class FileSystemPDFRepository(PDFRepository):
         sections_metadata_path = os.path.join(metadata_dir, 'sections.json')
         with open(sections_metadata_path, 'w', encoding='utf-8') as f:
             json.dump(sections_metadata, f, ensure_ascii=False, indent=2)
+
+        # Save progress metadata
+        progress_metadata = {
+            'status': processed_pdf.progress.status.value,
+            'current_page': processed_pdf.progress.current_page,
+            'total_pages': processed_pdf.progress.total_pages,
+            'processed_sections': processed_pdf.progress.processed_sections,
+            'processed_images': processed_pdf.progress.processed_images,
+            'error_message': processed_pdf.progress.error_message
+        }
+        
+        progress_metadata_path = os.path.join(metadata_dir, 'progress.json')
+        with open(progress_metadata_path, 'w', encoding='utf-8') as f:
+            json.dump(progress_metadata, f, ensure_ascii=False, indent=2)
+
+    async def get_processing_status(self, pdf_name: str, base_path: str) -> dict:
+        progress_path = os.path.join(base_path, pdf_name, 'metadata', 'progress.json')
+        try:
+            with open(progress_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {
+                'status': ProcessingStatus.NOT_STARTED.value,
+                'current_page': 0,
+                'total_pages': 0,
+                'processed_sections': 0,
+                'processed_images': 0,
+                'error_message': None
+            }

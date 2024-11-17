@@ -8,7 +8,7 @@ import io
 from concurrent.futures import ThreadPoolExecutor
 from PyPDF2 import PdfReader
 from ..domain.ports import PDFProcessor
-from ..domain.entities import Section, PDFImage, ProcessedPDF
+from ..domain.entities import Section, PDFImage, ProcessedPDF, ProcessingStatus, ProcessingProgress
 
 class MuPDFProcessor(PDFProcessor):
     def _get_pdf_folder_name(self, pdf_path: str) -> str:
@@ -42,7 +42,7 @@ class MuPDFProcessor(PDFProcessor):
                 return section.number
         return None
 
-    async def extract_images(self, pdf_path: str, base_output_dir: str, sections: List[Section]) -> List[PDFImage]:
+    async def extract_images(self, pdf_path: str, base_output_dir: str, sections: List[Section], progress: ProcessingProgress) -> List[PDFImage]:
         pdf_folder_name = self._get_pdf_folder_name(pdf_path)
         paths = self._create_book_structure(base_output_dir, pdf_folder_name)
         images_dir = paths["images_dir"]
@@ -53,7 +53,11 @@ class MuPDFProcessor(PDFProcessor):
 
         try:
             doc = fitz.open(pdf_path)
+            progress.status = ProcessingStatus.EXTRACTING_IMAGES
+            progress.total_pages = len(doc)
+            
             for page_num in range(len(doc)):
+                progress.current_page = page_num + 1
                 page = doc[page_num]
                 image_list = page.get_images()
                 
@@ -65,7 +69,6 @@ class MuPDFProcessor(PDFProcessor):
                         base_img = doc.extract_image(xref)
                         image_bytes = base_img["image"]
                         
-                        # Get image dimensions using PIL
                         image = Image.open(io.BytesIO(image_bytes))
                         width, height = image.size
                         
@@ -82,8 +85,8 @@ class MuPDFProcessor(PDFProcessor):
                             section_number=section_number
                         )
                         images.append(image_data)
+                        progress.processed_images += 1
                         
-                        # Add to metadata
                         images_metadata.append({
                             "page_number": page_num + 1,
                             "image_path": image_path,
@@ -98,13 +101,14 @@ class MuPDFProcessor(PDFProcessor):
             
             doc.close()
 
-            # Save images metadata
             metadata_path = os.path.join(metadata_dir, "images.json")
             with open(metadata_path, 'w') as f:
                 json.dump(images_metadata, f, indent=2)
 
         except Exception as e:
-            print(f"Error processing PDF for images: {e}")
+            progress.status = ProcessingStatus.FAILED
+            progress.error_message = f"Error processing PDF for images: {e}"
+            print(progress.error_message)
 
         return images
 
@@ -112,65 +116,87 @@ class MuPDFProcessor(PDFProcessor):
         pdf_folder_name = self._get_pdf_folder_name(pdf_path)
         paths = self._create_book_structure(base_output_dir, pdf_folder_name)
         sections_dir = paths["sections_dir"]
-
-        reader = PdfReader(pdf_path)
-        sections = []
-        current_section: Optional[int] = None
-        current_text: str = ""
-        current_page: int = 0
-
-        for page_num, page in enumerate(reader.pages):
-            try:
-                text = page.extract_text()
-                if text:
-                    lines = text.splitlines()
-                    for line in lines:
-                        line = line.strip()
-                        if line.isdigit():
-                            if current_section is not None:
-                                # Save current section
-                                file_path = os.path.join(sections_dir, f"{current_section}.md")
-                                sections.append(Section(
-                                    number=current_section,
-                                    content=current_text,
-                                    page_number=current_page + 1,
-                                    file_path=file_path,
-                                    pdf_name=pdf_folder_name
-                                ))
-                            
-                            current_section = int(line)
-                            current_text = ""
-                            current_page = page_num
-                        else:
-                            if current_section is not None:
-                                current_text += line + "\n"
-
-            except Exception as e:
-                print(f"Error processing page {page_num + 1}: {e}")
-
-        # Save last section
-        if current_section is not None:
-            file_path = os.path.join(sections_dir, f"{current_section}.md")
-            sections.append(Section(
-                number=current_section,
-                content=current_text,
-                page_number=current_page + 1,
-                file_path=file_path,
-                pdf_name=pdf_folder_name
-            ))
-
-        # Extract images after sections to properly associate them
-        images = await self.extract_images(pdf_path, base_output_dir, sections)
         
-        # Save sections content
-        for section in sections:
-            os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
-            with open(section.file_path, 'w', encoding='utf-8') as f:
-                f.write(section.content)
+        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
+        
+        try:
+            reader = PdfReader(pdf_path)
+            progress.total_pages = len(reader.pages)
+            progress.status = ProcessingStatus.EXTRACTING_SECTIONS
+            
+            sections = []
+            current_section: Optional[int] = None
+            current_text: str = ""
+            current_page: int = 0
 
-        return ProcessedPDF(
-            sections=sections,
-            images=images,
-            pdf_name=pdf_folder_name,
-            base_path=base_output_dir
-        )
+            for page_num, page in enumerate(reader.pages):
+                progress.current_page = page_num + 1
+                try:
+                    text = page.extract_text()
+                    if text:
+                        lines = text.splitlines()
+                        for line in lines:
+                            line = line.strip()
+                            if line.isdigit():
+                                if current_section is not None:
+                                    file_path = os.path.join(sections_dir, f"{current_section}.md")
+                                    sections.append(Section(
+                                        number=current_section,
+                                        content=current_text,
+                                        page_number=current_page + 1,
+                                        file_path=file_path,
+                                        pdf_name=pdf_folder_name
+                                    ))
+                                    progress.processed_sections += 1
+                                
+                                current_section = int(line)
+                                current_text = ""
+                                current_page = page_num
+                            else:
+                                if current_section is not None:
+                                    current_text += line + "\n"
+
+                except Exception as e:
+                    print(f"Error processing page {page_num + 1}: {e}")
+
+            # Save last section
+            if current_section is not None:
+                file_path = os.path.join(sections_dir, f"{current_section}.md")
+                sections.append(Section(
+                    number=current_section,
+                    content=current_text,
+                    page_number=current_page + 1,
+                    file_path=file_path,
+                    pdf_name=pdf_folder_name
+                ))
+                progress.processed_sections += 1
+
+            # Extract images after sections
+            images = await self.extract_images(pdf_path, base_output_dir, sections, progress)
+            
+            progress.status = ProcessingStatus.SAVING_METADATA
+            # Save sections content
+            for section in sections:
+                os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
+                with open(section.file_path, 'w', encoding='utf-8') as f:
+                    f.write(section.content)
+
+            progress.status = ProcessingStatus.COMPLETED
+            return ProcessedPDF(
+                sections=sections,
+                images=images,
+                pdf_name=pdf_folder_name,
+                base_path=base_output_dir,
+                progress=progress
+            )
+
+        except Exception as e:
+            progress.status = ProcessingStatus.FAILED
+            progress.error_message = f"Error processing PDF: {e}"
+            return ProcessedPDF(
+                sections=[],
+                images=[],
+                pdf_name=pdf_folder_name,
+                base_path=base_output_dir,
+                progress=progress
+            )
