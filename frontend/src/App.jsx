@@ -6,9 +6,10 @@ import {
   Route,
   Navigate
 } from 'react-router-dom';
-import { CircularProgress, Container } from '@mui/material';
+import { CircularProgress, Container, ThemeProvider } from '@mui/material';
 import MainLayout from './layouts/MainLayout';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import { casysTheme } from './theme/casysTheme';
 
 // Lazy load pages
 const HomePage = React.lazy(() => import('./pages/Home'));
@@ -73,7 +74,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider theme={casysTheme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;
