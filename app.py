@@ -56,85 +56,76 @@ def get_books():
         print(f"Error traceback: {traceback.format_exc()}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/upload-pdfs', methods=['POST'])
-async def upload_pdfs():
+@app.route('/api/upload-pdf', methods=['POST'])
+async def upload_pdf():
     try:
-        print("Request received at /api/upload-pdfs")
+        print("Request received at /api/upload-pdf")
         print(f"Request method: {request.method}")
         print(f"Request files: {request.files}")
         
-        if 'pdfs' not in request.files:
-            print("No 'pdfs' in request.files")
-            return jsonify({"error": "No PDF files provided"}), 400
+        if 'pdf' not in request.files:
+            print("No 'pdf' in request.files")
+            return jsonify({"error": "No PDF file provided"}), 400
 
-        files = request.files.getlist('pdfs')
-        print(f"Number of files received: {len(files)}")
+        file = request.files['pdf']
+        if not file or file.filename == '':
+            print("No selected file or empty filename")
+            return jsonify({"error": "No selected file"}), 400
+
+        if not allowed_file(file.filename):
+            print(f"Invalid file type: {file.filename}")
+            return jsonify({"error": "Invalid file type. Only PDF files are allowed"}), 400
+
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
         
-        if not files or all(file.filename == '' for file in files):
-            print("No selected files or empty filenames")
-            return jsonify({"error": "No selected files"}), 400
-
-        uploaded_files = []
-        for file in files:
-            print(f"Processing file: {file.filename}")
-            if not file or not allowed_file(file.filename or ''):
-                print(f"Invalid file or filename: {file.filename}")
-                continue
-
-            filename = secure_filename(file.filename or '')
-            file_path = os.path.join(UPLOAD_FOLDER, filename)
+        print(f"Saving file to: {file_path}")
+        file.save(file_path)
+        
+        try:
+            print(f"Processing file: {filename}")
+            await pdf_service.process_pdf(file_path)
             
-            print(f"Saving file to: {file_path}")
-            file.save(file_path)
+            metadata = {
+                "title": os.path.splitext(filename)[0],
+                "author": "Unknown",
+                "filename": filename,
+                "id": filename,
+                "uploadDate": datetime.now().isoformat(),
+                "processing_status": "processing",
+                "available": False
+            }
             
-            try:
-                print(f"Adding {filename} to processing queue")
-                await pdf_service.add_to_queue(file_path)
-                
-                metadata = {
-                    "title": os.path.splitext(filename)[0],
-                    "author": "Unknown",
-                    "filename": filename,
-                    "id": filename,
-                    "uploadDate": datetime.now().isoformat(),
-                    "processing_status": "queued",
-                    "available": False
-                }
-                
-                db[f"pdf_{filename}"] = json.dumps(metadata)
-                uploaded_files.append(metadata)
-                print(f"Successfully queued {filename}")
-                
-            except Exception as processing_error:
-                print(f"Error processing {filename}: {str(processing_error)}")
-                print(f"Error type: {type(processing_error)}")
-                print(f"Error traceback: {traceback.format_exc()}")
-                metadata = {
-                    "title": os.path.splitext(filename)[0],
-                    "author": "Unknown",
-                    "filename": filename,
-                    "id": filename,
-                    "uploadDate": datetime.now().isoformat(),
-                    "processing_status": "failed",
-                    "available": False,
-                    "error": str(processing_error)
-                }
-                db[f"pdf_{filename}"] = json.dumps(metadata)
-                uploaded_files.append(metadata)
-
-        if not uploaded_files:
-            return jsonify({"error": "No valid PDF files were uploaded"}), 400
-
-        queue_status = await pdf_service.get_queue_status()
-        print(f"Queue status: {queue_status}")
-        return jsonify({
-            "message": f"{len(uploaded_files)} PDFs uploaded and queued for processing",
-            "queue_status": queue_status,
-            "files": uploaded_files
-        })
+            db[f"pdf_{filename}"] = json.dumps(metadata)
+            print(f"Successfully processed {filename}")
+            
+            return jsonify({
+                "message": "PDF uploaded and processing started",
+                "file": metadata
+            })
+            
+        except Exception as processing_error:
+            print(f"Error processing {filename}: {str(processing_error)}")
+            print(f"Error type: {type(processing_error)}")
+            print(f"Error traceback: {traceback.format_exc()}")
+            metadata = {
+                "title": os.path.splitext(filename)[0],
+                "author": "Unknown",
+                "filename": filename,
+                "id": filename,
+                "uploadDate": datetime.now().isoformat(),
+                "processing_status": "failed",
+                "available": False,
+                "error": str(processing_error)
+            }
+            db[f"pdf_{filename}"] = json.dumps(metadata)
+            return jsonify({
+                "error": f"Error processing file: {str(processing_error)}",
+                "file": metadata
+            }), 500
             
     except Exception as e:
-        print(f"Error in upload_pdfs: {str(e)}")
+        print(f"Error in upload_pdf: {str(e)}")
         print(f"Error type: {type(e)}")
         print(f"Error traceback: {traceback.format_exc()}")
         return jsonify({"error": str(e)}), 500

@@ -22,10 +22,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PDFPreview from '../../components/features/books/PDFPreview';
-
-const MAX_CONCURRENT_PROCESSING = 3;
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -35,7 +32,6 @@ const HomePage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
-  const [processingBooks, setProcessingBooks] = useState(new Set());
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -43,7 +39,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchBooks();
     const interval = setInterval(() => {
-      if (books.some(book => ['queued', 'processing'].includes(book.processing_status))) {
+      if (books.some(book => book.processing_status === 'processing')) {
         fetchBooks();
       }
     }, 5000);
@@ -59,13 +55,6 @@ const HomePage = () => {
       }
       const data = await response.json();
       setBooks(data);
-      
-      const currentlyProcessing = new Set(
-        data
-          .filter(book => book.processing_status === 'processing')
-          .map(book => book.id)
-      );
-      setProcessingBooks(currentlyProcessing);
     } catch (error) {
       console.error('Error fetching books:', {
         message: error.message,
@@ -79,24 +68,21 @@ const HomePage = () => {
   };
 
   const handleFileUpload = async (event) => {
-    const files = Array.from(event.target.files);
-    if (files.length === 0) return;
+    const file = event.target.files[0];
+    if (!file) return;
 
-    const invalidFiles = files.filter(file => file.type !== 'application/pdf');
-    if (invalidFiles.length > 0) {
-      setError('Some files are not valid PDF documents');
+    if (file.type !== 'application/pdf') {
+      setError('Only PDF files are allowed');
       return;
     }
 
     const formData = new FormData();
-    files.forEach(file => {
-      formData.append('pdfs', file);
-    });
+    formData.append('pdf', file);
 
     try {
       setUploading(true);
       setError(null);
-      const response = await fetch('/api/upload-pdfs', {
+      const response = await fetch('/api/upload-pdf', {
         method: 'POST',
         body: formData,
       });
@@ -107,17 +93,17 @@ const HomePage = () => {
       }
 
       const result = await response.json();
-      setBooks(prevBooks => [...prevBooks, ...result.files]);
-      setSuccessMessage(`${files.length} file(s) uploaded successfully`);
+      setBooks(prevBooks => [...prevBooks, result.file]);
+      setSuccessMessage(`${file.name} uploaded successfully`);
       await fetchBooks(); // Refresh book list to get latest status
       event.target.value = '';
     } catch (error) {
-      console.error('Error uploading PDFs:', {
+      console.error('Error uploading PDF:', {
         message: error.message,
         stack: error.stack,
         type: error.name
       });
-      setError(`Error uploading files: ${error.message}`);
+      setError(`Error uploading file: ${error.message}`);
     } finally {
       setUploading(false);
     }
@@ -156,7 +142,7 @@ const HomePage = () => {
       return (
         <Chip
           icon={<CheckCircleIcon />}
-          label="Disponible"
+          label="Available"
           color="success"
           size="small"
           sx={{ mb: 1 }}
@@ -168,35 +154,16 @@ const HomePage = () => {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
           <CircularProgress size={20} />
-          <Chip
-            label={`Traitement (${info?.currentPage || 0}/${info?.totalPages || '?'})`}
-            color="primary"
-            size="small"
-          />
-        </Box>
-      );
-    }
-    if (book.processing_status === 'queued') {
-      const queuePosition = books.filter(b => 
-        b.processing_status === 'queued' && 
-        b.upload_time < book.upload_time
-      ).length + 1;
-      
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <HourglassEmptyIcon fontSize="small" />
-          <Chip
-            label={`En attente (#${queuePosition})`}
-            color="warning"
-            size="small"
-          />
+          <Typography variant="body2" color="text.secondary">
+            Processing ({info?.currentPage || 0}/{info?.totalPages || '?'})
+          </Typography>
         </Box>
       );
     }
     return (
       <Chip
         icon={<ErrorIcon />}
-        label={book.processing_status === 'failed' ? 'Échec du traitement' : 'Non disponible'}
+        label={book.processing_status === 'failed' ? 'Processing failed' : 'Not available'}
         color="error"
         size="small"
         sx={{ mb: 1 }}
@@ -213,7 +180,7 @@ const HomePage = () => {
           gutterBottom
           sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}
         >
-          Bibliothèque Numérique
+          Digital Library
         </Typography>
         
         <Button
@@ -232,21 +199,14 @@ const HomePage = () => {
           }}
           disabled={uploading}
         >
-          {uploading ? 'Téléchargement...' : 'Ajouter des livres PDF'}
+          {uploading ? 'Uploading...' : 'Upload PDF'}
           <input
             type="file"
             hidden
             accept=".pdf"
-            multiple
             onChange={handleFileUpload}
           />
         </Button>
-
-        {processingBooks.size > 0 && (
-          <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-            {processingBooks.size}/{MAX_CONCURRENT_PROCESSING} traitement(s) en cours
-          </Typography>
-        )}
       </Box>
 
       {error && (
@@ -285,10 +245,10 @@ const HomePage = () => {
               >
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    {book.title || 'Livre sans titre'}
+                    {book.title || 'Untitled Book'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Auteur: {book.author || 'Inconnu'}
+                    Author: {book.author || 'Unknown'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Pages: {book.pages || '?'}
@@ -317,7 +277,7 @@ const HomePage = () => {
                     onClick={() => handlePreviewBook(book)}
                     disabled={!book.available}
                   >
-                    Aperçu
+                    Preview
                   </Button>
                   <Button
                     variant="contained"
@@ -327,7 +287,7 @@ const HomePage = () => {
                     onClick={() => handleReadBook(book)}
                     disabled={!book.available}
                   >
-                    Lire
+                    Read
                   </Button>
                 </CardActions>
               </Card>
@@ -339,10 +299,10 @@ const HomePage = () => {
       {!isLoading && books.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
-            Aucun livre dans la bibliothèque
+            No books in the library
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-            Commencez par télécharger un PDF
+            Start by uploading a PDF
           </Typography>
         </Box>
       )}
