@@ -24,7 +24,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PDFPreview from '../../components/features/books/PDFPreview';
 
 const HomePage = () => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState([]); // Initialize as empty array
   const [isLoading, setIsLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
@@ -42,16 +42,40 @@ const HomePage = () => {
   const fetchBooks = async () => {
     try {
       setIsLoading(true);
+      setError(null);
+      
       const response = await fetch('/api/books');
-      if (response.ok) {
-        const data = await response.json();
-        setBooks(data);
-      } else {
-        setError('Erreur lors du chargement des livres');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      const data = await response.json();
+      
+      // Validate the response structure
+      if (!data || typeof data !== 'object') {
+        throw new Error('Invalid API response format');
+      }
+      
+      // Ensure books is an array, even if empty
+      const booksData = Array.isArray(data.books) ? data.books : [];
+      
+      // Map and validate each book object
+      const validatedBooks = booksData.map((book = {}) => ({
+        id: book.id || book.filename || '',
+        title: book.title || 'Untitled Book',
+        author: book.author || 'Unknown',
+        pages: book.pages || '?',
+        available: Boolean(book.available),
+        filename: book.filename || '',
+        processing_status: book.processing_status || 'pending'
+      }));
+      
+      setBooks(validatedBooks);
     } catch (error) {
       console.error('Error fetching books:', error);
-      setError('Erreur de connexion au serveur');
+      setError(error.message || 'Error connecting to server');
+      setBooks([]); // Reset to empty array on error
     } finally {
       setIsLoading(false);
     }
@@ -62,49 +86,65 @@ const HomePage = () => {
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-      setError('Veuillez sélectionner un fichier PDF valide');
+      setError('Please select a valid PDF file');
       return;
     }
 
     const formData = new FormData();
-    formData.append('pdf', file);
+    formData.append('pdf_files', file);
 
     try {
       setUploading(true);
       setError(null);
-      const response = await fetch('/api/upload-pdf', {
+      
+      const response = await fetch('/api/books/upload', {
         method: 'POST',
         body: formData,
       });
       
-      if (response.ok) {
-        const result = await response.json();
-        setBooks(prevBooks => [...prevBooks, result.metadata]);
-        setSuccessMessage(result.message);
-        event.target.value = '';
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Erreur lors du téléchargement du PDF');
+      const result = await response.json();
+      
+      if (!response.ok || !result) {
+        throw new Error(result?.message || 'Error uploading PDF');
       }
+
+      // Ensure books array exists in response
+      const newBooks = Array.isArray(result.books) ? result.books : [];
+      
+      // Map and validate new books
+      const validatedNewBooks = newBooks.map((book = {}) => ({
+        id: book.id || book.filename || '',
+        title: book.title || 'Untitled Book',
+        author: book.author || 'Unknown',
+        pages: book.pages || '?',
+        available: Boolean(book.available),
+        filename: book.filename || '',
+        processing_status: book.processing_status || 'pending'
+      }));
+
+      // Update books state, ensuring it remains an array
+      setBooks(prevBooks => [...(Array.isArray(prevBooks) ? prevBooks : []), ...validatedNewBooks]);
+      setSuccessMessage(result.message || 'PDF uploaded successfully');
+      event.target.value = ''; // Reset file input
     } catch (error) {
       console.error('Error uploading PDF:', error);
-      setError('Erreur lors du téléchargement du fichier');
+      setError(error.message || 'Error uploading file');
     } finally {
       setUploading(false);
     }
   };
 
   const handleReadBook = (book) => {
-    if (!book.available) {
-      setError('Ce livre n\'est pas disponible pour la lecture');
+    if (!book?.available) {
+      setError('This book is not available for reading');
       return;
     }
-    navigate(`/reader/${book.id}`);
+    navigate(`/reader/${book.filename}`);
   };
 
   const handlePreviewBook = (book) => {
-    if (!book.available) {
-      setError('Ce livre n\'est pas disponible pour l\'aperçu');
+    if (!book?.available) {
+      setError('This book is not available for preview');
       return;
     }
     setSelectedBook(book);
@@ -112,11 +152,13 @@ const HomePage = () => {
   };
 
   const getStatusChip = (book) => {
+    if (!book) return null;
+
     if (book.available) {
       return (
         <Chip
           icon={<CheckCircleIcon />}
-          label="Disponible"
+          label="Available"
           color="success"
           size="small"
           sx={{ mb: 1 }}
@@ -126,7 +168,7 @@ const HomePage = () => {
     return (
       <Chip
         icon={<ErrorIcon />}
-        label={book.processing_status === 'failed' ? 'Échec du traitement' : 'Non disponible'}
+        label={book.processing_status === 'failed' ? 'Processing Failed' : 'Processing'}
         color="error"
         size="small"
         sx={{ mb: 1 }}
@@ -134,6 +176,38 @@ const HomePage = () => {
     );
   };
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Box sx={{ width: '100%', mt: 4 }}>
+          <LinearProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert 
+          severity="error" 
+          sx={{ mb: 3 }} 
+          onClose={() => setError(null)}
+          action={
+            <Button color="inherit" size="small" onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+          }
+        >
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
+
+  // Main content
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4, textAlign: 'center' }}>
@@ -143,7 +217,7 @@ const HomePage = () => {
           gutterBottom
           sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}
         >
-          Bibliothèque Numérique
+          Digital Library
         </Typography>
         
         <Button
@@ -162,7 +236,7 @@ const HomePage = () => {
           }}
           disabled={uploading}
         >
-          {uploading ? 'Téléchargement...' : 'Ajouter un livre PDF'}
+          {uploading ? 'Uploading...' : 'Add PDF Book'}
           <input
             type="file"
             hidden
@@ -172,12 +246,6 @@ const HomePage = () => {
         </Button>
       </Box>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
@@ -185,14 +253,21 @@ const HomePage = () => {
         message={successMessage}
       />
 
-      {isLoading ? (
-        <Box sx={{ width: '100%', mt: 4 }}>
-          <LinearProgress />
+      {Array.isArray(books) && books.length === 0 && (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6" color="text.secondary">
+            No books in library
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+            Start by uploading a PDF
+          </Typography>
         </Box>
-      ) : (
+      )}
+
+      {Array.isArray(books) && books.length > 0 && (
         <Grid container spacing={3}>
           {books.map((book, index) => (
-            <Grid item xs={12} sm={6} md={4} key={book.id || index}>
+            <Grid item xs={12} sm={6} md={4} key={`book-${book?.id || index}`}>
               <Card 
                 sx={{ 
                   height: '100%', 
@@ -200,21 +275,21 @@ const HomePage = () => {
                   flexDirection: 'column',
                   transition: 'transform 0.2s',
                   '&:hover': {
-                    transform: book.available ? 'translateY(-4px)' : 'none',
-                    boxShadow: book.available ? 4 : 1,
+                    transform: book?.available ? 'translateY(-4px)' : 'none',
+                    boxShadow: book?.available ? 4 : 1,
                   },
-                  opacity: book.available ? 1 : 0.7,
+                  opacity: book?.available ? 1 : 0.7,
                 }}
               >
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    {book.title || 'Livre sans titre'}
+                    {book?.title || 'Untitled Book'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Auteur: {book.author || 'Inconnu'}
+                    Author: {book?.author || 'Unknown'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Pages: {book.pages || '?'}
+                    Pages: {book?.pages || '?'}
                   </Typography>
                   {getStatusChip(book)}
                 </CardContent>
@@ -231,9 +306,9 @@ const HomePage = () => {
                     color="primary"
                     startIcon={<PreviewIcon />}
                     onClick={() => handlePreviewBook(book)}
-                    disabled={!book.available}
+                    disabled={!book?.available}
                   >
-                    Aperçu
+                    Preview
                   </Button>
                   <Button
                     variant="contained"
@@ -241,26 +316,15 @@ const HomePage = () => {
                     color="primary"
                     startIcon={<MenuBookIcon />}
                     onClick={() => handleReadBook(book)}
-                    disabled={!book.available}
+                    disabled={!book?.available}
                   >
-                    Lire
+                    Read
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
           ))}
         </Grid>
-      )}
-
-      {!isLoading && books.length === 0 && (
-        <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h6" color="text.secondary">
-            Aucun livre dans la bibliothèque
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-            Commencez par télécharger un PDF
-          </Typography>
-        </Box>
       )}
 
       {selectedBook && (
