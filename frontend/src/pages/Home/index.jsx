@@ -23,15 +23,16 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PDFPreview from '../../components/features/books/PDFPreview';
+import PDFUploadDialog from '../../components/PDFUploadDialog';
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchBooks();
     const interval = setInterval(() => {
-      if (books?.some(book => book?.processing_status === 'processing')) {
+      if ((books || []).some(book => book?.processing_status === 'processing')) {
         fetchBooks();
       }
     }, 5000);
@@ -61,45 +62,14 @@ const HomePage = () => {
     }
   };
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (file.type !== 'application/pdf') {
-      setError('Only PDF files are allowed');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('pdf', file);
-
+  const handleFileUpload = async (uploadedFiles) => {
     try {
-      setUploading(true);
-      setError(null);
-      const response = await fetch('/api/upload-pdf', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
-      }
-
-      const result = await response.json();
-      setBooks(prevBooks => [...prevBooks, result.file]);
-      setSuccessMessage(`${file.name} uploaded successfully`);
+      setBooks(prevBooks => [...(prevBooks || []), ...uploadedFiles]);
+      setSuccessMessage(`${uploadedFiles.length} file(s) uploaded successfully`);
       await fetchBooks(); // Refresh book list to get latest status
-      event.target.value = '';
     } catch (error) {
-      console.error('Error uploading PDF:', {
-        message: error.message,
-        stack: error.stack,
-        type: error.name
-      });
-      setError(`Error uploading file: ${error.message}`);
-    } finally {
-      setUploading(false);
+      console.error('Error processing uploaded files:', error);
+      setError(`Error processing files: ${error.message}`);
     }
   };
 
@@ -108,7 +78,7 @@ const HomePage = () => {
       setError('This book is not yet available for reading');
       return;
     }
-    navigate(`/reader/${book.id}`);
+    navigate(`/reader/${book?.id}`);
   };
 
   const handlePreviewBook = (book) => {
@@ -123,9 +93,9 @@ const HomePage = () => {
   const getProcessingInfo = (book) => {
     if (book?.processing_status === 'processing') {
       return {
-        progress: book.progress || 0,
-        currentPage: book.current_page || 0,
-        totalPages: book.total_pages || '?'
+        progress: book?.progress || 0,
+        currentPage: book?.current_page || 0,
+        totalPages: book?.total_pages || '?'
       };
     }
     return null;
@@ -179,7 +149,7 @@ const HomePage = () => {
         
         <Button
           variant="contained"
-          component="label"
+          onClick={() => setUploadDialogOpen(true)}
           startIcon={<CloudUploadIcon />}
           sx={{ 
             mt: 2,
@@ -191,15 +161,8 @@ const HomePage = () => {
               backgroundColor: theme.palette.primary.dark,
             }
           }}
-          disabled={uploading}
         >
-          {uploading ? 'Uploading...' : 'Upload PDF'}
-          <input
-            type="file"
-            hidden
-            accept=".pdf"
-            onChange={handleFileUpload}
-          />
+          Upload PDFs
         </Button>
       </Box>
 
@@ -222,75 +185,77 @@ const HomePage = () => {
         </Box>
       ) : (
         <Grid container spacing={3}>
-          {books?.filter(book => book)?.map((book, index) => (
-            <Grid item xs={12} sm={6} md={4} key={book?.id || index}>
-              <Card 
-                sx={{ 
-                  height: '100%', 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: book?.available ? 'translateY(-4px)' : 'none',
-                    boxShadow: book?.available ? 4 : 1,
-                  },
-                  opacity: book?.available ? 1 : 0.7,
-                }}
-              >
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {book?.title || 'Untitled Book'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Author: {book?.author || 'Unknown'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Pages: {book?.pages || '?'}
-                  </Typography>
-                  {getStatusChip(book)}
-                  {book?.processing_status === 'processing' && (
-                    <LinearProgress 
-                      variant="determinate" 
-                      value={getProcessingInfo(book)?.progress || 0}
-                      sx={{ mt: 1 }}
-                    />
-                  )}
-                </CardContent>
-                <CardActions sx={{ 
-                  padding: 2,
-                  justifyContent: 'space-between',
-                  backgroundColor: theme.palette.background.paper,
-                  borderTop: 1,
-                  borderColor: theme.palette.divider
-                }}>
-                  <Button
-                    variant="outlined"
-                    size="medium"
-                    color="primary"
-                    startIcon={<PreviewIcon />}
-                    onClick={() => handlePreviewBook(book)}
-                    disabled={!book?.available}
-                  >
-                    Preview
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    color="primary"
-                    startIcon={<MenuBookIcon />}
-                    onClick={() => handleReadBook(book)}
-                    disabled={!book?.available}
-                  >
-                    Read
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+          {(books || [])
+            .filter(book => book && typeof book === 'object')
+            .map((book, index) => (
+              <Grid item xs={12} sm={6} md={4} key={book?.id || index}>
+                <Card 
+                  sx={{ 
+                    height: '100%', 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    transition: 'transform 0.2s',
+                    '&:hover': {
+                      transform: book?.available ? 'translateY(-4px)' : 'none',
+                      boxShadow: book?.available ? 4 : 1,
+                    },
+                    opacity: book?.available ? 1 : 0.7,
+                  }}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {(book && book.title) || 'Untitled Book'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Author: {book?.author || 'Unknown'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Pages: {book?.pages || '?'}
+                    </Typography>
+                    {getStatusChip(book)}
+                    {book?.processing_status === 'processing' && (
+                      <LinearProgress 
+                        variant="determinate" 
+                        value={getProcessingInfo(book)?.progress || 0}
+                        sx={{ mt: 1 }}
+                      />
+                    )}
+                  </CardContent>
+                  <CardActions sx={{ 
+                    padding: 2,
+                    justifyContent: 'space-between',
+                    backgroundColor: theme.palette.background.paper,
+                    borderTop: 1,
+                    borderColor: theme.palette.divider
+                  }}>
+                    <Button
+                      variant="outlined"
+                      size="medium"
+                      color="primary"
+                      startIcon={<PreviewIcon />}
+                      onClick={() => handlePreviewBook(book)}
+                      disabled={!book?.available}
+                    >
+                      Preview
+                    </Button>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      color="primary"
+                      startIcon={<MenuBookIcon />}
+                      onClick={() => handleReadBook(book)}
+                      disabled={!book?.available}
+                    >
+                      Read
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
         </Grid>
       )}
 
-      {!isLoading && books?.length === 0 && (
+      {!isLoading && (!books || books.length === 0) && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
             No books in the library
@@ -301,6 +266,12 @@ const HomePage = () => {
         </Box>
       )}
 
+      <PDFUploadDialog
+        open={uploadDialogOpen}
+        onClose={() => setUploadDialogOpen(false)}
+        onUpload={handleFileUpload}
+      />
+
       {selectedBook && (
         <PDFPreview
           open={previewOpen}
@@ -308,8 +279,8 @@ const HomePage = () => {
             setPreviewOpen(false);
             setSelectedBook(null);
           }}
-          pdfUrl={`/api/books/${selectedBook.filename}`}
-          bookTitle={selectedBook?.title}
+          pdfUrl={`/api/books/${selectedBook?.filename}`}
+          bookTitle={(selectedBook && selectedBook.title) || 'Untitled Book'}
         />
       )}
     </Container>
