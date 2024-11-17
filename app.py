@@ -81,44 +81,19 @@ async def process_pdf_file(file):
     db[f"pdf_{filename}"] = json.dumps(metadata)
     return metadata
 
-@app.route('/api/upload-pdf', methods=['POST'])
-async def upload_pdf():
-    print("Request received at /api/upload-pdf")
-    print(f"Request files: {request.files}")
-    
-    if 'pdfs' not in request.files:
-        return jsonify({"error": "No PDF file provided"}), 400
-        
-    file = request.files['pdfs']
-    
-    try:
-        metadata = await process_pdf_file(file)
-        return jsonify({
-            "message": "File uploaded and processing started",
-            "files": [metadata]
-        })
-    except ValueError as e:
-        print(f"Validation error: {str(e)}")
-        return jsonify({"error": str(e)}), 400
-    except Exception as e:
-        print(f"Error processing upload: {str(e)}")
-        print(f"Error traceback: {traceback.format_exc()}")
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/upload-pdfs', methods=['POST'])
+@app.route('/api/upload', methods=['POST'])
 async def upload_pdfs():
     try:
         print(f"Request received at: {request.path}")
         print(f"Request method: {request.method}")
         print(f"Request headers: {dict(request.headers)}")
         print(f"Request files: {request.files}")
-        print(f"Form data: {request.form}")
         
-        if 'pdfs' not in request.files:
+        if 'files' not in request.files:
             print("No PDF files in request")
             return jsonify({"error": "No PDF files provided"}), 400
 
-        uploaded_files = request.files.getlist('pdfs')
+        uploaded_files = request.files.getlist('files')
         print(f"Number of files received: {len(uploaded_files)}")
         
         if not uploaded_files:
