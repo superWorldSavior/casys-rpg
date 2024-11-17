@@ -7,7 +7,6 @@ from replit import db
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
-import asyncio
 from pdf_processing.infrastructure.pdf_processor import MuPDFProcessor
 from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 from pdf_processing.application.pdf_service import PDFService
@@ -49,7 +48,7 @@ def get_books():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/upload-pdf', methods=['POST'])
-async def upload_pdf():
+def upload_pdf():
     try:
         if 'pdf' not in request.files:
             return jsonify({"error": "No PDF file provided"}), 400
@@ -68,8 +67,8 @@ async def upload_pdf():
         file.save(file_path)
         
         try:
-            # Process the PDF using PDFService
-            processed_pdf = await pdf_service.process_pdf(file_path)
+            # Process the PDF using PDFService synchronously
+            processed_pdf = pdf_service.process_pdf_sync(file_path)
             
             # Create metadata
             metadata = {

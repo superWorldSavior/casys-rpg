@@ -23,3 +23,7 @@ class PDFService:
         await self.repository.save_metadata(processed_pdf)
 
         return processed_pdf
+
+    def process_pdf_sync(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
+        """Synchronous version of process_pdf"""
+        return asyncio.run(self.process_pdf(pdf_path, base_output_dir))

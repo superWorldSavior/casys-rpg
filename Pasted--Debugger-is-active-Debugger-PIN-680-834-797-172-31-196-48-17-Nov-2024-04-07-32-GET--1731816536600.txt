@@ -1,0 +1,55 @@
+ * Debugger is active!
+ * Debugger PIN: 680-834-797
+172.31.196.48 - - [17/Nov/2024 04:07:32] "GET / HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:32] "GET /assets/index-D3zaVbkK.js HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:32] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:32] "GET /assets/NavigateBefore-CkbDMWE6.js HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:32] "GET /assets/index-B1JlWXVq.js HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:33] "GET /api/books HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:41] "GET / HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:42] "GET /assets/index-D3zaVbkK.js HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:42] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:43] "GET /assets/NavigateBefore-CkbDMWE6.js HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:43] "GET /assets/index-B1JlWXVq.js HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:44] "GET /api/books HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:50] "GET /assets/index-B1JlWXVq.js HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:51] "GET /api/books HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:07:55] "GET /api/books/Defis_Fantastiques_18_-_La_Planete_Rebelle.pdf HTTP/1.1" 404 -
+172.31.196.48 - - [17/Nov/2024 04:07:57] "GET / HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:57] "GET /assets/index-D3zaVbkK.js HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:57] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:57] "GET /assets/index-B1JlWXVq.js HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:57] "GET /assets/NavigateBefore-CkbDMWE6.js HTTP/1.1" 304 -
+172.31.196.48 - - [17/Nov/2024 04:07:58] "GET /api/books HTTP/1.1" 200 -
+172.31.196.48 - - [17/Nov/2024 04:08:09] "POST /api/upload-pdf HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask_cors/extension.py", line 194, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask_cors/extension.py", line 194, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 976, in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/TextFlowNavigator/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 997, in async_to_sync
+    raise RuntimeError(
+RuntimeError: Install Flask with the 'async' extra in order to use async views.
