@@ -1,16 +1,13 @@
 import asyncio
 import os
 import json
-from typing import List, Dict
 from ..domain.ports import PDFProcessor, PDFRepository
-from ..domain.entities import ProcessedPDF, ProcessingStatus
+from ..domain.entities import ProcessedPDF
 
 class PDFService:
     def __init__(self, processor: PDFProcessor, repository: PDFRepository):
         self.processor = processor
         self.repository = repository
-        self._processing_queue = asyncio.Queue()
-        self._is_processing = False
 
     async def process_pdf(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
         # Process the PDF and get all sections and images
@@ -54,31 +51,3 @@ class PDFService:
     def process_pdf_sync(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
         """Synchronous version of process_pdf"""
         return asyncio.run(self.process_pdf(pdf_path, base_output_dir))
-
-    async def add_to_queue(self, pdf_path: str, base_output_dir: str = "sections") -> None:
-        """Add a PDF to the processing queue"""
-        await self._processing_queue.put((pdf_path, base_output_dir))
-        if not self._is_processing:
-            asyncio.create_task(self._process_queue())
-
-    async def _process_queue(self) -> None:
-        """Process PDFs in the queue sequentially"""
-        self._is_processing = True
-        try:
-            while not self._processing_queue.empty():
-                pdf_path, base_output_dir = await self._processing_queue.get()
-                try:
-                    await self.process_pdf(pdf_path, base_output_dir)
-                except Exception as e:
-                    print(f"Error processing {pdf_path}: {e}")
-                finally:
-                    self._processing_queue.task_done()
-        finally:
-            self._is_processing = False
-
-    async def get_queue_status(self) -> Dict:
-        """Get the current status of the processing queue"""
-        return {
-            "queue_size": self._processing_queue.qsize(),
-            "is_processing": self._is_processing
-        }
