@@ -47,13 +47,13 @@ def get_books():
         print(f"Error getting books: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/upload-pdf', methods=['POST'])
-async def upload_pdf():
+@app.route('/api/upload-pdfs', methods=['POST'])
+async def upload_pdfs():
     try:
-        if 'pdf' not in request.files:
+        if 'pdfs' not in request.files:
             return jsonify({"error": "No PDF files provided"}), 400
 
-        files = request.files.getlist('pdf')
+        files = request.files.getlist('pdfs')
         if not files or all(file.filename == '' for file in files):
             return jsonify({"error": "No selected files"}), 400
 
