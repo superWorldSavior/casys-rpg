@@ -37,7 +37,13 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchBooks();
+    fetchBooks(); // Initial fetch
+    
+    // Set up polling
+    const interval = setInterval(fetchBooks, 5000);
+    
+    // Cleanup
+    return () => clearInterval(interval);
   }, []);
 
   const fetchBooks = async () => {
@@ -68,7 +74,7 @@ const HomePage = () => {
         author: book.author || 'Unknown',
         pages: book.total_pages || '?',
         filename: book.filename || '',
-        status: book.status || 'processing'
+        status: book.status || 'unknown'
       }));
       
       setBooks(validatedBooks);
@@ -166,12 +172,17 @@ const HomePage = () => {
       },
       failed: {
         icon: <ErrorIcon />,
-        label: 'Processing Failed',
+        label: 'Failed',
         color: 'error'
       }
     };
 
-    const config = statusConfig[book.status] || statusConfig.processing;
+    // Use the actual status from the book
+    const config = statusConfig[book.status] || {
+      icon: <HourglassEmptyIcon />,
+      label: book.status || 'Unknown',
+      color: 'default'
+    };
 
     return (
       <Chip
@@ -185,7 +196,7 @@ const HomePage = () => {
   };
 
   // Loading state
-  if (isLoading) {
+  if (isLoading && books.length === 0) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ width: '100%', mt: 4 }}>
