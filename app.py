@@ -75,7 +75,11 @@ async def process_pdf_file(file):
         "id": filename,
         "uploadDate": datetime.now().isoformat(),
         "status": "processing",
-        "total_pages": 0
+        "current_page": 0,
+        "total_pages": 0,
+        "processed_sections": 0,
+        "processed_images": 0,
+        "error_message": None
     }
     
     db[f"pdf_{filename}"] = json.dumps(metadata)
@@ -154,12 +158,19 @@ def get_books():
                 base_name = os.path.splitext(metadata.get('filename', ''))[0]
                 progress_file = os.path.join(SECTIONS_FOLDER, base_name, 'metadata', 'progress.json')
                 
-                # Include all books with progress.json and add their status
+                # Include all books with progress.json and add their progress data
                 if os.path.exists(progress_file):
                     with open(progress_file, 'r') as f:
                         progress_data = json.load(f)
-                        metadata['status'] = progress_data.get('status', 'processing')
-                        metadata['total_pages'] = progress_data.get('total_pages', 0)
+                        # Update metadata with all progress fields
+                        metadata.update({
+                            'status': progress_data.get('status', 'processing'),
+                            'current_page': progress_data.get('current_page', 0),
+                            'total_pages': progress_data.get('total_pages', 0),
+                            'processed_sections': progress_data.get('processed_sections', 0),
+                            'processed_images': progress_data.get('processed_images', 0),
+                            'error_message': progress_data.get('error_message')
+                        })
                         books.append(metadata)
             except Exception as e:
                 continue

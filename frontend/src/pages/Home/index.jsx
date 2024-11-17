@@ -15,6 +15,8 @@ import {
   useTheme,
   useMediaQuery,
   Chip,
+  Stack,
+  Tooltip,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -22,10 +24,12 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import ImageIcon from '@mui/icons-material/Image';
+import ArticleIcon from '@mui/icons-material/Article';
 import PDFPreview from '../../components/features/books/PDFPreview';
 
 const HomePage = () => {
-  const [books, setBooks] = useState([]); // Initialize as empty array
+  const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
@@ -59,29 +63,30 @@ const HomePage = () => {
       
       const data = await response.json();
       
-      // Validate the response structure
       if (!data || typeof data !== 'object') {
         throw new Error('Invalid API response format');
       }
       
-      // Ensure books is an array, even if empty
       const booksData = Array.isArray(data.books) ? data.books : [];
       
-      // Map and validate each book object
       const validatedBooks = booksData.map((book = {}) => ({
         id: book.id || book.filename || '',
         title: book.title || 'Untitled Book',
         author: book.author || 'Unknown',
-        pages: book.total_pages || '?',
+        current_page: book.current_page || 0,
+        total_pages: book.total_pages || 0,
+        processed_sections: book.processed_sections || 0,
+        processed_images: book.processed_images || 0,
         filename: book.filename || '',
-        status: book.status || 'unknown'
+        status: book.status || 'unknown',
+        error_message: book.error_message || null
       }));
       
       setBooks(validatedBooks);
     } catch (error) {
       console.error('Error fetching books:', error);
       setError(error.message || 'Error connecting to server');
-      setBooks([]); // Reset to empty array on error
+      setBooks([]);
     } finally {
       setIsLoading(false);
     }
@@ -114,23 +119,24 @@ const HomePage = () => {
         throw new Error(result?.message || 'Error uploading PDF');
       }
 
-      // Ensure books array exists in response
       const newBooks = Array.isArray(result.books) ? result.books : [];
       
-      // Map and validate new books
       const validatedNewBooks = newBooks.map((book = {}) => ({
         id: book.id || book.filename || '',
         title: book.title || 'Untitled Book',
         author: book.author || 'Unknown',
-        pages: book.total_pages || '?',
+        current_page: book.current_page || 0,
+        total_pages: book.total_pages || 0,
+        processed_sections: book.processed_sections || 0,
+        processed_images: book.processed_images || 0,
         filename: book.filename || '',
-        status: book.status || 'processing'
+        status: book.status || 'processing',
+        error_message: book.error_message || null
       }));
 
-      // Update books state, ensuring it remains an array
       setBooks(prevBooks => [...(Array.isArray(prevBooks) ? prevBooks : []), ...validatedNewBooks]);
       setSuccessMessage(result.message || 'PDF uploaded successfully');
-      event.target.value = ''; // Reset file input
+      event.target.value = '';
     } catch (error) {
       console.error('Error uploading PDF:', error);
       setError(error.message || 'Error uploading file');
@@ -156,6 +162,31 @@ const HomePage = () => {
     setPreviewOpen(true);
   };
 
+  const getProgressInfo = (book) => {
+    if (!book) return null;
+
+    return (
+      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+        <Tooltip title="Processed Pages">
+          <Chip
+            icon={<ArticleIcon />}
+            label={`${book.current_page}/${book.total_pages} pages`}
+            size="small"
+            variant="outlined"
+          />
+        </Tooltip>
+        <Tooltip title="Processed Images">
+          <Chip
+            icon={<ImageIcon />}
+            label={`${book.processed_images} images`}
+            size="small"
+            variant="outlined"
+          />
+        </Tooltip>
+      </Stack>
+    );
+  };
+
   const getStatusChip = (book) => {
     if (!book) return null;
 
@@ -163,39 +194,43 @@ const HomePage = () => {
       completed: {
         icon: <CheckCircleIcon />,
         label: 'Ready to Read',
-        color: 'success'
+        color: 'success',
+        tooltip: 'Book is ready for reading'
       },
       processing: {
         icon: <HourglassEmptyIcon />,
         label: 'Processing',
-        color: 'warning'
+        color: 'warning',
+        tooltip: 'Book is being processed'
       },
       failed: {
         icon: <ErrorIcon />,
         label: 'Failed',
-        color: 'error'
+        color: 'error',
+        tooltip: book.error_message || 'Processing failed'
       }
     };
 
-    // Use the actual status from the book
     const config = statusConfig[book.status] || {
       icon: <HourglassEmptyIcon />,
       label: book.status || 'Unknown',
-      color: 'default'
+      color: 'default',
+      tooltip: 'Unknown status'
     };
 
     return (
-      <Chip
-        icon={config.icon}
-        label={config.label}
-        color={config.color}
-        size="small"
-        sx={{ mb: 1 }}
-      />
+      <Tooltip title={config.tooltip}>
+        <Chip
+          icon={config.icon}
+          label={config.label}
+          color={config.color}
+          size="small"
+          sx={{ mb: 1 }}
+        />
+      </Tooltip>
     );
   };
 
-  // Loading state
   if (isLoading && books.length === 0) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -206,7 +241,6 @@ const HomePage = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -226,7 +260,6 @@ const HomePage = () => {
     );
   }
 
-  // Main content
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4, textAlign: 'center' }}>
@@ -307,10 +340,13 @@ const HomePage = () => {
                   <Typography variant="body2" color="text.secondary" gutterBottom>
                     Author: {book?.author || 'Unknown'}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Pages: {book?.pages || '?'}
-                  </Typography>
                   {getStatusChip(book)}
+                  {getProgressInfo(book)}
+                  {book.error_message && (
+                    <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                      Error: {book.error_message}
+                    </Typography>
+                  )}
                 </CardContent>
                 <CardActions sx={{ 
                   padding: 2,
