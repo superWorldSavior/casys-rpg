@@ -34,6 +34,8 @@ app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
 
 def allowed_file(filename: str) -> bool:
+    if not filename:
+        return False
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.errorhandler(405)
@@ -47,8 +49,13 @@ def get_books():
         books = []
         for key in db.prefix("pdf_"):
             metadata = json.loads(db[key])
-            books.append(metadata)
-        print(f"Returning {len(books)} books")
+            base_name = os.path.splitext(metadata.get('filename', ''))[0]
+            sections_path = os.path.join(SECTIONS_FOLDER, base_name)
+            
+            if (metadata.get('processing_status') == 'completed' and 
+                os.path.exists(sections_path)):
+                books.append(metadata)
+        print(f"Returning {len(books)} completed books")
         return jsonify(books)
     except Exception as e:
         print(f"Error getting books: {str(e)}")
@@ -68,7 +75,7 @@ async def upload_pdf():
             return jsonify({"error": "No PDF file provided"}), 400
 
         file = request.files['pdf']
-        if not file or file.filename == '':
+        if not file or not file.filename:
             print("No selected file or empty filename")
             return jsonify({"error": "No selected file"}), 400
 
