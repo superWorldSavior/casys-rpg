@@ -23,7 +23,7 @@ const MainLayout = () => {
                 }
               }}
             >
-              Casys.AI Reader
+              Casys.AI
             </Typography>
           </Box>
           <Button 

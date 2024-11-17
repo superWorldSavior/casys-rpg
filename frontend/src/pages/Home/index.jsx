@@ -284,7 +284,7 @@ const HomePage = () => {
             mb: 3
           }}
         >
-          Digital Library
+          Solo RPG AI Narrator
         </Typography>
         
         <ErrorBoundary fallbackMessage="Error in file upload component">
