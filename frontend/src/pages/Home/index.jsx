@@ -25,6 +25,129 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import ImageIcon from '@mui/icons-material/Image';
 import ArticleIcon from '@mui/icons-material/Article';
 import PDFPreview from '../../components/features/books/PDFPreview';
+import ErrorBoundary from '../../components/common/ErrorBoundary';
+
+// BookGrid Component
+const BookGrid = ({ books, onReadBook, onPreviewBook, theme }) => (
+  <Grid container spacing={3}>
+    {books.map((book, index) => (
+      <Grid item xs={12} sm={6} md={4} key={`book-${book?.id || index}`}>
+        <Card 
+          sx={{ 
+            height: '100%', 
+            display: 'flex', 
+            flexDirection: 'column',
+            transition: 'transform 0.2s',
+            '&:hover': {
+              transform: book?.status === 'completed' ? 'translateY(-4px)' : 'none',
+              boxShadow: book?.status === 'completed' ? 4 : 1,
+            },
+          }}
+        >
+          {book.cover_image && (
+            <CardMedia
+              component="img"
+              height="200"
+              image={book.cover_image}
+              alt={`Cover for ${book.title}`}
+              sx={{ objectFit: 'contain', p: 1 }}
+            />
+          )}
+          <CardContent sx={{ flexGrow: 1 }}>
+            <Typography gutterBottom variant="h5" component="h2">
+              {book?.title || 'Untitled Book'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              Author: {book?.author || 'Unknown'}
+            </Typography>
+            <BookStatus book={book} />
+            <BookProgress book={book} />
+            {book.error_message && (
+              <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                Error: {book.error_message}
+              </Typography>
+            )}
+          </CardContent>
+          <CardActions sx={{ 
+            padding: 2,
+            justifyContent: 'space-between',
+            backgroundColor: theme.palette.background.paper,
+            borderTop: 1,
+            borderColor: theme.palette.divider
+          }}>
+            <Button
+              variant="outlined"
+              size="medium"
+              color="primary"
+              startIcon={<PreviewIcon />}
+              onClick={() => onPreviewBook(book)}
+              disabled={book?.status !== 'completed'}
+            >
+              Preview
+            </Button>
+            <Button
+              variant="contained"
+              size="medium"
+              color="primary"
+              startIcon={<MenuBookIcon />}
+              onClick={() => onReadBook(book)}
+              disabled={book?.status !== 'completed'}
+            >
+              Read
+            </Button>
+          </CardActions>
+        </Card>
+      </Grid>
+    ))}
+  </Grid>
+);
+
+// BookStatus Component
+const BookStatus = ({ book }) => (
+  book && (
+    <Tooltip title={`Status: ${book.status}`}>
+      <Chip
+        label={book.status}
+        color={book.status === 'completed' ? 'success' : 'default'}
+        size="small"
+        sx={{ mb: 1 }}
+      />
+    </Tooltip>
+  )
+);
+
+// BookProgress Component
+const BookProgress = ({ book }) => (
+  book && (
+    <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+      <Tooltip title="Pages">
+        <Chip
+          icon={<ArticleIcon />}
+          label={`${book.current_page || 0}/${book.total_pages || 0} pages`}
+          size="small"
+          variant="outlined"
+        />
+      </Tooltip>
+      <Tooltip title="Images">
+        <Chip
+          icon={<ImageIcon />}
+          label={`${book.processed_images || 0} images`}
+          size="small"
+          variant="outlined"
+        />
+      </Tooltip>
+      {book.processed_sections > 0 && (
+        <Tooltip title="Sections">
+          <Chip
+            label={`${book.processed_sections} sections`}
+            size="small"
+            variant="outlined"
+          />
+        </Tooltip>
+      )}
+    </Stack>
+  )
+);
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -80,7 +203,6 @@ const HomePage = () => {
         processed_images: book.processed_images || 0,
         error_message: book.error_message || null,
         cover_image: book.cover_image || null,
-        // Include any additional metadata from progress.json
         ...book
       }));
       
@@ -149,55 +271,6 @@ const HomePage = () => {
     setPreviewOpen(true);
   };
 
-  const getProgressInfo = (book) => {
-    if (!book) return null;
-
-    return (
-      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-        <Tooltip title="Pages">
-          <Chip
-            icon={<ArticleIcon />}
-            label={`${book.current_page || 0}/${book.total_pages || 0} pages`}
-            size="small"
-            variant="outlined"
-          />
-        </Tooltip>
-        <Tooltip title="Images">
-          <Chip
-            icon={<ImageIcon />}
-            label={`${book.processed_images || 0} images`}
-            size="small"
-            variant="outlined"
-          />
-        </Tooltip>
-        {book.processed_sections > 0 && (
-          <Tooltip title="Sections">
-            <Chip
-              label={`${book.processed_sections} sections`}
-              size="small"
-              variant="outlined"
-            />
-          </Tooltip>
-        )}
-      </Stack>
-    );
-  };
-
-  const getStatusChip = (book) => {
-    if (!book) return null;
-    
-    return (
-      <Tooltip title={`Status: ${book.status}`}>
-        <Chip
-          label={book.status}
-          color={book.status === 'completed' ? 'success' : 'default'}
-          size="small"
-          sx={{ mb: 1 }}
-        />
-      </Tooltip>
-    );
-  };
-
   if (isLoading && books.length === 0) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -220,30 +293,32 @@ const HomePage = () => {
           Digital Library
         </Typography>
         
-        <Button
-          variant="contained"
-          component="label"
-          startIcon={<CloudUploadIcon />}
-          sx={{ 
-            mt: 2,
-            px: 3,
-            py: 1.5,
-            borderRadius: 2,
-            backgroundColor: theme.palette.primary.main,
-            '&:hover': {
-              backgroundColor: theme.palette.primary.dark,
-            }
-          }}
-          disabled={uploading}
-        >
-          {uploading ? 'Uploading...' : 'Add PDF Book'}
-          <input
-            type="file"
-            hidden
-            accept=".pdf"
-            onChange={handleFileUpload}
-          />
-        </Button>
+        <ErrorBoundary fallbackMessage="Error in file upload component">
+          <Button
+            variant="contained"
+            component="label"
+            startIcon={<CloudUploadIcon />}
+            sx={{ 
+              mt: 2,
+              px: 3,
+              py: 1.5,
+              borderRadius: 2,
+              backgroundColor: theme.palette.primary.main,
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+              }
+            }}
+            disabled={uploading}
+          >
+            {uploading ? 'Uploading...' : 'Add PDF Book'}
+            <input
+              type="file"
+              hidden
+              accept=".pdf"
+              onChange={handleFileUpload}
+            />
+          </Button>
+        </ErrorBoundary>
       </Box>
 
       <Snackbar
@@ -280,89 +355,28 @@ const HomePage = () => {
       )}
 
       {Array.isArray(books) && books.length > 0 && (
-        <Grid container spacing={3}>
-          {books.map((book, index) => (
-            <Grid item xs={12} sm={6} md={4} key={`book-${book?.id || index}`}>
-              <Card 
-                sx={{ 
-                  height: '100%', 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: book?.status === 'completed' ? 'translateY(-4px)' : 'none',
-                    boxShadow: book?.status === 'completed' ? 4 : 1,
-                  },
-                }}
-              >
-                {book.cover_image && (
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={book.cover_image}
-                    alt={`Cover for ${book.title}`}
-                    sx={{ objectFit: 'contain', p: 1 }}
-                  />
-                )}
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {book?.title || 'Untitled Book'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Author: {book?.author || 'Unknown'}
-                  </Typography>
-                  {getStatusChip(book)}
-                  {getProgressInfo(book)}
-                  {book.error_message && (
-                    <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-                      Error: {book.error_message}
-                    </Typography>
-                  )}
-                </CardContent>
-                <CardActions sx={{ 
-                  padding: 2,
-                  justifyContent: 'space-between',
-                  backgroundColor: theme.palette.background.paper,
-                  borderTop: 1,
-                  borderColor: theme.palette.divider
-                }}>
-                  <Button
-                    variant="outlined"
-                    size="medium"
-                    color="primary"
-                    startIcon={<PreviewIcon />}
-                    onClick={() => handlePreviewBook(book)}
-                    disabled={book?.status !== 'completed'}
-                  >
-                    Preview
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    color="primary"
-                    startIcon={<MenuBookIcon />}
-                    onClick={() => handleReadBook(book)}
-                    disabled={book?.status !== 'completed'}
-                  >
-                    Read
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        <ErrorBoundary fallbackMessage="Error displaying book grid">
+          <BookGrid 
+            books={books}
+            onReadBook={handleReadBook}
+            onPreviewBook={handlePreviewBook}
+            theme={theme}
+          />
+        </ErrorBoundary>
       )}
 
       {selectedBook && (
-        <PDFPreview
-          open={previewOpen}
-          onClose={() => {
-            setPreviewOpen(false);
-            setSelectedBook(null);
-          }}
-          pdfUrl={`/api/books/${selectedBook.filename}`}
-          bookTitle={selectedBook.title}
-        />
+        <ErrorBoundary fallbackMessage="Error displaying PDF preview">
+          <PDFPreview
+            open={previewOpen}
+            onClose={() => {
+              setPreviewOpen(false);
+              setSelectedBook(null);
+            }}
+            pdfUrl={`/api/books/${selectedBook.filename}`}
+            bookTitle={selectedBook.title}
+          />
+        </ErrorBoundary>
       )}
     </Container>
   );
