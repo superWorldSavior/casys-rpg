@@ -3,9 +3,9 @@ import { createTheme } from '@mui/material/styles';
 export const casysTheme = createTheme({
   palette: {
     primary: {
-      main: '#007BFF',
-      light: '#3395FF',
-      dark: '#0056B3',
+      main: '#6200EE',
+      light: '#7F39FB',
+      dark: '#4B0082',
       contrastText: '#FFFFFF',
     },
     secondary: {
@@ -83,19 +83,19 @@ export const casysTheme = createTheme({
           fontWeight: 500,
         },
         contained: {
-          backgroundColor: '#007BFF',
+          backgroundColor: '#6200EE',
           '&:hover': {
-            backgroundColor: '#0056B3',
+            backgroundColor: '#4B0082',
           },
           boxShadow: 'none',
         },
         outlined: {
-          borderColor: '#007BFF',
-          color: '#007BFF',
+          borderColor: '#6200EE',
+          color: '#6200EE',
           '&:hover': {
-            borderColor: '#0056B3',
-            color: '#0056B3',
-            backgroundColor: 'rgba(0, 123, 255, 0.04)',
+            borderColor: '#4B0082',
+            color: '#4B0082',
+            backgroundColor: 'rgba(98, 0, 238, 0.04)',
           },
         },
       },
