@@ -8,7 +8,6 @@ import {
   Typography,
   Button,
   Box,
-  LinearProgress,
   Alert,
   CardActions,
   Snackbar,
@@ -26,6 +25,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import ArticleIcon from '@mui/icons-material/Article';
 import PDFPreview from '../../components/features/books/PDFPreview';
 import ErrorBoundary from '../../components/common/ErrorBoundary';
+import SkeletonLoader from '../../components/common/SkeletonLoader';
 
 // BookGrid Component
 const BookGrid = ({ books, onReadBook, onPreviewBook, theme }) => (
@@ -271,16 +271,6 @@ const HomePage = () => {
     setPreviewOpen(true);
   };
 
-  if (isLoading && books.length === 0) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ width: '100%', mt: 4 }}>
-          <LinearProgress />
-        </Box>
-      </Container>
-    );
-  }
-
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4, textAlign: 'center' }}>
@@ -343,26 +333,34 @@ const HomePage = () => {
         </Alert>
       )}
 
-      {Array.isArray(books) && books.length === 0 && (
-        <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h6" color="text.secondary">
-            No books in library
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-            Start by uploading a PDF
-          </Typography>
-        </Box>
-      )}
-
-      {Array.isArray(books) && books.length > 0 && (
-        <ErrorBoundary fallbackMessage="Error displaying book grid">
-          <BookGrid 
-            books={books}
-            onReadBook={handleReadBook}
-            onPreviewBook={handlePreviewBook}
-            theme={theme}
-          />
+      {isLoading ? (
+        <ErrorBoundary fallbackMessage="Error displaying skeleton loader">
+          <SkeletonLoader count={6} />
         </ErrorBoundary>
+      ) : (
+        <>
+          {Array.isArray(books) && books.length === 0 && (
+            <Box sx={{ textAlign: 'center', mt: 4 }}>
+              <Typography variant="h6" color="text.secondary">
+                No books in library
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+                Start by uploading a PDF
+              </Typography>
+            </Box>
+          )}
+
+          {Array.isArray(books) && books.length > 0 && (
+            <ErrorBoundary fallbackMessage="Error displaying book grid">
+              <BookGrid 
+                books={books}
+                onReadBook={handleReadBook}
+                onPreviewBook={handlePreviewBook}
+                theme={theme}
+              />
+            </ErrorBoundary>
+          )}
+        </>
       )}
 
       {selectedBook && (
