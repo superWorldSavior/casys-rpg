@@ -51,67 +51,69 @@ def get_books():
 async def upload_pdf():
     try:
         if 'pdf' not in request.files:
-            return jsonify({"error": "No PDF file provided"}), 400
+            return jsonify({"error": "No PDF files provided"}), 400
+
+        files = request.files.getlist('pdf')
+        if not files or all(file.filename == '' for file in files):
+            return jsonify({"error": "No selected files"}), 400
+
+        uploaded_files = []
+        for file in files:
+            if not file or not allowed_file(file.filename or ''):
+                continue
+
+            filename = secure_filename(file.filename or '')
+            file_path = os.path.join(UPLOAD_FOLDER, filename)
             
-        file = request.files['pdf']
-        if not file or file.filename == '':
-            return jsonify({"error": "No selected file"}), 400
+            # Save file locally
+            file.save(file_path)
             
-        if not file or not allowed_file(file.filename or ''):
-            return jsonify({"error": "File type not allowed"}), 400
-            
-        filename = secure_filename(file.filename or '')
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
-        
-        # Save file locally
-        file.save(file_path)
-        
-        try:
-            # Process the PDF using PDFService
-            processed_pdf = await pdf_service.process_pdf(file_path)
-            
-            # Create metadata
-            metadata = {
-                "title": os.path.splitext(filename)[0],
-                "author": "Unknown",
-                "pages": len(processed_pdf.sections),
-                "filename": filename,
-                "id": filename,
-                "uploadDate": datetime.now().isoformat(),
-                "processing_status": "available",
-                "available": True,
-                "sections": len(processed_pdf.sections),
-                "images": len(processed_pdf.images)
-            }
-            
-            # Store metadata in database
-            db[f"pdf_{filename}"] = json.dumps(metadata)
-            
-            return jsonify({
-                "message": "PDF uploaded and processed successfully",
-                "metadata": metadata
-            })
-            
-        except Exception as processing_error:
-            print(f"Error processing PDF: {processing_error}")
-            metadata = {
-                "title": os.path.splitext(filename)[0],
-                "author": "Unknown",
-                "filename": filename,
-                "id": filename,
-                "uploadDate": datetime.now().isoformat(),
-                "processing_status": "failed",
-                "available": False,
-                "error": str(processing_error)
-            }
-            db[f"pdf_{filename}"] = json.dumps(metadata)
-            return jsonify({
-                "error": "Failed to process PDF",
-                "metadata": metadata
-            }), 500
+            try:
+                # Add to processing queue
+                await pdf_service.add_to_queue(file_path)
+                
+                # Create initial metadata
+                metadata = {
+                    "title": os.path.splitext(filename)[0],
+                    "author": "Unknown",
+                    "filename": filename,
+                    "id": filename,
+                    "uploadDate": datetime.now().isoformat(),
+                    "processing_status": "queued",
+                    "available": False
+                }
+                
+                # Store metadata in database
+                db[f"pdf_{filename}"] = json.dumps(metadata)
+                uploaded_files.append(metadata)
+                
+            except Exception as processing_error:
+                print(f"Error queueing PDF: {processing_error}")
+                metadata = {
+                    "title": os.path.splitext(filename)[0],
+                    "author": "Unknown",
+                    "filename": filename,
+                    "id": filename,
+                    "uploadDate": datetime.now().isoformat(),
+                    "processing_status": "failed",
+                    "available": False,
+                    "error": str(processing_error)
+                }
+                db[f"pdf_{filename}"] = json.dumps(metadata)
+                uploaded_files.append(metadata)
+
+        if not uploaded_files:
+            return jsonify({"error": "No valid PDF files were uploaded"}), 400
+
+        queue_status = await pdf_service.get_queue_status()
+        return jsonify({
+            "message": f"{len(uploaded_files)} PDFs uploaded and queued for processing",
+            "queue_status": queue_status,
+            "files": uploaded_files
+        })
             
     except Exception as e:
-        print(f"Error uploading PDF: {e}")
+        print(f"Error uploading PDFs: {e}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/books/<filename>')

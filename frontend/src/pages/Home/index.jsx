@@ -21,6 +21,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PDFPreview from '../../components/features/books/PDFPreview';
 
 const HomePage = () => {
@@ -37,7 +38,14 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+    // Poll for updates every 5 seconds if there are queued books
+    const interval = setInterval(() => {
+      if (books.some(book => book.processing_status === 'queued')) {
+        fetchBooks();
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [books]);
 
   const fetchBooks = async () => {
     try {
@@ -58,16 +66,19 @@ const HomePage = () => {
   };
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
 
-    if (file.type !== 'application/pdf') {
-      setError('Veuillez sélectionner un fichier PDF valide');
+    const invalidFiles = files.filter(file => file.type !== 'application/pdf');
+    if (invalidFiles.length > 0) {
+      setError('Certains fichiers ne sont pas au format PDF valide');
       return;
     }
 
     const formData = new FormData();
-    formData.append('pdf', file);
+    files.forEach(file => {
+      formData.append('pdf', file);
+    });
 
     try {
       setUploading(true);
@@ -79,16 +90,16 @@ const HomePage = () => {
       
       if (response.ok) {
         const result = await response.json();
-        setBooks(prevBooks => [...prevBooks, result.metadata]);
+        setBooks(prevBooks => [...prevBooks, ...result.files]);
         setSuccessMessage(result.message);
         event.target.value = '';
       } else {
         const errorData = await response.json();
-        setError(errorData.error || 'Erreur lors du téléchargement du PDF');
+        setError(errorData.error || 'Erreur lors du téléchargement des PDFs');
       }
     } catch (error) {
-      console.error('Error uploading PDF:', error);
-      setError('Erreur lors du téléchargement du fichier');
+      console.error('Error uploading PDFs:', error);
+      setError('Erreur lors du téléchargement des fichiers');
     } finally {
       setUploading(false);
     }
@@ -118,6 +129,17 @@ const HomePage = () => {
           icon={<CheckCircleIcon />}
           label="Disponible"
           color="success"
+          size="small"
+          sx={{ mb: 1 }}
+        />
+      );
+    }
+    if (book.processing_status === 'queued') {
+      return (
+        <Chip
+          icon={<HourglassEmptyIcon />}
+          label="En attente"
+          color="warning"
           size="small"
           sx={{ mb: 1 }}
         />
@@ -162,11 +184,12 @@ const HomePage = () => {
           }}
           disabled={uploading}
         >
-          {uploading ? 'Téléchargement...' : 'Ajouter un livre PDF'}
+          {uploading ? 'Téléchargement...' : 'Ajouter des livres PDF'}
           <input
             type="file"
             hidden
             accept=".pdf"
+            multiple
             onChange={handleFileUpload}
           />
         </Button>
