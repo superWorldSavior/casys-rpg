@@ -32,7 +32,7 @@ pdf_service = PDFService(pdf_processor, pdf_repository)
 app = Flask(__name__, static_folder='frontend/dist')
 CORS(app)
 
-def allowed_file(filename):
+def allowed_file(filename: str) -> bool:
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/api/books')
@@ -48,27 +48,27 @@ def get_books():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/upload-pdf', methods=['POST'])
-def upload_pdf():
+async def upload_pdf():
     try:
         if 'pdf' not in request.files:
             return jsonify({"error": "No PDF file provided"}), 400
             
         file = request.files['pdf']
-        if file.filename == '':
+        if not file or file.filename == '':
             return jsonify({"error": "No selected file"}), 400
             
-        if not file or not allowed_file(file.filename):
+        if not file or not allowed_file(file.filename or ''):
             return jsonify({"error": "File type not allowed"}), 400
             
-        filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename or '')
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         
         # Save file locally
         file.save(file_path)
         
         try:
-            # Process the PDF using PDFService synchronously
-            processed_pdf = pdf_service.process_pdf_sync(file_path)
+            # Process the PDF using PDFService
+            processed_pdf = await pdf_service.process_pdf(file_path)
             
             # Create metadata
             metadata = {
@@ -126,7 +126,7 @@ def get_book(filename):
         if not metadata.get('available', False):
             return jsonify({"error": "Book is not available for reading"}), 403
             
-        return send_from_directory(UPLOAD_FOLDER, filename)
+        return send_from_directory(str(UPLOAD_FOLDER), filename)
     except Exception as e:
         return jsonify({"error": str(e)}), 404
 
@@ -167,9 +167,10 @@ def get_book_content(filename):
 def serve(path):
     if path.startswith('api/'):
         return jsonify({"error": "Not found"}), 404
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, 'index.html')
+    static_folder = str(app.static_folder) if app.static_folder else ''
+    if path != "" and os.path.exists(os.path.join(static_folder, path)):
+        return send_from_directory(static_folder, path)
+    return send_from_directory(static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

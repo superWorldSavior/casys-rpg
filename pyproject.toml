@@ -19,4 +19,6 @@ dependencies = [
     "pypdf2>=3.0.1",
     "reportlab>=4.2.5",
     "pillow>=11.0.0",
+    "asgiref>=3.8.1",
+    "hypercorn>=0.17.3",
 ]
