@@ -75,10 +75,7 @@ async def process_pdf_file(file):
         "id": filename,
         "uploadDate": datetime.now().isoformat(),
         "status": "processing",
-        "available": False,
-        "total_pages": 0,
-        "progress": 0,
-        "current_page": 0
+        "total_pages": 0
     }
     
     db[f"pdf_{filename}"] = json.dumps(metadata)
@@ -86,10 +83,6 @@ async def process_pdf_file(file):
 
 @app.route('/api/books/upload', methods=['POST'])
 async def upload_pdfs():
-    """
-    Unified endpoint for PDF uploads.
-    Expects files in the 'pdf_files' field of the multipart form data.
-    """
     try:
         if 'pdf_files' not in request.files:
             return jsonify({
@@ -161,17 +154,13 @@ def get_books():
                 base_name = os.path.splitext(metadata.get('filename', ''))[0]
                 progress_file = os.path.join(SECTIONS_FOLDER, base_name, 'metadata', 'progress.json')
                 
+                # Include all books with progress.json and add their status
                 if os.path.exists(progress_file):
                     with open(progress_file, 'r') as f:
                         progress_data = json.load(f)
-                        if progress_data.get('status') == 'completed':
-                            metadata['available'] = True
-                            metadata['total_pages'] = progress_data.get('total_pages', 0)
-                            metadata['progress'] = 100
-                        else:
-                            metadata['progress'] = progress_data.get('progress', 0)
-                            metadata['total_pages'] = progress_data.get('total_pages', 0)
-                books.append(metadata)
+                        metadata['status'] = progress_data.get('status', 'processing')
+                        metadata['total_pages'] = progress_data.get('total_pages', 0)
+                        books.append(metadata)
             except Exception as e:
                 continue
         
@@ -198,13 +187,19 @@ def get_book(filename):
             }), 404
             
         metadata = json.loads(db[metadata_key])
-        if not metadata.get('available', False):
-            return jsonify({
-                "status": "error",
-                "message": "Book is not available for reading",
-                "code": 403
-            }), 403
-            
+        base_name = os.path.splitext(filename)[0]
+        progress_file = os.path.join(SECTIONS_FOLDER, base_name, 'metadata', 'progress.json')
+        
+        if os.path.exists(progress_file):
+            with open(progress_file, 'r') as f:
+                progress_data = json.load(f)
+                if progress_data.get('status') != 'completed':
+                    return jsonify({
+                        "status": "error",
+                        "message": "Book is not ready for reading",
+                        "code": 403
+                    }), 403
+                    
         return send_from_directory(str(UPLOAD_FOLDER), filename)
     except Exception as e:
         return jsonify({
@@ -223,14 +218,6 @@ def get_book_content(filename):
                 "message": "Book not found",
                 "code": 404
             }), 404
-            
-        metadata = json.loads(db[metadata_key])
-        if not metadata.get('available', False):
-            return jsonify({
-                "status": "error",
-                "message": "Book is not available for reading",
-                "code": 403
-            }), 403
         
         base_name = os.path.splitext(filename)[0]
         sections_folder = os.path.join(SECTIONS_FOLDER, base_name)

@@ -21,6 +21,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PDFPreview from '../../components/features/books/PDFPreview';
 
 const HomePage = () => {
@@ -65,10 +66,9 @@ const HomePage = () => {
         id: book.id || book.filename || '',
         title: book.title || 'Untitled Book',
         author: book.author || 'Unknown',
-        pages: book.pages || '?',
-        available: Boolean(book.available),
+        pages: book.total_pages || '?',
         filename: book.filename || '',
-        processing_status: book.processing_status || 'pending'
+        status: book.status || 'processing'
       }));
       
       setBooks(validatedBooks);
@@ -116,10 +116,9 @@ const HomePage = () => {
         id: book.id || book.filename || '',
         title: book.title || 'Untitled Book',
         author: book.author || 'Unknown',
-        pages: book.pages || '?',
-        available: Boolean(book.available),
+        pages: book.total_pages || '?',
         filename: book.filename || '',
-        processing_status: book.processing_status || 'pending'
+        status: book.status || 'processing'
       }));
 
       // Update books state, ensuring it remains an array
@@ -135,16 +134,16 @@ const HomePage = () => {
   };
 
   const handleReadBook = (book) => {
-    if (!book?.available) {
-      setError('This book is not available for reading');
+    if (book?.status !== 'completed') {
+      setError('This book is not ready for reading yet');
       return;
     }
     navigate(`/reader/${book.filename}`);
   };
 
   const handlePreviewBook = (book) => {
-    if (!book?.available) {
-      setError('This book is not available for preview');
+    if (book?.status !== 'completed') {
+      setError('This book is not ready for preview yet');
       return;
     }
     setSelectedBook(book);
@@ -154,22 +153,31 @@ const HomePage = () => {
   const getStatusChip = (book) => {
     if (!book) return null;
 
-    if (book.available) {
-      return (
-        <Chip
-          icon={<CheckCircleIcon />}
-          label="Available"
-          color="success"
-          size="small"
-          sx={{ mb: 1 }}
-        />
-      );
-    }
+    const statusConfig = {
+      completed: {
+        icon: <CheckCircleIcon />,
+        label: 'Ready to Read',
+        color: 'success'
+      },
+      processing: {
+        icon: <HourglassEmptyIcon />,
+        label: 'Processing',
+        color: 'warning'
+      },
+      failed: {
+        icon: <ErrorIcon />,
+        label: 'Processing Failed',
+        color: 'error'
+      }
+    };
+
+    const config = statusConfig[book.status] || statusConfig.processing;
+
     return (
       <Chip
-        icon={<ErrorIcon />}
-        label={book.processing_status === 'failed' ? 'Processing Failed' : 'Processing'}
-        color="error"
+        icon={config.icon}
+        label={config.label}
+        color={config.color}
         size="small"
         sx={{ mb: 1 }}
       />
@@ -275,10 +283,10 @@ const HomePage = () => {
                   flexDirection: 'column',
                   transition: 'transform 0.2s',
                   '&:hover': {
-                    transform: book?.available ? 'translateY(-4px)' : 'none',
-                    boxShadow: book?.available ? 4 : 1,
+                    transform: book?.status === 'completed' ? 'translateY(-4px)' : 'none',
+                    boxShadow: book?.status === 'completed' ? 4 : 1,
                   },
-                  opacity: book?.available ? 1 : 0.7,
+                  opacity: book?.status === 'completed' ? 1 : 0.8,
                 }}
               >
                 <CardContent sx={{ flexGrow: 1 }}>
@@ -306,7 +314,7 @@ const HomePage = () => {
                     color="primary"
                     startIcon={<PreviewIcon />}
                     onClick={() => handlePreviewBook(book)}
-                    disabled={!book?.available}
+                    disabled={book?.status !== 'completed'}
                   >
                     Preview
                   </Button>
@@ -316,7 +324,7 @@ const HomePage = () => {
                     color="primary"
                     startIcon={<MenuBookIcon />}
                     onClick={() => handleReadBook(book)}
-                    disabled={!book?.available}
+                    disabled={book?.status !== 'completed'}
                   >
                     Read
                   </Button>
