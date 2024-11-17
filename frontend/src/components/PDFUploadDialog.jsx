@@ -102,7 +102,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const handleUpload = async () => {
     if (selectedFiles.length === 0 || isUploading) return;
 
-    console.log("Starting upload process");
+    console.log('Sending request to:', '/api/upload-pdfs');
     console.log("Selected files:", selectedFiles);
     
     setIsUploading(true);
@@ -119,7 +119,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
     try {
       const response = await fetch('/api/upload-pdfs', {
         method: 'POST',
-        body: formData,
+        body: formData
       });
 
       if (!response.ok) {
