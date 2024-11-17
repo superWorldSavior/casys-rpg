@@ -46,6 +46,15 @@ def allowed_file(filename: str) -> bool:
         return False
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def find_cover_image(book_folder: str) -> str:
+    """Find the first image in the book's images folder to use as cover."""
+    images_folder = os.path.join(book_folder, 'images')
+    if os.path.exists(images_folder):
+        image_files = [f for f in os.listdir(images_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        if image_files:
+            return f'/sections/{os.path.basename(book_folder)}/images/{image_files[0]}'
+    return None
+
 @app.errorhandler(405)
 def method_not_allowed(e):
     return jsonify({
@@ -79,7 +88,8 @@ async def process_pdf_file(file):
         "total_pages": 0,
         "processed_sections": 0,
         "processed_images": 0,
-        "error_message": None
+        "error_message": None,
+        "cover_image": None
     }
     
     db[f"pdf_{filename}"] = json.dumps(metadata)
@@ -156,21 +166,17 @@ def get_books():
             try:
                 metadata = json.loads(db[key])
                 base_name = os.path.splitext(metadata.get('filename', ''))[0]
-                progress_file = os.path.join(SECTIONS_FOLDER, base_name, 'metadata', 'progress.json')
+                book_folder = os.path.join(SECTIONS_FOLDER, base_name)
+                progress_file = os.path.join(book_folder, 'metadata', 'progress.json')
                 
                 # Include all books with progress.json and add their progress data
                 if os.path.exists(progress_file):
                     with open(progress_file, 'r') as f:
                         progress_data = json.load(f)
-                        # Auto-determine status based on progress
-                        if progress_data.get('current_page', 0) == progress_data.get('total_pages', 0) and progress_data.get('total_pages', 0) > 0:
-                            progress_data['status'] = 'completed'
-                        elif progress_data.get('error_message'):
-                            progress_data['status'] = 'failed'
-                        else:
-                            progress_data['status'] = 'processing'
-                        # Update metadata with all progress fields
+                        # Update metadata with all progress fields without modification
                         metadata.update(progress_data)
+                        # Add cover image path
+                        metadata['cover_image'] = find_cover_image(book_folder)
                         books.append(metadata)
             except Exception as e:
                 continue
@@ -212,6 +218,21 @@ def get_book(filename):
                     }), 403
                     
         return send_from_directory(str(UPLOAD_FOLDER), filename)
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "code": 404
+        }), 404
+
+@app.route('/sections/<path:filename>')
+def serve_section_file(filename):
+    """Serve files from the sections folder (including images)."""
+    try:
+        directory = os.path.dirname(filename)
+        file = os.path.basename(filename)
+        full_dir = os.path.join(SECTIONS_FOLDER, directory)
+        return send_from_directory(full_dir, file)
     except Exception as e:
         return jsonify({
             "status": "error",

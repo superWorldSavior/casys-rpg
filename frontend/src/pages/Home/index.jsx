@@ -17,13 +17,11 @@ import {
   Chip,
   Stack,
   Tooltip,
+  CardMedia,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewIcon from '@mui/icons-material/Preview';
-import ErrorIcon from '@mui/icons-material/Error';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import ImageIcon from '@mui/icons-material/Image';
 import ArticleIcon from '@mui/icons-material/Article';
 import PDFPreview from '../../components/features/books/PDFPreview';
@@ -52,7 +50,6 @@ const HomePage = () => {
 
   const fetchBooks = async () => {
     try {
-      setIsLoading(true);
       setError(null);
       
       const response = await fetch('/api/books');
@@ -69,17 +66,22 @@ const HomePage = () => {
       
       const booksData = Array.isArray(data.books) ? data.books : [];
       
+      // Validate and initialize book data with all available metadata
       const validatedBooks = booksData.map((book = {}) => ({
         id: book.id || book.filename || '',
         title: book.title || 'Untitled Book',
         author: book.author || 'Unknown',
+        filename: book.filename || '',
+        uploadDate: book.uploadDate,
+        status: book.status || 'unknown',
         current_page: book.current_page || 0,
         total_pages: book.total_pages || 0,
         processed_sections: book.processed_sections || 0,
         processed_images: book.processed_images || 0,
-        filename: book.filename || '',
-        status: book.status || 'unknown',
-        error_message: book.error_message || null
+        error_message: book.error_message || null,
+        cover_image: book.cover_image || null,
+        // Include any additional metadata from progress.json
+        ...book
       }));
       
       setBooks(validatedBooks);
@@ -119,24 +121,9 @@ const HomePage = () => {
         throw new Error(result?.message || 'Error uploading PDF');
       }
 
-      const newBooks = Array.isArray(result.books) ? result.books : [];
-      
-      const validatedNewBooks = newBooks.map((book = {}) => ({
-        id: book.id || book.filename || '',
-        title: book.title || 'Untitled Book',
-        author: book.author || 'Unknown',
-        current_page: book.current_page || 0,
-        total_pages: book.total_pages || 0,
-        processed_sections: book.processed_sections || 0,
-        processed_images: book.processed_images || 0,
-        filename: book.filename || '',
-        status: book.status || 'processing',
-        error_message: book.error_message || null
-      }));
-
-      setBooks(prevBooks => [...(Array.isArray(prevBooks) ? prevBooks : []), ...validatedNewBooks]);
       setSuccessMessage(result.message || 'PDF uploaded successfully');
       event.target.value = '';
+      fetchBooks(); // Refresh the book list
     } catch (error) {
       console.error('Error uploading PDF:', error);
       setError(error.message || 'Error uploading file');
@@ -167,10 +154,10 @@ const HomePage = () => {
 
     return (
       <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-        <Tooltip title="Pages Progress">
+        <Tooltip title="Pages">
           <Chip
             icon={<ArticleIcon />}
-            label={`${book.current_page}/${book.total_pages} pages`}
+            label={`${book.current_page || 0}/${book.total_pages || 0} pages`}
             size="small"
             variant="outlined"
           />
@@ -178,11 +165,20 @@ const HomePage = () => {
         <Tooltip title="Images">
           <Chip
             icon={<ImageIcon />}
-            label={`${book.processed_images} images`}
+            label={`${book.processed_images || 0} images`}
             size="small"
             variant="outlined"
           />
         </Tooltip>
+        {book.processed_sections > 0 && (
+          <Tooltip title="Sections">
+            <Chip
+              label={`${book.processed_sections} sections`}
+              size="small"
+              variant="outlined"
+            />
+          </Tooltip>
+        )}
       </Stack>
     );
   };
@@ -208,25 +204,6 @@ const HomePage = () => {
         <Box sx={{ width: '100%', mt: 4 }}>
           <LinearProgress />
         </Box>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert 
-          severity="error" 
-          sx={{ mb: 3 }} 
-          onClose={() => setError(null)}
-          action={
-            <Button color="inherit" size="small" onClick={() => window.location.reload()}>
-              Retry
-            </Button>
-          }
-        >
-          {error}
-        </Alert>
       </Container>
     );
   }
@@ -276,6 +253,21 @@ const HomePage = () => {
         message={successMessage}
       />
 
+      {error && (
+        <Alert 
+          severity="error" 
+          sx={{ mb: 3 }} 
+          onClose={() => setError(null)}
+          action={
+            <Button color="inherit" size="small" onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+          }
+        >
+          {error}
+        </Alert>
+      )}
+
       {Array.isArray(books) && books.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
@@ -301,9 +293,17 @@ const HomePage = () => {
                     transform: book?.status === 'completed' ? 'translateY(-4px)' : 'none',
                     boxShadow: book?.status === 'completed' ? 4 : 1,
                   },
-                  opacity: book?.status === 'completed' ? 1 : 0.8,
                 }}
               >
+                {book.cover_image && (
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={book.cover_image}
+                    alt={`Cover for ${book.title}`}
+                    sx={{ objectFit: 'contain', p: 1 }}
+                  />
+                )}
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography gutterBottom variant="h5" component="h2">
                     {book?.title || 'Untitled Book'}
