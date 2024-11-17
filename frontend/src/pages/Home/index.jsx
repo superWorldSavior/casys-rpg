@@ -54,7 +54,7 @@ const BookGrid = ({ books, onReadBook, onPreviewBook, theme }) => (
             />
           )}
           <CardContent sx={{ flexGrow: 1 }}>
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography gutterBottom variant="h5" component="h2" color="text.primary">
               {book?.title || 'Untitled Book'}
             </Typography>
             <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -71,9 +71,9 @@ const BookGrid = ({ books, onReadBook, onPreviewBook, theme }) => (
           <CardActions sx={{ 
             padding: 2,
             justifyContent: 'space-between',
-            backgroundColor: theme.palette.background.paper,
+            backgroundColor: 'background.paper',
             borderTop: 1,
-            borderColor: theme.palette.divider
+            borderColor: 'divider'
           }}>
             <Button
               variant="outlined"
@@ -178,7 +178,7 @@ const HomePage = () => {
       const response = await fetch('/api/books');
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Server returned ${response.status}: ${await response.text()}`);
       }
       
       const data = await response.json();
@@ -209,7 +209,7 @@ const HomePage = () => {
       setBooks(validatedBooks);
     } catch (error) {
       console.error('Error fetching books:', error);
-      setError(error.message || 'Error connecting to server');
+      setError(`Failed to load books: ${error.message}`);
       setBooks([]);
     } finally {
       setIsLoading(false);
@@ -237,12 +237,12 @@ const HomePage = () => {
         body: formData,
       });
       
-      const result = await response.json();
-      
-      if (!response.ok || !result) {
-        throw new Error(result?.message || 'Error uploading PDF');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.message || `Upload failed: ${response.status}`);
       }
 
+      const result = await response.json();
       setSuccessMessage(result.message || 'PDF uploaded successfully');
       event.target.value = '';
       fetchBooks(); // Refresh the book list
@@ -278,7 +278,11 @@ const HomePage = () => {
           variant={isMobile ? "h4" : "h3"} 
           component="h1" 
           gutterBottom
-          sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}
+          sx={{ 
+            fontWeight: 'bold', 
+            color: theme.palette.secondary.main,
+            mb: 3
+          }}
         >
           Digital Library
         </Typography>
@@ -293,10 +297,6 @@ const HomePage = () => {
               px: 3,
               py: 1.5,
               borderRadius: 2,
-              backgroundColor: theme.palette.primary.main,
-              '&:hover': {
-                backgroundColor: theme.palette.primary.dark,
-              }
             }}
             disabled={uploading}
           >
@@ -324,7 +324,7 @@ const HomePage = () => {
           sx={{ mb: 3 }} 
           onClose={() => setError(null)}
           action={
-            <Button color="inherit" size="small" onClick={() => window.location.reload()}>
+            <Button color="inherit" size="small" onClick={fetchBooks}>
               Retry
             </Button>
           }
@@ -340,7 +340,15 @@ const HomePage = () => {
       ) : (
         <>
           {Array.isArray(books) && books.length === 0 && (
-            <Box sx={{ textAlign: 'center', mt: 4 }}>
+            <Box sx={{ 
+              textAlign: 'center', 
+              mt: 4,
+              p: 4,
+              backgroundColor: 'background.paper',
+              borderRadius: 2,
+              border: 1,
+              borderColor: 'divider'
+            }}>
               <Typography variant="h6" color="text.secondary">
                 No books in library
               </Typography>
