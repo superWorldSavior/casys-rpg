@@ -102,9 +102,7 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
   const handleUpload = async () => {
     if (selectedFiles.length === 0 || isUploading) return;
 
-    console.log('Sending request to:', '/api/upload-pdfs');
-    console.log("Selected files:", selectedFiles);
-    
+    console.log('Starting upload...');
     setIsUploading(true);
     setErrors({});
 
@@ -114,20 +112,33 @@ const PDFUploadDialog = ({ open, onClose, onUpload }) => {
       formData.append('pdfs', file);
     });
 
-    console.log('FormData contents:', Array.from(formData.entries()));
-
     try {
-      const response = await fetch('/api/upload-pdfs', {
+      // Use different endpoints based on number of files
+      const endpoint = selectedFiles.length === 1 ? '/api/upload-pdf' : '/api/upload-pdfs';
+      console.log(`Using endpoint: ${endpoint}`);
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData
       });
-
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
-        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+        console.error('Upload failed:', response);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        let errorMessage = 'Upload failed';
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          console.error('Error parsing error response:', e);
+        }
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
+      console.log('Upload successful:', result);
       onUpload(result.files || []);
       handleClose();
     } catch (error) {

@@ -54,6 +54,57 @@ def method_not_allowed(e):
     print(f"Headers: {dict(request.headers)}")
     return jsonify({"error": "Method not allowed"}), 405
 
+async def process_pdf_file(file):
+    if not file or not file.filename:
+        raise ValueError("No file selected")
+        
+    if not allowed_file(file.filename):
+        raise ValueError("Invalid file type")
+        
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(file_path)
+    
+    # Process the PDF
+    await pdf_service.process_pdf(file_path)
+    
+    metadata = {
+        "title": os.path.splitext(filename)[0],
+        "author": "Unknown",
+        "filename": filename,
+        "id": filename,
+        "uploadDate": datetime.now().isoformat(),
+        "processing_status": "processing",
+        "available": False
+    }
+    
+    db[f"pdf_{filename}"] = json.dumps(metadata)
+    return metadata
+
+@app.route('/api/upload-pdf', methods=['POST'])
+async def upload_pdf():
+    print("Request received at /api/upload-pdf")
+    print(f"Request files: {request.files}")
+    
+    if 'pdfs' not in request.files:
+        return jsonify({"error": "No PDF file provided"}), 400
+        
+    file = request.files['pdfs']
+    
+    try:
+        metadata = await process_pdf_file(file)
+        return jsonify({
+            "message": "File uploaded and processing started",
+            "files": [metadata]
+        })
+    except ValueError as e:
+        print(f"Validation error: {str(e)}")
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        print(f"Error processing upload: {str(e)}")
+        print(f"Error traceback: {traceback.format_exc()}")
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/upload-pdfs', methods=['POST'])
 async def upload_pdfs():
     try:
@@ -75,56 +126,40 @@ async def upload_pdfs():
             return jsonify({"error": "No files selected"}), 400
 
         processed_files = []
+        errors = []
+        
         for file in uploaded_files:
-            if not file or not file.filename:
-                print(f"Skipping empty file")
-                continue
-
-            if not allowed_file(file.filename):
-                print(f"Skipping file with invalid type: {file.filename}")
-                continue
-
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(UPLOAD_FOLDER, filename)
-            print(f"Saving file to: {file_path}")
-            file.save(file_path)
-
             try:
-                print(f"Processing file: {filename}")
-                await pdf_service.process_pdf(file_path)
-                metadata = {
-                    "title": os.path.splitext(filename)[0],
-                    "author": "Unknown",
-                    "filename": filename,
-                    "id": filename,
-                    "uploadDate": datetime.now().isoformat(),
-                    "processing_status": "processing",
-                    "available": False
-                }
-                print(f"Saving metadata: {json.dumps(metadata, indent=2)}")
-                db[f"pdf_{filename}"] = json.dumps(metadata)
+                metadata = await process_pdf_file(file)
                 processed_files.append(metadata)
-            except Exception as e:
-                print(f"Error processing {filename}: {str(e)}")
-                print(f"Error traceback: {traceback.format_exc()}")
-                metadata = {
-                    "title": os.path.splitext(filename)[0],
-                    "author": "Unknown",
-                    "filename": filename,
-                    "id": filename,
-                    "uploadDate": datetime.now().isoformat(),
-                    "processing_status": "failed",
-                    "available": False,
+            except ValueError as e:
+                print(f"Validation error for {file.filename}: {str(e)}")
+                errors.append({
+                    "filename": file.filename,
                     "error": str(e)
-                }
-                db[f"pdf_{filename}"] = json.dumps(metadata)
-                processed_files.append(metadata)
+                })
+            except Exception as e:
+                print(f"Processing error for {file.filename}: {str(e)}")
+                errors.append({
+                    "filename": file.filename,
+                    "error": f"Processing failed: {str(e)}"
+                })
 
-        print(f"Successfully processed {len(processed_files)} files")
-        return jsonify({
+        if not processed_files and errors:
+            return jsonify({
+                "error": "All files failed to process",
+                "details": errors
+            }), 400
+
+        response_data = {
             "message": f"{len(processed_files)} files uploaded and processing started",
             "files": processed_files
-        })
+        }
+        
+        if errors:
+            response_data["errors"] = errors
+
+        return jsonify(response_data)
 
     except Exception as e:
         print(f"Error in upload_pdfs: {str(e)}")
