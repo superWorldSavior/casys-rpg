@@ -72,14 +72,16 @@ class MuPDFProcessor(PDFProcessor):
         # Check for common centered text indicators
         indicators = [
             text.isupper(),  # All uppercase
-            text.istitle(),  # Title case
+            text.istitle() and len(text.split()) <= 7,  # Short title case phrases
             text.startswith('    ') or text.startswith('\t'),  # Indentation
             text.startswith('*') and text.endswith('*'),  # Asterisk wrapping
             bool(re.match(r'^[-—=]{3,}$', text)),  # Horizontal rules
-            bool(re.match(r'^[A-Z][^.!?]*(?:[.!?]|\s)*$', text))  # Single complete sentence starting with capital
+            bool(re.match(r'^[A-Z][^.!?]*(?:[.!?]|\s)*$', text) and len(text) < 60),  # Short complete sentence
+            bool(re.match(r'^(?:by|written by|translated by)\s+[A-Z][a-zA-Z\s.]+$', text, re.I)),  # Author attribution
+            bool(re.match(r'^[A-Z\s]+$', text) and len(text) < 50)  # All caps short text
         ]
         
-        return any(indicators) and len(text.split()) <= 10  # Limit to short phrases
+        return any(indicators)
 
     def _detect_formatting(self, text: str, is_pre_section: bool = False) -> TextFormatting:
         """Enhanced formatting detection"""
@@ -88,6 +90,10 @@ class MuPDFProcessor(PDFProcessor):
         if not text:
             return TextFormatting.PARAGRAPH
 
+        # Check for horizontal rules
+        if re.match(r'^[-—=*]{3,}$', text):
+            return TextFormatting.HEADER
+
         # Check for standalone section number
         chapter_num, _ = self._detect_chapter(text)
         if chapter_num is not None and not is_pre_section:
@@ -95,7 +101,10 @@ class MuPDFProcessor(PDFProcessor):
 
         # Enhanced centered text detection for pre-sections
         if is_pre_section and self._is_centered_text(text):
-            return TextFormatting.HEADER
+            # Check for main title indicators
+            if text.isupper() or (text.istitle() and len(text.split()) <= 5):
+                return TextFormatting.HEADER
+            return TextFormatting.SUBHEADER
 
         # Check for headers
         if any(re.match(pattern, text) for pattern in self.header_patterns):
@@ -114,7 +123,7 @@ class MuPDFProcessor(PDFProcessor):
             return TextFormatting.QUOTE
 
         # Check for subheaders in pre-section content
-        if is_pre_section and len(text) < 100 and text.istitle():
+        if is_pre_section and len(text) < 100 and (text.istitle() or text.isupper()):
             return TextFormatting.SUBHEADER
 
         return TextFormatting.PARAGRAPH
@@ -139,6 +148,7 @@ class MuPDFProcessor(PDFProcessor):
 
             format_type = self._detect_formatting(line, is_pre_section)
             
+            # Always start a new block for headers and subheaders
             if format_type != current_format or format_type in [TextFormatting.HEADER, TextFormatting.SUBHEADER]:
                 if current_text:
                     formatted_texts.append(FormattedText(
@@ -147,6 +157,16 @@ class MuPDFProcessor(PDFProcessor):
                     ))
                     current_text = []
                 current_format = format_type
+            
+            # Special handling for pre-section content
+            if is_pre_section and self._is_centered_text(line):
+                if current_text and current_format != TextFormatting.HEADER:
+                    formatted_texts.append(FormattedText(
+                        text="\n".join(current_text),
+                        format_type=current_format or TextFormatting.PARAGRAPH
+                    ))
+                    current_text = []
+                current_format = TextFormatting.HEADER
             
             current_text.append(line)
         
@@ -158,8 +178,21 @@ class MuPDFProcessor(PDFProcessor):
         
         return formatted_texts
 
-    async def extract_images(self, pdf_path: str, base_output_dir: str = "sections") -> List[PDFImage]:
-        """Extract images from the PDF"""
+    def _get_section_number_for_page(self, page_number: int, sections: List[Section]) -> Optional[int]:
+        """Determine section number based on page number"""
+        for section in sections:
+            if section.page_number <= page_number:
+                next_section_idx = sections.index(section) + 1
+                if next_section_idx < len(sections):
+                    next_section = sections[next_section_idx]
+                    if page_number < next_section.page_number:
+                        return section.chapter_number
+                else:
+                    return section.chapter_number
+        return None
+
+    async def extract_images(self, pdf_path: str, base_output_dir: str = "sections", sections: List[Section] = None) -> List[PDFImage]:
+        """Extract images from the PDF with section information"""
         pdf_folder_name = self._get_pdf_folder_name(pdf_path)
         paths = self._create_book_structure(base_output_dir, pdf_folder_name)
         images_dir = paths["images_dir"]
@@ -174,6 +207,11 @@ class MuPDFProcessor(PDFProcessor):
             for page_num in range(len(doc)):
                 page = doc[page_num]
                 image_list = page.get_images()
+                
+                # Determine section number for this page
+                section_number = None
+                if sections:
+                    section_number = self._get_section_number_for_page(page_num + 1, sections)
                 
                 for img_idx, img in enumerate(image_list):
                     try:
@@ -193,7 +231,8 @@ class MuPDFProcessor(PDFProcessor):
                             image_path=image_path,
                             pdf_name=pdf_folder_name,
                             width=width,
-                            height=height
+                            height=height,
+                            section_number=section_number
                         )
                         images.append(image_data)
                         
@@ -202,7 +241,8 @@ class MuPDFProcessor(PDFProcessor):
                             "image_path": image_path,
                             "width": width,
                             "height": height,
-                            "filename": image_filename
+                            "filename": image_filename,
+                            "section_number": section_number
                         })
                     except Exception as e:
                         print(f"Error extracting image {img_idx} from page {page_num + 1}: {e}")
@@ -379,33 +419,40 @@ class MuPDFProcessor(PDFProcessor):
                 os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
                 formatted_content = []
                 
-                # Add title
+                # Add title with proper formatting
                 if section.is_chapter:
                     formatted_content.append(f"# {section.chapter_number}\n")
                 else:
-                    formatted_content.append("# Introduction\n")
-                
-                # Add formatted content
-                for fmt_text in section.formatted_content:
-                    if fmt_text.format_type == TextFormatting.HEADER:
-                        formatted_content.append(f"\n## {fmt_text.text}\n")
-                    elif fmt_text.format_type == TextFormatting.SUBHEADER:
-                        formatted_content.append(f"\n### {fmt_text.text}\n")
-                    elif fmt_text.format_type == TextFormatting.LIST_ITEM:
-                        formatted_content.append(f"\n- {fmt_text.text}\n")
-                    elif fmt_text.format_type == TextFormatting.CODE:
-                        formatted_content.append(f"\n```\n{fmt_text.text}\n```\n")
-                    elif fmt_text.format_type == TextFormatting.QUOTE:
-                        formatted_content.append(f"\n> {fmt_text.text}\n")
-                    else:
-                        formatted_content.append(f"\n{fmt_text.text}\n")
+                    # Enhanced formatting for introduction
+                    has_title = False
+                    for fmt_text in section.formatted_content:
+                        if fmt_text.format_type == TextFormatting.HEADER and not has_title:
+                            formatted_content.append(f"# {fmt_text.text}\n")
+                            has_title = True
+                            continue
+                        
+                        if fmt_text.format_type == TextFormatting.HEADER:
+                            formatted_content.append(f"\n## {fmt_text.text}\n")
+                        elif fmt_text.format_type == TextFormatting.SUBHEADER:
+                            formatted_content.append(f"\n### {fmt_text.text}\n")
+                        elif fmt_text.format_type == TextFormatting.LIST_ITEM:
+                            formatted_content.append(f"- {fmt_text.text}\n")
+                        elif fmt_text.format_type == TextFormatting.CODE:
+                            formatted_content.append(f"\n```\n{fmt_text.text}\n```\n")
+                        elif fmt_text.format_type == TextFormatting.QUOTE:
+                            formatted_content.append(f"\n> {fmt_text.text}\n")
+                        else:
+                            formatted_content.append(f"\n{fmt_text.text}\n")
+                    
+                    if not has_title:
+                        formatted_content.insert(0, "# Introduction\n")
                 
                 with open(section.file_path, 'w', encoding='utf-8') as f:
                     f.write("".join(formatted_content).strip() + "\n")
             
-            # Extract images
+            # Extract images with section information
             progress.status = ProcessingStatus.EXTRACTING_IMAGES
-            images = await self.extract_images(pdf_path, base_output_dir)
+            images = await self.extract_images(pdf_path, base_output_dir, sections)
             
             progress.status = ProcessingStatus.COMPLETED
             return ProcessedPDF(
