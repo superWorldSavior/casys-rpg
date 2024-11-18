@@ -128,6 +128,18 @@ class MuPDFProcessor(PDFProcessor):
 
         return TextFormatting.PARAGRAPH
 
+    def _detect_chapter_break(self, formatted_text: FormattedText) -> bool:
+        """Detect if the formatted text indicates a chapter break"""
+        if formatted_text.format_type == TextFormatting.HEADER:
+            text = formatted_text.text.strip()
+            # Check for chapter title indicators
+            if (text.isupper() or text.istitle()) and len(text.split()) <= 7:
+                return True
+            # Check for horizontal rules
+            if re.match(r'^[-—=*]{3,}$', text):
+                return True
+        return False
+
     def _process_text_block(self, text: str, is_pre_section: bool = False) -> List[FormattedText]:
         """Process a block of text and return formatted text segments"""
         formatted_texts = []
@@ -158,16 +170,6 @@ class MuPDFProcessor(PDFProcessor):
                     current_text = []
                 current_format = format_type
             
-            # Special handling for pre-section content
-            if is_pre_section and self._is_centered_text(line):
-                if current_text and current_format != TextFormatting.HEADER:
-                    formatted_texts.append(FormattedText(
-                        text="\n".join(current_text),
-                        format_type=current_format or TextFormatting.PARAGRAPH
-                    ))
-                    current_text = []
-                current_format = TextFormatting.HEADER
-            
             current_text.append(line)
         
         if current_text:
@@ -177,6 +179,88 @@ class MuPDFProcessor(PDFProcessor):
             ))
         
         return formatted_texts
+
+    def _split_pre_section_content(self, content: str, histoire_dir: str, pdf_folder_name: str) -> List[Section]:
+        """Split pre-section content into chapters based on formatting"""
+        sections = []
+        formatted_texts = self._process_text_block(content, is_pre_section=True)
+        
+        current_chapter = []
+        chapter_count = 0
+        current_title = None
+        
+        for fmt_text in formatted_texts:
+            if self._detect_chapter_break(fmt_text) and current_chapter:
+                # Save current chapter
+                chapter_count += 1
+                file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
+                
+                chapter_content = "\n".join(text.text for text in current_chapter)
+                sections.append(Section(
+                    number=chapter_count,
+                    content=chapter_content,
+                    page_number=1,  # Pre-sections start from page 1
+                    file_path=file_path,
+                    pdf_name=pdf_folder_name,
+                    title=current_title,
+                    formatted_content=current_chapter.copy(),
+                    is_chapter=True,
+                    chapter_number=chapter_count
+                ))
+                
+                current_chapter = []
+                current_title = fmt_text.text if fmt_text.format_type == TextFormatting.HEADER else None
+            
+            current_chapter.append(fmt_text)
+        
+        # Save the last chapter if exists
+        if current_chapter:
+            chapter_count += 1
+            file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
+            
+            chapter_content = "\n".join(text.text for text in current_chapter)
+            sections.append(Section(
+                number=chapter_count,
+                content=chapter_content,
+                page_number=1,
+                file_path=file_path,
+                pdf_name=pdf_folder_name,
+                title=current_title,
+                formatted_content=current_chapter,
+                is_chapter=True,
+                chapter_number=chapter_count
+            ))
+        
+        return sections
+
+    def _save_section_content(self, section: Section):
+        """Save section content to file with proper formatting"""
+        os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
+        formatted_content = []
+        
+        # Add title with proper formatting
+        if section.title:
+            formatted_content.append(f"# {section.title}\n")
+        elif section.is_chapter:
+            formatted_content.append(f"# Chapter {section.chapter_number}\n")
+        
+        # Add formatted content
+        for fmt_text in section.formatted_content:
+            if fmt_text.format_type == TextFormatting.HEADER:
+                formatted_content.append(f"\n## {fmt_text.text}\n")
+            elif fmt_text.format_type == TextFormatting.SUBHEADER:
+                formatted_content.append(f"\n### {fmt_text.text}\n")
+            elif fmt_text.format_type == TextFormatting.LIST_ITEM:
+                formatted_content.append(f"- {fmt_text.text}\n")
+            elif fmt_text.format_type == TextFormatting.CODE:
+                formatted_content.append(f"\n```\n{fmt_text.text}\n```\n")
+            elif fmt_text.format_type == TextFormatting.QUOTE:
+                formatted_content.append(f"\n> {fmt_text.text}\n")
+            else:
+                formatted_content.append(f"\n{fmt_text.text}\n")
+        
+        with open(section.file_path, 'w', encoding='utf-8') as f:
+            f.write("".join(formatted_content).strip() + "\n")
 
     def _get_section_number_for_page(self, page_number: int, sections: List[Section]) -> Optional[int]:
         """Determine section number based on page number"""
@@ -191,7 +275,7 @@ class MuPDFProcessor(PDFProcessor):
                     return section.chapter_number
         return None
 
-    async def extract_images(self, pdf_path: str, base_output_dir: str = "sections", sections: List[Section] = None) -> List[PDFImage]:
+    async def extract_images(self, pdf_path: str, base_output_dir: str = "sections", sections: Optional[List[Section]] = None) -> List[PDFImage]:
         """Extract images from the PDF with section information"""
         pdf_folder_name = self._get_pdf_folder_name(pdf_path)
         paths = self._create_book_structure(base_output_dir, pdf_folder_name)
@@ -307,24 +391,15 @@ class MuPDFProcessor(PDFProcessor):
                 if page_lines:
                     pre_section_content.append("\n".join(page_lines))
             
-            # Save pre-section content
+            # Process pre-section content into separate chapters
             if pre_section_content:
                 content = "\n".join(pre_section_content)
-                file_path = os.path.join(histoire_dir, "introduction.md")
-                formatted_content = self._process_text_block(content, is_pre_section=True)
+                pre_sections = self._split_pre_section_content(content, histoire_dir, pdf_folder_name)
                 
-                sections.append(Section(
-                    number=0,
-                    content=content,
-                    page_number=1,
-                    file_path=file_path,
-                    pdf_name=pdf_folder_name,
-                    title="Introduction",
-                    formatted_content=formatted_content,
-                    is_chapter=False,
-                    chapter_number=None
-                ))
-                progress.processed_sections += 1
+                for section in pre_sections:
+                    self._save_section_content(section)
+                    sections.extend(pre_sections)
+                    progress.processed_sections += 1
             
             # Second pass: process numbered sections
             current_section = None
@@ -380,6 +455,7 @@ class MuPDFProcessor(PDFProcessor):
                                     is_chapter=True,
                                     chapter_number=current_section['chapter']
                                 ))
+                                self._save_section_content(sections[-1])
                                 progress.processed_sections += 1
                             
                             # Start new section
@@ -389,14 +465,15 @@ class MuPDFProcessor(PDFProcessor):
                                 'page': page_num + 1
                             }
                             current_text = [line]
-                        elif current_section is not None:
-                            current_text.append(line)
+                        else:
+                            if current_text or current_section:
+                                current_text.append(line)
                 
                 except Exception as e:
                     print(f"Error processing page {page_num + 1}: {e}")
                     continue
             
-            # Save last section if exists
+            # Save the last section if exists
             if current_section is not None and current_text:
                 file_path = os.path.join(sections_dir, f"{current_section['chapter']}.md")
                 formatted_content = self._process_text_block("\n".join(current_text))
@@ -412,43 +489,8 @@ class MuPDFProcessor(PDFProcessor):
                     is_chapter=True,
                     chapter_number=current_section['chapter']
                 ))
+                self._save_section_content(sections[-1])
                 progress.processed_sections += 1
-            
-            # Save sections with proper markdown formatting
-            for section in sections:
-                os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
-                formatted_content = []
-                
-                # Add title with proper formatting
-                if section.is_chapter:
-                    formatted_content.append(f"# {section.chapter_number}\n")
-                else:
-                    # Enhanced formatting for introduction
-                    has_title = False
-                    for fmt_text in section.formatted_content:
-                        if fmt_text.format_type == TextFormatting.HEADER and not has_title:
-                            formatted_content.append(f"# {fmt_text.text}\n")
-                            has_title = True
-                            continue
-                        
-                        if fmt_text.format_type == TextFormatting.HEADER:
-                            formatted_content.append(f"\n## {fmt_text.text}\n")
-                        elif fmt_text.format_type == TextFormatting.SUBHEADER:
-                            formatted_content.append(f"\n### {fmt_text.text}\n")
-                        elif fmt_text.format_type == TextFormatting.LIST_ITEM:
-                            formatted_content.append(f"- {fmt_text.text}\n")
-                        elif fmt_text.format_type == TextFormatting.CODE:
-                            formatted_content.append(f"\n```\n{fmt_text.text}\n```\n")
-                        elif fmt_text.format_type == TextFormatting.QUOTE:
-                            formatted_content.append(f"\n> {fmt_text.text}\n")
-                        else:
-                            formatted_content.append(f"\n{fmt_text.text}\n")
-                    
-                    if not has_title:
-                        formatted_content.insert(0, "# Introduction\n")
-                
-                with open(section.file_path, 'w', encoding='utf-8') as f:
-                    f.write("".join(formatted_content).strip() + "\n")
             
             # Extract images with section information
             progress.status = ProcessingStatus.EXTRACTING_IMAGES
@@ -462,9 +504,8 @@ class MuPDFProcessor(PDFProcessor):
                 base_path=base_output_dir,
                 progress=progress
             )
-        
+            
         except Exception as e:
             progress.status = ProcessingStatus.FAILED
             progress.error_message = str(e)
-            print(f"Error processing PDF: {e}")
             raise
