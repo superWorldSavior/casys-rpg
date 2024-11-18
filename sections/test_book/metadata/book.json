@@ -1,7 +1,13 @@
 {
   "title": "test_book",
-  "total_sections": 0,
+  "total_sections": 1,
   "total_images": 0,
-  "sections": [],
+  "sections": [
+    {
+      "number": 0,
+      "page_number": 1,
+      "file_path": "sections/test_book/sections/0.md"
+    }
+  ],
   "base_path": "sections"
 }

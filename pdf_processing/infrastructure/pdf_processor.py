@@ -24,7 +24,11 @@ class MuPDFProcessor(PDFProcessor):
             r'^[A-Z][^a-z]{0,2}[A-Z].*$',  # All caps or nearly all caps
             r'^[A-Z][a-zA-Z\s]{0,50}$',     # Title case, not too long
         ]
-        self.numerical_start_pattern = r'^\s*\d+\.?\s*$'  # Matches standalone numbers
+        self.pre_section_patterns = [
+            r'^(?:preface|introduction|foreword|about\s+the\s+author|acknowledgments).*$',
+            r'^(?:table\s+of\s+contents|contents)$',
+            r'^(?:prologue|abstract).*$'
+        ]
 
     def _get_pdf_folder_name(self, pdf_path: str) -> str:
         base_name = os.path.basename(pdf_path)
@@ -63,9 +67,23 @@ class MuPDFProcessor(PDFProcessor):
                     continue
         return None, None
 
-    def _is_standalone_number(self, text: str) -> bool:
-        """Check if the text is just a standalone number (possibly with a period)"""
-        return bool(re.match(self.numerical_start_pattern, text))
+    def _is_pre_section_title(self, text: str) -> bool:
+        """Detect if text is a pre-section title"""
+        text = text.strip().lower()
+        return any(re.match(pattern, text, re.IGNORECASE) for pattern in self.pre_section_patterns)
+
+    def _is_centered_text(self, text: str, line_spacing: Optional[float] = None) -> bool:
+        """Detect if text appears to be centered based on formatting"""
+        if not text.strip():
+            return False
+        # Check if text is relatively short (likely title)
+        if len(text.strip()) > 100:
+            return False
+        # Check if text starts with significant whitespace
+        if text.startswith('    ') or text.startswith('\t'):
+            return True
+        # Check if text is in title case or all caps
+        return text.istitle() or text.isupper()
 
     def _detect_formatting(self, text: str, is_pre_section: bool = False) -> TextFormatting:
         """Detect the formatting type of a text line"""
@@ -75,13 +93,17 @@ class MuPDFProcessor(PDFProcessor):
         if not text:
             return TextFormatting.PARAGRAPH
 
-        # Skip standalone numbers in pre-section content
-        if is_pre_section and self._is_standalone_number(text):
-            return TextFormatting.PARAGRAPH
+        # Check for pre-section titles
+        if is_pre_section and self._is_pre_section_title(text):
+            return TextFormatting.HEADER
 
         # Check for headers
         chapter_num, _ = self._detect_chapter(text)
-        if chapter_num is not None:
+        if chapter_num is not None and not is_pre_section:
+            return TextFormatting.HEADER
+
+        # Check for centered text in pre-section
+        if is_pre_section and self._is_centered_text(text):
             return TextFormatting.HEADER
 
         # Check for all caps headers
@@ -92,7 +114,7 @@ class MuPDFProcessor(PDFProcessor):
         if re.match(r'^\s*[-•*]\s+', text) or re.match(r'^\s*\d+\.\s+.+', text):
             return TextFormatting.LIST_ITEM
 
-        # Check for code blocks (indented text)
+        # Check for code blocks
         if text.startswith('    ') or text.startswith('\t'):
             return TextFormatting.CODE
 
@@ -100,7 +122,7 @@ class MuPDFProcessor(PDFProcessor):
         if text.startswith('>') or (text.startswith('"') and text.endswith('"')):
             return TextFormatting.QUOTE
 
-        # Check for subheaders (shorter lines with title case)
+        # Check for subheaders
         if len(text) < 100 and text.istitle():
             return TextFormatting.SUBHEADER
 
@@ -109,70 +131,80 @@ class MuPDFProcessor(PDFProcessor):
     def _process_text_block(self, text: str, is_pre_section: bool = False) -> List[FormattedText]:
         """Process a block of text and return formatted text segments"""
         formatted_texts = []
-        paragraphs = text.split('\n\n')
-        
-        current_list_items = []
-        current_paragraph = []
+        current_format = None
+        current_text = []
         
         for line in text.splitlines():
             line = line.strip()
             if not line:
-                if current_paragraph:
+                if current_text:
                     formatted_texts.append(FormattedText(
-                        text='\n'.join(current_paragraph),
-                        format_type=TextFormatting.PARAGRAPH
+                        text="\n".join(current_text),
+                        format_type=current_format or TextFormatting.PARAGRAPH
                     ))
-                    current_paragraph = []
+                    current_text = []
+                    current_format = None
                 continue
-            
-            # For pre-section content, check if it's actually a section marker
-            if is_pre_section:
-                chapter_num, _ = self._detect_chapter(line)
-                if chapter_num is not None or self._is_standalone_number(line):
-                    continue
-            
+
             format_type = self._detect_formatting(line, is_pre_section)
             
-            # Handle list items specially
-            if format_type == TextFormatting.LIST_ITEM:
-                if current_paragraph:
+            # Start new segment if format changes or it's a header/subheader
+            if format_type != current_format or format_type in [TextFormatting.HEADER, TextFormatting.SUBHEADER]:
+                if current_text:
                     formatted_texts.append(FormattedText(
-                        text='\n'.join(current_paragraph),
+                        text="\n".join(current_text),
+                        format_type=current_format or TextFormatting.PARAGRAPH
+                    ))
+                    current_text = []
+                current_format = format_type
+            
+            current_text.append(line)
+        
+        # Add remaining text
+        if current_text:
+            formatted_texts.append(FormattedText(
+                text="\n".join(current_text),
+                format_type=current_format or TextFormatting.PARAGRAPH
+            ))
+        
+        return formatted_texts
+
+    def _process_pre_section_content(self, text: str) -> List[FormattedText]:
+        """Process pre-section content with special formatting detection"""
+        formatted_texts = []
+        current_text = []
+        lines = text.splitlines()
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Skip if line is a numbered section marker
+            chapter_num, _ = self._detect_chapter(line)
+            if chapter_num is not None:
+                continue
+            
+            # Detect formatting with pre-section specific rules
+            format_type = self._detect_formatting(line, is_pre_section=True)
+            
+            if format_type == TextFormatting.HEADER:
+                if current_text:
+                    formatted_texts.append(FormattedText(
+                        text="\n".join(current_text),
                         format_type=TextFormatting.PARAGRAPH
                     ))
-                    current_paragraph = []
-                current_list_items.append(line)
+                    current_text = []
+                formatted_texts.append(FormattedText(
+                    text=line,
+                    format_type=TextFormatting.HEADER
+                ))
             else:
-                if current_list_items:
-                    formatted_texts.append(FormattedText(
-                        text='\n'.join(current_list_items),
-                        format_type=TextFormatting.LIST_ITEM
-                    ))
-                    current_list_items = []
-                
-                if format_type in [TextFormatting.HEADER, TextFormatting.SUBHEADER]:
-                    if current_paragraph:
-                        formatted_texts.append(FormattedText(
-                            text='\n'.join(current_paragraph),
-                            format_type=TextFormatting.PARAGRAPH
-                        ))
-                        current_paragraph = []
-                    formatted_texts.append(FormattedText(
-                        text=line,
-                        format_type=format_type
-                    ))
-                else:
-                    current_paragraph.append(line)
+                current_text.append(line)
         
-        # Add any remaining content
-        if current_list_items:
+        if current_text:
             formatted_texts.append(FormattedText(
-                text='\n'.join(current_list_items),
-                format_type=TextFormatting.LIST_ITEM
-            ))
-        if current_paragraph:
-            formatted_texts.append(FormattedText(
-                text='\n'.join(current_paragraph),
+                text="\n".join(current_text),
                 format_type=TextFormatting.PARAGRAPH
             ))
         
@@ -252,36 +284,63 @@ class MuPDFProcessor(PDFProcessor):
             progress.status = ProcessingStatus.EXTRACTING_SECTIONS
             
             sections = []
-            current_section: Optional[int] = None
-            current_text: str = ""
-            current_page: int = 0
-            pre_section_content: str = ""
-            current_chapter: Optional[int] = None
-            current_title: Optional[str] = None
+            pre_section_content = ""
+            pre_section_end_page = 0
             
-            # First pass: collect all section markers
-            section_markers = []
+            # First pass: collect pre-section content and determine where it ends
             for page_num, page in enumerate(reader.pages):
                 text = page.extract_text()
                 if text:
                     lines = text.splitlines()
                     for line in lines:
-                        chapter_num, title = self._detect_chapter(line)
+                        chapter_num, _ = self._detect_chapter(line)
                         if chapter_num is not None:
-                            section_markers.append((chapter_num, title, page_num))
+                            pre_section_end_page = page_num
+                            break
+                    if pre_section_end_page:
+                        break
+                    pre_section_content += text + "\n"
             
-            # Second pass: process content with known section boundaries
-            for page_num, page in enumerate(reader.pages):
+            # Process pre-section content if it exists
+            if pre_section_content.strip():
+                file_path = os.path.join(sections_dir, "0.md")
+                formatted_content = self._process_pre_section_content(pre_section_content)
+                if formatted_content:
+                    sections.append(Section(
+                        number=0,
+                        content=pre_section_content,
+                        page_number=1,
+                        file_path=file_path,
+                        pdf_name=pdf_folder_name,
+                        title="Introduction",
+                        formatted_content=formatted_content,
+                        is_chapter=False,
+                        chapter_number=None
+                    ))
+                    progress.processed_sections += 1
+            
+            # Second pass: process numbered sections
+            current_section = None
+            current_text = ""
+            current_page = pre_section_end_page
+            current_chapter = None
+            current_title = None
+            
+            for page_num in range(pre_section_end_page, len(reader.pages)):
                 progress.current_page = page_num + 1
                 try:
                     text = page.extract_text()
                     if text:
-                        # Check if this page starts a new section
-                        next_section = None
-                        for marker_num, marker_title, marker_page in section_markers:
-                            if marker_page == page_num:
+                        lines = text.splitlines()
+                        for line in lines:
+                            line = line.strip()
+                            if not line:
+                                continue
+                            
+                            chapter_num, title = self._detect_chapter(line)
+                            if chapter_num is not None:
+                                # Save previous section if exists
                                 if current_section is not None:
-                                    # Save current section
                                     file_path = os.path.join(sections_dir, f"{current_section}.md")
                                     formatted_content = self._process_text_block(current_text)
                                     sections.append(Section(
@@ -297,30 +356,16 @@ class MuPDFProcessor(PDFProcessor):
                                     ))
                                     progress.processed_sections += 1
                                 
+                                # Start new section
                                 current_section = len(sections) + 1
                                 current_text = ""
                                 current_page = page_num
-                                current_chapter = marker_num
-                                current_title = marker_title
-                                next_section = marker_num
-                                break
-                        
-                        # Process page content
-                        lines = text.splitlines()
-                        for line in lines:
-                            line = line.strip()
-                            if not line:
-                                continue
-                            
-                            # Skip section marker lines
-                            chapter_num, _ = self._detect_chapter(line)
-                            if chapter_num == next_section:
+                                current_chapter = chapter_num
+                                current_title = title
                                 continue
                             
                             if current_section is not None:
                                 current_text += line + "\n"
-                            else:
-                                pre_section_content += line + "\n"
                 
                 except Exception as e:
                     print(f"Error processing page {page_num + 1}: {e}")
@@ -343,35 +388,12 @@ class MuPDFProcessor(PDFProcessor):
                 ))
                 progress.processed_sections += 1
 
-            # Save pre-section content if exists
-            if pre_section_content.strip():
-                file_path = os.path.join(sections_dir, "0.md")
-                formatted_content = self._process_text_block(pre_section_content, is_pre_section=True)
-                if formatted_content:  # Only save if there's actual content
-                    sections.append(Section(
-                        number=0,
-                        content=pre_section_content,
-                        page_number=1,
-                        file_path=file_path,
-                        pdf_name=pdf_folder_name,
-                        title="Introduction",
-                        formatted_content=formatted_content,
-                        is_chapter=False,
-                        chapter_number=None
-                    ))
-                    progress.processed_sections += 1
-
-            # Extract images
-            progress.status = ProcessingStatus.EXTRACTING_IMAGES
-            images = await self.extract_images(pdf_path, base_output_dir)
-            
-            # Save sections content with proper markdown formatting
-            progress.status = ProcessingStatus.SAVING_METADATA
+            # Save sections with proper markdown formatting
             for section in sections:
                 os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
                 formatted_content = []
                 
-                # Add title with proper formatting
+                # Add title
                 if section.is_chapter:
                     if section.title:
                         formatted_content.append(f"# Chapter {section.chapter_number}: {section.title}\n")
@@ -380,15 +402,14 @@ class MuPDFProcessor(PDFProcessor):
                 else:
                     formatted_content.append("# Introduction\n")
                 
-                # Add formatted content with proper spacing
+                # Add formatted content
                 for fmt_text in section.formatted_content:
                     if fmt_text.format_type == TextFormatting.HEADER:
                         formatted_content.append(f"\n## {fmt_text.text}\n")
                     elif fmt_text.format_type == TextFormatting.SUBHEADER:
                         formatted_content.append(f"\n### {fmt_text.text}\n")
                     elif fmt_text.format_type == TextFormatting.LIST_ITEM:
-                        items = fmt_text.text.split('\n')
-                        formatted_content.append("\n" + "\n".join([f"- {item.lstrip('- ').lstrip('* ').lstrip('• ')}" for item in items]) + "\n")
+                        formatted_content.append(f"\n- {fmt_text.text}\n")
                     elif fmt_text.format_type == TextFormatting.CODE:
                         formatted_content.append(f"\n```\n{fmt_text.text}\n```\n")
                     elif fmt_text.format_type == TextFormatting.QUOTE:
@@ -397,8 +418,12 @@ class MuPDFProcessor(PDFProcessor):
                         formatted_content.append(f"\n{fmt_text.text}\n")
                 
                 with open(section.file_path, 'w', encoding='utf-8') as f:
-                    f.write("".join(formatted_content))
+                    f.write("".join(formatted_content).strip() + "\n")
 
+            # Extract images
+            progress.status = ProcessingStatus.EXTRACTING_IMAGES
+            images = await self.extract_images(pdf_path, base_output_dir)
+            
             progress.status = ProcessingStatus.COMPLETED
             return ProcessedPDF(
                 sections=sections,
@@ -407,6 +432,7 @@ class MuPDFProcessor(PDFProcessor):
                 base_path=base_output_dir,
                 progress=progress
             )
+
         except Exception as e:
             progress.status = ProcessingStatus.FAILED
             progress.error_message = str(e)
