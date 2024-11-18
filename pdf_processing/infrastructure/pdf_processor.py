@@ -42,15 +42,17 @@ class MuPDFProcessor(PDFProcessor):
         sections_dir = os.path.join(book_dir, "sections")
         images_dir = os.path.join(book_dir, "images")
         metadata_dir = os.path.join(book_dir, "metadata")
+        histoire_dir = os.path.join(book_dir, "histoire")  # New directory for pre-sections
 
-        for directory in [book_dir, sections_dir, images_dir, metadata_dir]:
+        for directory in [book_dir, sections_dir, images_dir, metadata_dir, histoire_dir]:
             os.makedirs(directory, exist_ok=True)
 
         return {
             "book_dir": book_dir,
             "sections_dir": sections_dir,
             "images_dir": images_dir,
-            "metadata_dir": metadata_dir
+            "metadata_dir": metadata_dir,
+            "histoire_dir": histoire_dir
         }
 
     def _detect_chapter(self, text: str) -> Tuple[Optional[int], Optional[str]]:
@@ -275,6 +277,7 @@ class MuPDFProcessor(PDFProcessor):
         pdf_folder_name = self._get_pdf_folder_name(pdf_path)
         paths = self._create_book_structure(base_output_dir, pdf_folder_name)
         sections_dir = paths["sections_dir"]
+        histoire_dir = paths["histoire_dir"]
         
         progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
         
@@ -303,7 +306,7 @@ class MuPDFProcessor(PDFProcessor):
             
             # Process pre-section content if it exists
             if pre_section_content.strip():
-                file_path = os.path.join(sections_dir, "0.md")
+                file_path = os.path.join(histoire_dir, "0.md")  # Store in histoire directory
                 formatted_content = self._process_pre_section_content(pre_section_content)
                 if formatted_content:
                     sections.append(Section(
@@ -326,7 +329,9 @@ class MuPDFProcessor(PDFProcessor):
             current_chapter = None
             current_title = None
             
+            # Get the page object for current page
             for page_num in range(pre_section_end_page, len(reader.pages)):
+                page = reader.pages[page_num]
                 progress.current_page = page_num + 1
                 try:
                     text = page.extract_text()
