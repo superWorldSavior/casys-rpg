@@ -1,8 +1,8 @@
 {
-  "status": "failed",
-  "current_page": 1,
+  "status": "completed",
+  "current_page": 199,
   "total_pages": 199,
-  "processed_sections": 0,
+  "processed_sections": 401,
   "processed_images": 0,
-  "error_message": "cannot access local variable 'fmt_text' where it is not associated with a value"
+  "error_message": null
 }

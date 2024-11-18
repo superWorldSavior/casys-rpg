@@ -2,9 +2,11 @@ import os
 import fitz  # PyMuPDF
 import re
 import json
-from typing import List, Optional, Dict, Any, Tuple
+from typing import List, Optional, Dict, Tuple
 from PIL import Image
 import io
+from concurrent.futures import ThreadPoolExecutor
+from PyPDF2 import PdfReader
 from ..domain.ports import PDFProcessor
 from ..domain.entities import (
     Section, PDFImage, ProcessedPDF, ProcessingStatus, 
@@ -13,353 +15,488 @@ from ..domain.entities import (
 
 class MuPDFProcessor(PDFProcessor):
     def __init__(self):
+        # Simplified pattern to match only standalone numbers
         self.chapter_pattern = r'^\s*(\d+)\s*$'
-        self.pre_section_titles = ['Introduction', 'Preface', 'Game Rules']
-        self.list_pattern = r'^(?:•|\d+\.)\s+'
+        self.header_patterns = [
+            r'^[A-Z][^a-z]{0,2}[A-Z].*$',  # All caps or nearly all caps
+            r'^[A-Z][a-zA-Z\s]{0,50}$',     # Title case, not too long
+        ]
 
-    def _get_text_properties(self, block: Dict[str, Any]) -> Dict[str, Any]:
-        """Extract text properties including font and positioning"""
-        properties = {
-            'font_size': 0,
-            'font_name': '',
-            'is_bold': False,
-            'is_italic': False,
-            'is_centered': False,
-            'top_margin': 0,
-            'bottom_margin': 0,
-            'alignment': 'left'
+    def _get_pdf_folder_name(self, pdf_path: str) -> str:
+        base_name = os.path.basename(pdf_path)
+        folder_name = os.path.splitext(base_name)[0]
+        folder_name = re.sub(r'[^\w\s-]', '_', folder_name)
+        return folder_name
+
+    def _create_book_structure(self, base_output_dir: str, pdf_folder_name: str) -> Dict[str, str]:
+        """Create the book directory structure and return paths"""
+        book_dir = os.path.join(base_output_dir, pdf_folder_name)
+        sections_dir = os.path.join(book_dir, "sections")
+        images_dir = os.path.join(book_dir, "images")
+        metadata_dir = os.path.join(book_dir, "metadata")
+        histoire_dir = os.path.join(book_dir, "histoire")
+
+        for directory in [book_dir, sections_dir, images_dir, metadata_dir, histoire_dir]:
+            os.makedirs(directory, exist_ok=True)
+
+        return {
+            "book_dir": book_dir,
+            "sections_dir": sections_dir,
+            "images_dir": images_dir,
+            "metadata_dir": metadata_dir,
+            "histoire_dir": histoire_dir
         }
-        
-        try:
-            # Process spans for font information
-            spans = block.get('spans', [])
-            if spans:
-                for span in spans:
-                    size = span.get('size', 0)
-                    if size > properties['font_size']:
-                        properties['font_size'] = size
-                    
-                    font = span.get('font', '').lower()
-                    properties['is_bold'] = properties['is_bold'] or 'bold' in font
-                    properties['is_italic'] = properties['is_italic'] or 'italic' in font
-            
-            # Process block position
-            bbox = block.get('bbox', (0, 0, 0, 0))
-            if len(bbox) == 4:
-                page_width = 612  # Standard letter width in points
-                text_width = bbox[2] - bbox[0]
-                left_margin = bbox[0]
-                right_margin = page_width - bbox[2]
-                
-                # Enhanced center detection with dynamic threshold
-                margin_threshold = min(30, page_width * 0.05)  # Points or 5% of page width
-                if abs(left_margin - right_margin) < margin_threshold:
-                    properties['alignment'] = 'center'
-                    properties['is_centered'] = True
-            
-            properties['top_margin'] = bbox[1]
-            properties['bottom_margin'] = bbox[3]
-            
-        except Exception as e:
-            print(f"Error extracting text properties: {e}")
-        
-        return properties
 
-    def _detect_formatting(self, text: str, properties: Dict[str, Any]) -> TextFormatting:
-        """Enhanced formatting detection with improved rules"""
+    def _detect_chapter(self, text: str) -> Tuple[Optional[int], Optional[str]]:
+        """Detect if text is a standalone number"""
         text = text.strip()
+        match = re.match(self.chapter_pattern, text)
+        if match:
+            try:
+                chapter_num = int(match.group(1))
+                return chapter_num, ""
+            except ValueError:
+                pass
+        return None, None
+
+    def _is_centered_text(self, text: str, line_spacing: Optional[float] = None) -> bool:
+        """Enhanced centered text detection"""
+        text = text.strip()
+        if not text:
+            return False
+            
+        # Skip long paragraphs
+        if len(text) > 100:
+            return False
+            
+        # Check for common centered text indicators
+        indicators = [
+            text.isupper(),  # All uppercase
+            text.istitle() and len(text.split()) <= 7,  # Short title case phrases
+            text.startswith('    ') or text.startswith('\t'),  # Indentation
+            text.startswith('*') and text.endswith('*'),  # Asterisk wrapping
+            bool(re.match(r'^[-—=]{3,}$', text)),  # Horizontal rules
+            bool(re.match(r'^[A-Z][^.!?]*(?:[.!?]|\s)*$', text) and len(text) < 60),  # Short complete sentence
+            bool(re.match(r'^(?:by|written by|translated by)\s+[A-Z][a-zA-Z\s.]+$', text, re.I)),  # Author attribution
+            bool(re.match(r'^[A-Z\s]+$', text) and len(text) < 50)  # All caps short text
+        ]
+        
+        return any(indicators)
+
+    def _detect_formatting(self, text: str, is_pre_section: bool = False) -> TextFormatting:
+        """Enhanced formatting detection"""
+        text = text.strip()
+        
         if not text:
             return TextFormatting.PARAGRAPH
 
-        # Pre-section titles detection
-        if text in self.pre_section_titles and properties['font_size'] >= 14:
+        # Check for horizontal rules
+        if re.match(r'^[-—=*]{3,}$', text):
             return TextFormatting.HEADER
 
-        # Headers detection based on font size and style
-        if properties['font_size'] >= 18 or (properties['is_bold'] and len(text.split()) <= 5):
+        # Check for standalone section number
+        chapter_num, _ = self._detect_chapter(text)
+        if chapter_num is not None and not is_pre_section:
             return TextFormatting.HEADER
-        elif properties['font_size'] >= 14 and (properties['is_bold'] or properties.get('is_centered')):
+
+        # Enhanced centered text detection for pre-sections
+        if is_pre_section and self._is_centered_text(text):
+            # Check for main title indicators
+            if text.isupper() or (text.istitle() and len(text.split()) <= 5):
+                return TextFormatting.HEADER
             return TextFormatting.SUBHEADER
 
-        # List items detection
-        if re.match(self.list_pattern, text):
+        # Check for headers
+        if any(re.match(pattern, text) for pattern in self.header_patterns):
+            return TextFormatting.HEADER
+
+        # Check for list items
+        if re.match(r'^\s*[-•*]\s+', text) or re.match(r'^\s*\d+\.\s+.+', text):
             return TextFormatting.LIST_ITEM
 
-        # Quotes detection
-        if (text.startswith('>') or (text.startswith('"') and text.endswith('"'))) and len(text.split()) > 1:
+        # Check for code blocks
+        if text.startswith('    ') or text.startswith('\t'):
+            return TextFormatting.CODE
+
+        # Check for quotes
+        if text.startswith('>') or (text.startswith('"') and text.endswith('"')):
             return TextFormatting.QUOTE
+
+        # Check for subheaders in pre-section content
+        if is_pre_section and len(text) < 100 and (text.istitle() or text.isupper()):
+            return TextFormatting.SUBHEADER
 
         return TextFormatting.PARAGRAPH
 
-    def _process_text_block(self, block: Dict[str, Any]) -> Optional[FormattedText]:
-        """Process a text block with enhanced formatting"""
-        text = block.get('text', '').strip()
-        if not text:
-            return None
-            
-        properties = self._get_text_properties(block)
-        format_type = self._detect_formatting(text, properties)
-        
-        # Clean up text content
-        text = re.sub(r'\s+', ' ', text).strip()
-        
-        return FormattedText(
-            text=text,
-            format_type=format_type,
-            metadata=properties
-        )
+    def _detect_chapter_break(self, formatted_text: FormattedText) -> bool:
+        """Detect if the formatted text indicates a chapter break"""
+        if formatted_text.format_type == TextFormatting.HEADER:
+            text = formatted_text.text.strip()
+            # Check for chapter title indicators
+            if (text.isupper() or text.istitle()) and len(text.split()) <= 7:
+                return True
+            # Check for horizontal rules
+            if re.match(r'^[-—=*]{3,}$', text):
+                return True
+        return False
 
-    def _extract_blocks_from_page(self, page: fitz.Page) -> List[Dict[str, Any]]:
-        """Extract and sort text blocks"""
-        try:
-            text_page = page.get_textpage()
-            dict_data = text_page.extractDICT()
-            
-            blocks = [
-                block for block in dict_data.get("blocks", [])
-                if block.get("type") == 0 and block.get("bbox")
-            ]
-            
-            # Sort blocks by vertical position first, then horizontal
-            blocks.sort(key=lambda b: (round(b["bbox"][1]), b["bbox"][0]))
-            
-            return blocks
-            
-        except Exception as e:
-            print(f"Error extracting blocks from page: {e}")
-            return []
-
-    def _format_text(self, fmt_text: FormattedText, skip_header: bool = False) -> str:
-        """Format text content with improved markdown syntax"""
-        text = fmt_text.text.strip()
+    def _process_text_block(self, text: str, is_pre_section: bool = False) -> List[FormattedText]:
+        """Process a block of text and return formatted text segments"""
+        formatted_texts = []
+        current_format = None
+        current_text = []
         
-        if fmt_text.format_type == TextFormatting.HEADER and not skip_header:
-            return f"# {text}\n\n"
-        elif fmt_text.format_type == TextFormatting.SUBHEADER:
-            return f"### {text}\n\n"
-        elif fmt_text.format_type == TextFormatting.LIST_ITEM:
-            match = re.match(self.list_pattern, text)
-            if match:
-                list_content = text[match.end():].strip()
-                if text.startswith('•'):
-                    return f"- {list_content}\n"
-                elif re.match(r'^\d+\.', text):
-                    return f"{text}\n"
-            return f"- {text}\n"
-        elif fmt_text.format_type == TextFormatting.QUOTE:
-            return f"> {text}\n\n"
-        else:  # Paragraph
-            if fmt_text.metadata.get('is_centered'):
-                return f"<div align='center'>{text}</div>\n\n"
-            return f"{text}\n\n"
-
-    def _process_section_content(self, content: List[FormattedText]) -> List[FormattedText]:
-        """Process and clean section content"""
-        if not content:
-            return []
-        
-        # Remove duplicate content
-        seen = set()
-        unique_content = []
-        for fmt_text in content:
-            text_hash = hash(fmt_text.text.strip())
-            if text_hash not in seen:
-                seen.add(text_hash)
-                unique_content.append(fmt_text)
-        return unique_content
-
-    def _save_section_content(self, section: Section) -> None:
-        """Save formatted section content"""
-        os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
-        
-        # Process and format content
-        content = self._process_section_content(section.formatted_content)
-        formatted_lines = []
-        
-        # Add section title
-        if section.title:
-            formatted_lines.append(f"# {section.title}\n\n")
-        
-        # Format remaining content
-        for fmt_text in content:
-            # Skip chapter numbers in numbered sections
-            if section.is_chapter and re.match(self.chapter_pattern, fmt_text.text.strip()):
+        for line in text.splitlines():
+            line = line.strip()
+            if not line:
+                if current_text:
+                    formatted_texts.append(FormattedText(
+                        text="\n".join(current_text),
+                        format_type=current_format or TextFormatting.PARAGRAPH
+                    ))
+                    current_text = []
+                    current_format = None
                 continue
-            formatted_lines.append(self._format_text(fmt_text))
-        
-        # Write content to file
-        with open(section.file_path, 'w', encoding='utf-8') as f:
-            f.write("".join(formatted_lines).strip() + "\n")
 
-    async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
-        """Extract sections with enhanced pre-section and chapter handling"""
-        pdf_folder_name = os.path.splitext(os.path.basename(pdf_path))[0]
-        pdf_folder_name = re.sub(r'[^\w\s-]', '_', pdf_folder_name)
+            format_type = self._detect_formatting(line, is_pre_section)
+            
+            # Always start a new block for headers and subheaders
+            if format_type != current_format or format_type in [TextFormatting.HEADER, TextFormatting.SUBHEADER]:
+                if current_text:
+                    formatted_texts.append(FormattedText(
+                        text="\n".join(current_text),
+                        format_type=current_format or TextFormatting.PARAGRAPH
+                    ))
+                    current_text = []
+                current_format = format_type
+            
+            current_text.append(line)
         
-        paths = {
-            "sections_dir": os.path.join(base_output_dir, pdf_folder_name, "sections"),
-            "histoire_dir": os.path.join(base_output_dir, pdf_folder_name, "histoire"),
-            "images_dir": os.path.join(base_output_dir, pdf_folder_name, "images"),
-            "metadata_dir": os.path.join(base_output_dir, pdf_folder_name, "metadata"),
-        }
+        if current_text:
+            formatted_texts.append(FormattedText(
+                text="\n".join(current_text),
+                format_type=current_format or TextFormatting.PARAGRAPH
+            ))
         
-        for directory in paths.values():
-            os.makedirs(directory, exist_ok=True)
-        
+        return formatted_texts
+
+    def _split_pre_section_content(self, content: str, histoire_dir: str, pdf_folder_name: str) -> List[Section]:
+        """Split pre-section content into chapters based on formatting"""
         sections = []
-        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
-        doc = None
+        formatted_texts = self._process_text_block(content, is_pre_section=True)
         
+        current_chapter = []
+        chapter_count = 0
+        current_title = None
+        
+        for fmt_text in formatted_texts:
+            if self._detect_chapter_break(fmt_text) and current_chapter:
+                # Save current chapter
+                chapter_count += 1
+                file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
+                
+                chapter_content = "\n".join(text.text for text in current_chapter)
+                sections.append(Section(
+                    number=chapter_count,
+                    content=chapter_content,
+                    page_number=1,  # Pre-sections start from page 1
+                    file_path=file_path,
+                    pdf_name=pdf_folder_name,
+                    title=current_title,
+                    formatted_content=current_chapter.copy(),
+                    is_chapter=True,
+                    chapter_number=chapter_count
+                ))
+                
+                current_chapter = []
+                current_title = fmt_text.text if fmt_text.format_type == TextFormatting.HEADER else None
+            
+            current_chapter.append(fmt_text)
+        
+        # Save the last chapter if exists
+        if current_chapter:
+            chapter_count += 1
+            file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
+            
+            chapter_content = "\n".join(text.text for text in current_chapter)
+            sections.append(Section(
+                number=chapter_count,
+                content=chapter_content,
+                page_number=1,
+                file_path=file_path,
+                pdf_name=pdf_folder_name,
+                title=current_title,
+                formatted_content=current_chapter,
+                is_chapter=True,
+                chapter_number=chapter_count
+            ))
+        
+        return sections
+
+    def _save_section_content(self, section: Section):
+        """Save section content to file with proper formatting"""
+        os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
+        formatted_content = []
+        
+        # Add title with proper formatting
+        if section.title:
+            formatted_content.append(f"# {section.title}\n")
+        elif section.is_chapter:
+            formatted_content.append(f"# Chapter {section.chapter_number}\n")
+        
+        # Add formatted content
+        for fmt_text in section.formatted_content:
+            if fmt_text.format_type == TextFormatting.HEADER:
+                formatted_content.append(f"\n## {fmt_text.text}\n")
+            elif fmt_text.format_type == TextFormatting.SUBHEADER:
+                formatted_content.append(f"\n### {fmt_text.text}\n")
+            elif fmt_text.format_type == TextFormatting.LIST_ITEM:
+                formatted_content.append(f"- {fmt_text.text}\n")
+            elif fmt_text.format_type == TextFormatting.CODE:
+                formatted_content.append(f"\n```\n{fmt_text.text}\n```\n")
+            elif fmt_text.format_type == TextFormatting.QUOTE:
+                formatted_content.append(f"\n> {fmt_text.text}\n")
+            else:
+                formatted_content.append(f"\n{fmt_text.text}\n")
+        
+        with open(section.file_path, 'w', encoding='utf-8') as f:
+            f.write("".join(formatted_content).strip() + "\n")
+
+    def _get_section_number_for_page(self, page_number: int, sections: List[Section]) -> Optional[int]:
+        """Determine section number based on page number"""
+        for section in sections:
+            if section.page_number <= page_number:
+                next_section_idx = sections.index(section) + 1
+                if next_section_idx < len(sections):
+                    next_section = sections[next_section_idx]
+                    if page_number < next_section.page_number:
+                        return section.chapter_number
+                else:
+                    return section.chapter_number
+        return None
+
+    async def extract_images(self, pdf_path: str, base_output_dir: str = "sections", sections: Optional[List[Section]] = None) -> List[PDFImage]:
+        """Extract images from the PDF with section information"""
+        pdf_folder_name = self._get_pdf_folder_name(pdf_path)
+        paths = self._create_book_structure(base_output_dir, pdf_folder_name)
+        images_dir = paths["images_dir"]
+        metadata_dir = paths["metadata_dir"]
+
+        images = []
+        images_metadata = []
+
         try:
             doc = fitz.open(pdf_path)
-            progress.total_pages = len(doc)
+            
+            for page_num in range(len(doc)):
+                page = doc[page_num]
+                image_list = page.get_images()
+                
+                # Determine section number for this page
+                section_number = None
+                if sections:
+                    section_number = self._get_section_number_for_page(page_num + 1, sections)
+                
+                for img_idx, img in enumerate(image_list):
+                    try:
+                        xref = img[0]
+                        base_img = doc.extract_image(xref)
+                        image_bytes = base_img["image"]
+                        
+                        image = Image.open(io.BytesIO(image_bytes))
+                        width, height = image.size
+                        
+                        image_filename = f"page_{page_num + 1}_img_{img_idx + 1}.png"
+                        image_path = os.path.join(images_dir, image_filename)
+                        image.save(image_path)
+
+                        image_data = PDFImage(
+                            page_number=page_num + 1,
+                            image_path=image_path,
+                            pdf_name=pdf_folder_name,
+                            width=width,
+                            height=height,
+                            section_number=section_number
+                        )
+                        images.append(image_data)
+                        
+                        images_metadata.append({
+                            "page_number": page_num + 1,
+                            "image_path": image_path,
+                            "width": width,
+                            "height": height,
+                            "filename": image_filename,
+                            "section_number": section_number
+                        })
+                    except Exception as e:
+                        print(f"Error extracting image {img_idx} from page {page_num + 1}: {e}")
+                        continue
+            
+            doc.close()
+
+            metadata_path = os.path.join(metadata_dir, "images.json")
+            with open(metadata_path, 'w') as f:
+                json.dump(images_metadata, f, indent=2)
+
+        except Exception as e:
+            print(f"Error processing PDF for images: {e}")
+
+        return images
+
+    async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
+        """Extract sections from the PDF"""
+        pdf_folder_name = self._get_pdf_folder_name(pdf_path)
+        paths = self._create_book_structure(base_output_dir, pdf_folder_name)
+        sections_dir = paths["sections_dir"]
+        histoire_dir = paths["histoire_dir"]
+        
+        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
+        sections = []
+        
+        try:
+            reader = PdfReader(pdf_path)
+            progress.total_pages = len(reader.pages)
             progress.status = ProcessingStatus.EXTRACTING_SECTIONS
             
-            # Process pre-sections first
-            current_pre_section = None
-            current_content = []
-            pre_section_number = 0
-            page_num = 0
+            # First pass: collect all content until first standalone number
+            pre_section_content = []
+            first_section_page = None
+            first_section_number = None
             
-            # Find and process pre-sections
-            while page_num < len(doc):
-                progress.current_page = page_num + 1
-                page = doc[page_num]
-                blocks = self._extract_blocks_from_page(page)
+            for page_num, page in enumerate(reader.pages):
+                text = page.extract_text()
+                if not text:
+                    continue
                 
-                for block in blocks:
-                    fmt_text = self._process_text_block(block)
-                    if not fmt_text:
+                page_lines = []
+                lines = text.splitlines()
+                
+                for line in lines:
+                    line = line.strip()
+                    if not line:
                         continue
                     
-                    # Check for numbered section start
-                    if re.match(self.chapter_pattern, fmt_text.text.strip()):
-                        # Save current pre-section if exists
-                        if current_pre_section and current_content:
-                            file_path = os.path.join(
-                                paths["histoire_dir"],
-                                f"{current_pre_section.lower().replace(' ', '_')}.md"
-                            )
-                            sections.append(Section(
-                                number=pre_section_number,
-                                content="\n".join(text.text for text in current_content),
-                                page_number=page_num,
-                                file_path=file_path,
-                                pdf_name=pdf_folder_name,
-                                title=current_pre_section,
-                                formatted_content=current_content,
-                                is_chapter=False
-                            ))
-                            self._save_section_content(sections[-1])
-                            progress.processed_sections += 1
-                        page_num -= 1  # Go back one page to process the chapter
+                    # Check for standalone section number
+                    chapter_num, _ = self._detect_chapter(line)
+                    if chapter_num is not None:
+                        first_section_page = page_num
+                        first_section_number = line
                         break
                     
-                    # Check for pre-section titles
-                    if fmt_text.text in self.pre_section_titles:
-                        if current_pre_section and current_content:
-                            file_path = os.path.join(
-                                paths["histoire_dir"],
-                                f"{current_pre_section.lower().replace(' ', '_')}.md"
-                            )
-                            sections.append(Section(
-                                number=pre_section_number,
-                                content="\n".join(text.text for text in current_content),
-                                page_number=page_num,
-                                file_path=file_path,
-                                pdf_name=pdf_folder_name,
-                                title=current_pre_section,
-                                formatted_content=current_content,
-                                is_chapter=False
-                            ))
-                            self._save_section_content(sections[-1])
-                            progress.processed_sections += 1
-                            pre_section_number += 1
-                        
-                        current_pre_section = fmt_text.text
-                        current_content = [fmt_text]
-                    elif current_pre_section:
-                        current_content.append(fmt_text)
+                    page_lines.append(line)
                 
-                if not re.match(self.chapter_pattern, fmt_text.text.strip() if fmt_text else ""):
-                    page_num += 1
-                else:
+                if first_section_page is not None:
                     break
-            
-            # Process numbered sections
-            current_section = None
-            current_content = []
-            
-            while page_num < len(doc):
-                progress.current_page = page_num + 1
-                page = doc[page_num]
-                blocks = self._extract_blocks_from_page(page)
                 
-                for block in blocks:
-                    fmt_text = self._process_text_block(block)
-                    if not fmt_text:
+                if page_lines:
+                    pre_section_content.append("\n".join(page_lines))
+            
+            # Process pre-section content into separate chapters
+            if pre_section_content:
+                content = "\n".join(pre_section_content)
+                pre_sections = self._split_pre_section_content(content, histoire_dir, pdf_folder_name)
+                
+                for section in pre_sections:
+                    self._save_section_content(section)
+                    sections.extend(pre_sections)
+                    progress.processed_sections += 1
+            
+            # Second pass: process numbered sections
+            current_section = None
+            current_text = []
+            current_page = first_section_page or 0
+            
+            # Start with the first section number if we found one
+            if first_section_number:
+                chapter_num, _ = self._detect_chapter(first_section_number)
+                if chapter_num is not None:
+                    current_section = {
+                        'chapter': chapter_num,
+                        'title': "",
+                        'page': current_page + 1
+                    }
+                    current_text = [first_section_number]
+            
+            # Process remaining pages
+            for page_num in range(current_page, len(reader.pages)):
+                page = reader.pages[page_num]
+                progress.current_page = page_num + 1
+                
+                try:
+                    text = page.extract_text()
+                    if not text:
                         continue
                     
-                    # Check for new numbered section
-                    match = re.match(self.chapter_pattern, fmt_text.text.strip())
-                    if match:
-                        if current_section and current_content:
-                            file_path = os.path.join(
-                                paths["sections_dir"],
-                                f"{current_section['chapter']}.md"
-                            )
-                            sections.append(Section(
-                                number=current_section['number'],
-                                content="\n".join(text.text for text in current_content),
-                                page_number=current_section['page'],
-                                file_path=file_path,
-                                pdf_name=pdf_folder_name,
-                                title=f"Chapter {current_section['chapter']}",
-                                formatted_content=current_content,
-                                is_chapter=True,
-                                chapter_number=current_section['chapter']
-                            ))
-                            self._save_section_content(sections[-1])
-                            progress.processed_sections += 1
+                    lines = text.splitlines()
+                    for line in lines:
+                        line = line.strip()
+                        if not line:
+                            continue
                         
-                        # Start new section
-                        chapter_num = int(match.group(1))
-                        current_section = {
-                            'number': len(sections),
-                            'chapter': chapter_num,
-                            'page': page_num + 1
-                        }
-                        current_content = []
-                    
-                    current_content.append(fmt_text)
+                        # Skip the first section number we already processed
+                        if page_num == first_section_page and line == first_section_number:
+                            continue
+                        
+                        chapter_num, _ = self._detect_chapter(line)
+                        if chapter_num is not None:
+                            # Save previous section if exists
+                            if current_section is not None and current_text:
+                                file_path = os.path.join(sections_dir, f"{current_section['chapter']}.md")
+                                formatted_content = self._process_text_block("\n".join(current_text))
+                                
+                                sections.append(Section(
+                                    number=len(sections),
+                                    content="\n".join(current_text),
+                                    page_number=current_section['page'],
+                                    file_path=file_path,
+                                    pdf_name=pdf_folder_name,
+                                    title=current_section['title'],
+                                    formatted_content=formatted_content,
+                                    is_chapter=True,
+                                    chapter_number=current_section['chapter']
+                                ))
+                                self._save_section_content(sections[-1])
+                                progress.processed_sections += 1
+                            
+                            # Start new section
+                            current_section = {
+                                'chapter': chapter_num,
+                                'title': "",
+                                'page': page_num + 1
+                            }
+                            current_text = [line]
+                        else:
+                            if current_text or current_section:
+                                current_text.append(line)
                 
-                page_num += 1
+                except Exception as e:
+                    print(f"Error processing page {page_num + 1}: {e}")
+                    continue
             
-            # Save last section if exists
-            if current_section and current_content:
-                file_path = os.path.join(
-                    paths["sections_dir"],
-                    f"{current_section['chapter']}.md"
-                )
+            # Save the last section if exists
+            if current_section is not None and current_text:
+                file_path = os.path.join(sections_dir, f"{current_section['chapter']}.md")
+                formatted_content = self._process_text_block("\n".join(current_text))
+                
                 sections.append(Section(
-                    number=current_section['number'],
-                    content="\n".join(text.text for text in current_content),
+                    number=len(sections),
+                    content="\n".join(current_text),
                     page_number=current_section['page'],
                     file_path=file_path,
                     pdf_name=pdf_folder_name,
-                    title=f"Chapter {current_section['chapter']}",
-                    formatted_content=current_content,
+                    title=current_section['title'],
+                    formatted_content=formatted_content,
                     is_chapter=True,
                     chapter_number=current_section['chapter']
                 ))
                 self._save_section_content(sections[-1])
                 progress.processed_sections += 1
             
+            # Extract images with section information
+            progress.status = ProcessingStatus.EXTRACTING_IMAGES
+            images = await self.extract_images(pdf_path, base_output_dir, sections)
+            
             progress.status = ProcessingStatus.COMPLETED
-            
-            # Extract images
-            images = await self.extract_images(pdf_path, base_output_dir)
-            
             return ProcessedPDF(
                 sections=sections,
                 images=images,
@@ -369,92 +506,6 @@ class MuPDFProcessor(PDFProcessor):
             )
             
         except Exception as e:
-            print(f"Error processing PDF: {e}")
             progress.status = ProcessingStatus.FAILED
             progress.error_message = str(e)
-            return ProcessedPDF(
-                sections=[],
-                images=[],
-                pdf_name=pdf_folder_name,
-                base_path=base_output_dir,
-                progress=progress
-            )
-        finally:
-            if doc:
-                doc.close()
-
-    async def extract_images(self, pdf_path: str, base_output_dir: str = "sections") -> List[PDFImage]:
-        """Extract images from PDF with enhanced handling"""
-        pdf_folder_name = os.path.splitext(os.path.basename(pdf_path))[0]
-        pdf_folder_name = re.sub(r'[^\w\s-]', '_', pdf_folder_name)
-        
-        paths = {
-            "images_dir": os.path.join(base_output_dir, pdf_folder_name, "images"),
-            "metadata_dir": os.path.join(base_output_dir, pdf_folder_name, "metadata"),
-        }
-        
-        for directory in paths.values():
-            os.makedirs(directory, exist_ok=True)
-        
-        images = []
-        images_metadata = []
-        doc = None
-        
-        try:
-            doc = fitz.open(pdf_path)
-            
-            for page_num in range(len(doc)):
-                page = doc[page_num]
-                image_list = page.get_images()
-                
-                for img_idx, img_info in enumerate(image_list):
-                    try:
-                        xref = img_info[0]
-                        base_image = doc.extract_image(xref)
-                        
-                        if not base_image:
-                            continue
-                        
-                        image_bytes = base_image["image"]
-                        image = Image.open(io.BytesIO(image_bytes))
-                        
-                        # Save image with original format
-                        image_filename = f"image_{page_num + 1}_{img_idx + 1}.{base_image['ext']}"
-                        image_path = os.path.join(paths["images_dir"], image_filename)
-                        
-                        with open(image_path, 'wb') as img_file:
-                            img_file.write(image_bytes)
-                        
-                        pdf_image = PDFImage(
-                            page_number=page_num + 1,
-                            image_path=image_path,
-                            pdf_name=pdf_folder_name,
-                            width=image.width,
-                            height=image.height
-                        )
-                        
-                        images.append(pdf_image)
-                        images_metadata.append({
-                            "page_number": page_num + 1,
-                            "image_path": image_path,
-                            "width": image.width,
-                            "height": image.height
-                        })
-                        
-                    except Exception as e:
-                        print(f"Error processing image {img_idx} on page {page_num + 1}: {e}")
-            
-            # Save metadata
-            metadata_path = os.path.join(paths["metadata_dir"], "images.json")
-            with open(metadata_path, 'w') as f:
-                json.dump(images_metadata, f, indent=2)
-            
-            return images
-            
-        except Exception as e:
-            print(f"Error extracting images: {e}")
             raise
-        
-        finally:
-            if doc:
-                doc.close()
