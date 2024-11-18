@@ -21,7 +21,7 @@ class MuPDFProcessor(PDFProcessor):
             r'^[A-Z][^a-z]{0,2}[A-Z].*$',  # All caps or nearly all caps
             r'^[A-Z][a-zA-Z\s]{0,50}$',     # Title case, not too long
         ]
-        self.openai_client = openai.OpenAI()
+        self.openai_client = openai.AsyncOpenAI()
 
     def _get_pdf_folder_name(self, pdf_path: str) -> str:
         base_name = os.path.basename(pdf_path)
@@ -62,8 +62,9 @@ class MuPDFProcessor(PDFProcessor):
                 }]
             )
             
-            result = json.loads(response.choices[0].message.content)
-            return result.get("is_chapter", False), result.get("title")
+            result = response.choices[0].message.content
+            result_json = json.loads(result)
+            return result_json.get("is_chapter", False), result_json.get("title")
         except Exception as e:
             print(f"Error using OpenAI for chapter detection: {e}")
             return False, None
