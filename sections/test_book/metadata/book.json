@@ -1,23 +1,7 @@
 {
   "title": "test_book",
-  "total_sections": 3,
+  "total_sections": 0,
   "total_images": 0,
-  "sections": [
-    {
-      "number": 1,
-      "page_number": 1,
-      "file_path": "sections/test_book/sections/1.md"
-    },
-    {
-      "number": 2,
-      "page_number": 2,
-      "file_path": "sections/test_book/sections/2.md"
-    },
-    {
-      "number": 3,
-      "page_number": 3,
-      "file_path": "sections/test_book/sections/3.md"
-    }
-  ],
+  "sections": [],
   "base_path": "sections"
 }
