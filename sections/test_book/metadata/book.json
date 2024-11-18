@@ -1,71 +1,67 @@
 {
   "title": "test_book",
-  "total_sections": 8,
+  "total_sections": 12,
   "total_images": 0,
   "sections": [
     {
       "number": 1,
       "page_number": 1,
-      "file_path": "sections/test_book/histoire/1.md",
-      "title": "THE DARK FORTRESS",
-      "is_chapter": true,
-      "chapter_number": 1
+      "file_path": "sections/test_book/histoire/1.md"
     },
     {
       "number": 2,
-      "page_number": 2,
-      "file_path": "sections/test_book/histoire/2.md",
-      "title": "INTRODUCTION",
-      "is_chapter": true,
-      "chapter_number": 2
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/2.md"
     },
     {
       "number": 3,
-      "page_number": 3,
-      "file_path": "sections/test_book/histoire/3.md",
-      "title": "COMBAT RULES",
-      "is_chapter": true,
-      "chapter_number": 3
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/3.md"
     },
     {
       "number": 4,
-      "page_number": 4,
-      "file_path": "sections/test_book/histoire/4.md",
-      "title": "GAME RULES",
-      "is_chapter": true,
-      "chapter_number": 4
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/4.md"
     },
     {
       "number": 5,
-      "page_number": 5,
-      "file_path": "sections/test_book/histoire/5.md",
-      "title": "EQUIPMENT",
-      "is_chapter": true,
-      "chapter_number": 5
-    },
-    {
-      "number": 5,
-      "page_number": 8,
-      "file_path": "sections/test_book/sections/1.md",
-      "title": null,
-      "is_chapter": true,
-      "chapter_number": 1
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/5.md"
     },
     {
       "number": 6,
-      "page_number": 9,
-      "file_path": "sections/test_book/sections/2.md",
-      "title": null,
-      "is_chapter": true,
-      "chapter_number": 2
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/6.md"
     },
     {
       "number": 7,
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/7.md"
+    },
+    {
+      "number": 8,
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/8.md"
+    },
+    {
+      "number": 9,
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/9.md"
+    },
+    {
+      "number": 9,
+      "page_number": 8,
+      "file_path": "sections/test_book/sections/1.md"
+    },
+    {
+      "number": 10,
       "page_number": 9,
-      "file_path": "sections/test_book/sections/3.md",
-      "title": null,
-      "is_chapter": true,
-      "chapter_number": 3
+      "file_path": "sections/test_book/sections/2.md"
+    },
+    {
+      "number": 11,
+      "page_number": 9,
+      "file_path": "sections/test_book/sections/3.md"
     }
   ],
   "base_path": "sections"

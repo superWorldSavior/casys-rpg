@@ -22,7 +22,7 @@ class PDFService:
         for section in processed_pdf.sections:
             await self.repository.save_section(section)
 
-        # Save images metadata
+        # Save images metadata (already saved by processor in images.json)
         for image in processed_pdf.images:
             await self.repository.save_image(image)
 
@@ -34,17 +34,14 @@ class PDFService:
             "sections": [{
                 "number": section.number,
                 "page_number": section.page_number,
-                "file_path": section.file_path,
-                "title": section.title,
-                "is_chapter": section.is_chapter,
-                "chapter_number": section.chapter_number
+                "file_path": section.file_path
             } for section in processed_pdf.sections],
             "base_path": base_output_dir
         }
 
         metadata_path = os.path.join(metadata_dir, "book.json")
-        with open(metadata_path, 'w', encoding='utf-8') as f:
-            json.dump(book_metadata, f, indent=2, ensure_ascii=False)
+        with open(metadata_path, 'w') as f:
+            json.dump(book_metadata, f, indent=2)
 
         # Save metadata to repository
         await self.repository.save_metadata(processed_pdf)
