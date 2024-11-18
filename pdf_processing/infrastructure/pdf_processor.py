@@ -15,11 +15,8 @@ from ..domain.entities import (
 
 class MuPDFProcessor(PDFProcessor):
     def __init__(self):
-        self.chapter_patterns = [
-            r'^(?:chapter|section)\s*(\d+)(?:[.:]\s*|\s+)(.*)$',
-            r'^\s*(\d+)(?:[.:]\s*|\s+)(.*)$',
-            r'^\s*part\s+(\d+)(?:[.:]\s*|\s+)(.*)$',
-        ]
+        # Simplified pattern to match only standalone numbers
+        self.chapter_pattern = r'^\s*(\d+)\s*$'
         self.header_patterns = [
             r'^[A-Z][^a-z]{0,2}[A-Z].*$',  # All caps or nearly all caps
             r'^[A-Z][a-zA-Z\s]{0,50}$',     # Title case, not too long
@@ -51,56 +48,73 @@ class MuPDFProcessor(PDFProcessor):
         }
 
     def _detect_chapter(self, text: str) -> Tuple[Optional[int], Optional[str]]:
-        """Detect if text is a chapter header and return chapter number and title"""
+        """Detect if text is a standalone number"""
         text = text.strip()
-        for pattern in self.chapter_patterns:
-            match = re.match(pattern, text, re.IGNORECASE)
-            if match:
-                try:
-                    chapter_num = int(match.group(1))
-                    title = match.group(2).strip() if len(match.groups()) > 1 else ""
-                    return chapter_num, title
-                except ValueError:
-                    continue
+        match = re.match(self.chapter_pattern, text)
+        if match:
+            try:
+                chapter_num = int(match.group(1))
+                return chapter_num, ""
+            except ValueError:
+                pass
         return None, None
 
     def _is_centered_text(self, text: str, line_spacing: Optional[float] = None) -> bool:
-        """Detect if text appears to be centered based on formatting"""
-        if not text.strip():
+        """Enhanced centered text detection"""
+        text = text.strip()
+        if not text:
             return False
-        if len(text.strip()) > 100:
+            
+        # Skip long paragraphs
+        if len(text) > 100:
             return False
-        if text.startswith('    ') or text.startswith('\t'):
-            return True
-        return text.istitle() or text.isupper()
+            
+        # Check for common centered text indicators
+        indicators = [
+            text.isupper(),  # All uppercase
+            text.istitle(),  # Title case
+            text.startswith('    ') or text.startswith('\t'),  # Indentation
+            text.startswith('*') and text.endswith('*'),  # Asterisk wrapping
+            bool(re.match(r'^[-—=]{3,}$', text)),  # Horizontal rules
+            bool(re.match(r'^[A-Z][^.!?]*(?:[.!?]|\s)*$', text))  # Single complete sentence starting with capital
+        ]
+        
+        return any(indicators) and len(text.split()) <= 10  # Limit to short phrases
 
     def _detect_formatting(self, text: str, is_pre_section: bool = False) -> TextFormatting:
-        """Detect the formatting type of a text line"""
+        """Enhanced formatting detection"""
         text = text.strip()
         
         if not text:
             return TextFormatting.PARAGRAPH
 
+        # Check for standalone section number
         chapter_num, _ = self._detect_chapter(text)
         if chapter_num is not None and not is_pre_section:
             return TextFormatting.HEADER
 
+        # Enhanced centered text detection for pre-sections
         if is_pre_section and self._is_centered_text(text):
             return TextFormatting.HEADER
 
+        # Check for headers
         if any(re.match(pattern, text) for pattern in self.header_patterns):
             return TextFormatting.HEADER
 
+        # Check for list items
         if re.match(r'^\s*[-•*]\s+', text) or re.match(r'^\s*\d+\.\s+.+', text):
             return TextFormatting.LIST_ITEM
 
+        # Check for code blocks
         if text.startswith('    ') or text.startswith('\t'):
             return TextFormatting.CODE
 
+        # Check for quotes
         if text.startswith('>') or (text.startswith('"') and text.endswith('"')):
             return TextFormatting.QUOTE
 
-        if len(text) < 100 and text.istitle():
+        # Check for subheaders in pre-section content
+        if is_pre_section and len(text) < 100 and text.istitle():
             return TextFormatting.SUBHEADER
 
         return TextFormatting.PARAGRAPH
@@ -220,33 +234,40 @@ class MuPDFProcessor(PDFProcessor):
             progress.total_pages = len(reader.pages)
             progress.status = ProcessingStatus.EXTRACTING_SECTIONS
             
-            # First pass: collect pre-section content
+            # First pass: collect all content until first standalone number
             pre_section_content = []
-            first_chapter_page = None
+            first_section_page = None
+            first_section_number = None
             
             for page_num, page in enumerate(reader.pages):
                 text = page.extract_text()
                 if not text:
                     continue
                 
+                page_lines = []
                 lines = text.splitlines()
+                
                 for line in lines:
                     line = line.strip()
                     if not line:
                         continue
                     
-                    # Check if this is a numbered chapter
+                    # Check for standalone section number
                     chapter_num, _ = self._detect_chapter(line)
                     if chapter_num is not None:
-                        first_chapter_page = page_num
+                        first_section_page = page_num
+                        first_section_number = line
                         break
-                
-                if first_chapter_page is not None:
-                    break
                     
-                pre_section_content.append(text)
+                    page_lines.append(line)
+                
+                if first_section_page is not None:
+                    break
+                
+                if page_lines:
+                    pre_section_content.append("\n".join(page_lines))
             
-            # Save pre-section content if it exists
+            # Save pre-section content
             if pre_section_content:
                 content = "\n".join(pre_section_content)
                 file_path = os.path.join(histoire_dir, "introduction.md")
@@ -268,8 +289,20 @@ class MuPDFProcessor(PDFProcessor):
             # Second pass: process numbered sections
             current_section = None
             current_text = []
-            current_page = first_chapter_page or 0
+            current_page = first_section_page or 0
             
+            # Start with the first section number if we found one
+            if first_section_number:
+                chapter_num, _ = self._detect_chapter(first_section_number)
+                if chapter_num is not None:
+                    current_section = {
+                        'chapter': chapter_num,
+                        'title': "",
+                        'page': current_page + 1
+                    }
+                    current_text = [first_section_number]
+            
+            # Process remaining pages
             for page_num in range(current_page, len(reader.pages)):
                 page = reader.pages[page_num]
                 progress.current_page = page_num + 1
@@ -285,7 +318,11 @@ class MuPDFProcessor(PDFProcessor):
                         if not line:
                             continue
                         
-                        chapter_num, title = self._detect_chapter(line)
+                        # Skip the first section number we already processed
+                        if page_num == first_section_page and line == first_section_number:
+                            continue
+                        
+                        chapter_num, _ = self._detect_chapter(line)
                         if chapter_num is not None:
                             # Save previous section if exists
                             if current_section is not None and current_text:
@@ -308,7 +345,7 @@ class MuPDFProcessor(PDFProcessor):
                             # Start new section
                             current_section = {
                                 'chapter': chapter_num,
-                                'title': title,
+                                'title': "",
                                 'page': page_num + 1
                             }
                             current_text = [line]
@@ -344,10 +381,7 @@ class MuPDFProcessor(PDFProcessor):
                 
                 # Add title
                 if section.is_chapter:
-                    if section.title:
-                        formatted_content.append(f"# Chapter {section.chapter_number}: {section.title}\n")
-                    else:
-                        formatted_content.append(f"# Chapter {section.chapter_number}\n")
+                    formatted_content.append(f"# {section.chapter_number}\n")
                 else:
                     formatted_content.append("# Introduction\n")
                 
