@@ -54,19 +54,25 @@
     "page_number": 1
   },
   {
-    "section_number": 9,
+    "section_number": 10,
+    "file_path": "test_book/histoire/10.md",
+    "pdf_name": "test_book",
+    "page_number": 1
+  },
+  {
+    "section_number": 10,
     "file_path": "test_book/sections/1.md",
     "pdf_name": "test_book",
     "page_number": 8
   },
   {
-    "section_number": 10,
+    "section_number": 11,
     "file_path": "test_book/sections/2.md",
     "pdf_name": "test_book",
     "page_number": 9
   },
   {
-    "section_number": 11,
+    "section_number": 12,
     "file_path": "test_book/sections/3.md",
     "pdf_name": "test_book",
     "page_number": 9
