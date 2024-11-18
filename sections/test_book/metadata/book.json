@@ -4,9 +4,9 @@
   "total_images": 0,
   "sections": [
     {
-      "number": 1,
-      "page_number": null,
-      "file_path": "sections/test_book/sections/None.md"
+      "number": 0,
+      "page_number": 1,
+      "file_path": "sections/test_book/histoire/introduction.md"
     }
   ],
   "base_path": "sections"
