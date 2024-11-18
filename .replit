@@ -31,6 +31,10 @@ args = "PDF Processor"
 task = "workflow.run"
 args = "Create Test PDF"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Run Tests"
+
 [[workflows.workflow]]
 name = "Flask Server"
 author = "agent"
@@ -101,6 +105,20 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python create_test_pdf.py"
+
+[[workflows.workflow]]
+name = "Run Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m unittest test_pdf_processor.py -v"
 
 [deployment]
 run = ["sh", "-c", "python3 app.py"]

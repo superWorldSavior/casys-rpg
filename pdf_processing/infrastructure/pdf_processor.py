@@ -2,6 +2,7 @@ import os
 import fitz  # PyMuPDF
 import re
 import json
+import openai
 from typing import List, Optional, Dict, Tuple
 from PIL import Image
 import io
@@ -15,12 +16,12 @@ from ..domain.entities import (
 
 class MuPDFProcessor(PDFProcessor):
     def __init__(self):
-        # Simplified pattern to match only standalone numbers
         self.chapter_pattern = r'^\s*(\d+)\s*$'
         self.header_patterns = [
             r'^[A-Z][^a-z]{0,2}[A-Z].*$',  # All caps or nearly all caps
             r'^[A-Z][a-zA-Z\s]{0,50}$',     # Title case, not too long
         ]
+        self.openai_client = openai.OpenAI()
 
     def _get_pdf_folder_name(self, pdf_path: str) -> str:
         base_name = os.path.basename(pdf_path)
@@ -46,6 +47,26 @@ class MuPDFProcessor(PDFProcessor):
             "metadata_dir": metadata_dir,
             "histoire_dir": histoire_dir
         }
+
+    async def _detect_chapter_with_ai(self, text: str) -> Tuple[bool, Optional[str]]:
+        """Use OpenAI to detect chapter breaks and determine titles"""
+        try:
+            response = await self.openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{
+                    "role": "system",
+                    "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
+                }, {
+                    "role": "user",
+                    "content": f"Analyze this text block for chapter characteristics:\n{text}"
+                }]
+            )
+            
+            result = json.loads(response.choices[0].message.content)
+            return result.get("is_chapter", False), result.get("title")
+        except Exception as e:
+            print(f"Error using OpenAI for chapter detection: {e}")
+            return False, None
 
     def _detect_chapter(self, text: str) -> Tuple[Optional[int], Optional[str]]:
         """Detect if text is a standalone number"""
@@ -122,23 +143,7 @@ class MuPDFProcessor(PDFProcessor):
         if text.startswith('>') or (text.startswith('"') and text.endswith('"')):
             return TextFormatting.QUOTE
 
-        # Check for subheaders in pre-section content
-        if is_pre_section and len(text) < 100 and (text.istitle() or text.isupper()):
-            return TextFormatting.SUBHEADER
-
         return TextFormatting.PARAGRAPH
-
-    def _detect_chapter_break(self, formatted_text: FormattedText) -> bool:
-        """Detect if the formatted text indicates a chapter break"""
-        if formatted_text.format_type == TextFormatting.HEADER:
-            text = formatted_text.text.strip()
-            # Check for chapter title indicators
-            if (text.isupper() or text.istitle()) and len(text.split()) <= 7:
-                return True
-            # Check for horizontal rules
-            if re.match(r'^[-—=*]{3,}$', text):
-                return True
-        return False
 
     def _process_text_block(self, text: str, is_pre_section: bool = False) -> List[FormattedText]:
         """Process a block of text and return formatted text segments"""
@@ -180,74 +185,17 @@ class MuPDFProcessor(PDFProcessor):
         
         return formatted_texts
 
-    def _split_pre_section_content(self, content: str, histoire_dir: str, pdf_folder_name: str) -> List[Section]:
-        """Split pre-section content into chapters based on formatting"""
-        sections = []
-        formatted_texts = self._process_text_block(content, is_pre_section=True)
-        
-        current_chapter = []
-        chapter_count = 0
-        current_title = None
-        
-        for fmt_text in formatted_texts:
-            if self._detect_chapter_break(fmt_text) and current_chapter:
-                # Save current chapter
-                chapter_count += 1
-                file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
-                
-                chapter_content = "\n".join(text.text for text in current_chapter)
-                sections.append(Section(
-                    number=chapter_count,
-                    content=chapter_content,
-                    page_number=1,  # Pre-sections start from page 1
-                    file_path=file_path,
-                    pdf_name=pdf_folder_name,
-                    title=current_title,
-                    formatted_content=current_chapter.copy(),
-                    is_chapter=True,
-                    chapter_number=chapter_count
-                ))
-                
-                current_chapter = []
-                current_title = fmt_text.text if fmt_text.format_type == TextFormatting.HEADER else None
-            
-            current_chapter.append(fmt_text)
-        
-        # Save the last chapter if exists
-        if current_chapter:
-            chapter_count += 1
-            file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
-            
-            chapter_content = "\n".join(text.text for text in current_chapter)
-            sections.append(Section(
-                number=chapter_count,
-                content=chapter_content,
-                page_number=1,
-                file_path=file_path,
-                pdf_name=pdf_folder_name,
-                title=current_title,
-                formatted_content=current_chapter,
-                is_chapter=True,
-                chapter_number=chapter_count
-            ))
-        
-        return sections
-
     def _save_section_content(self, section: Section):
         """Save section content to file with proper formatting"""
         os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
         formatted_content = []
         
-        # Add title with proper formatting
-        if section.title:
-            formatted_content.append(f"# {section.title}\n")
-        elif section.is_chapter:
-            formatted_content.append(f"# Chapter {section.chapter_number}\n")
-        
-        # Add formatted content
+        # Add formatted content without section numbers in titles
         for fmt_text in section.formatted_content:
             if fmt_text.format_type == TextFormatting.HEADER:
-                formatted_content.append(f"\n## {fmt_text.text}\n")
+                # Skip if it's just a number
+                if not re.match(r'^\s*\d+\s*$', fmt_text.text.strip()):
+                    formatted_content.append(f"\n## {fmt_text.text}\n")
             elif fmt_text.format_type == TextFormatting.SUBHEADER:
                 formatted_content.append(f"\n### {fmt_text.text}\n")
             elif fmt_text.format_type == TextFormatting.LIST_ITEM:
@@ -260,20 +208,195 @@ class MuPDFProcessor(PDFProcessor):
                 formatted_content.append(f"\n{fmt_text.text}\n")
         
         with open(section.file_path, 'w', encoding='utf-8') as f:
+            # Add title if present, otherwise skip section number
+            if section.title:
+                f.write(f"# {section.title}\n\n")
             f.write("".join(formatted_content).strip() + "\n")
 
-    def _get_section_number_for_page(self, page_number: int, sections: List[Section]) -> Optional[int]:
-        """Determine section number based on page number"""
-        for section in sections:
-            if section.page_number <= page_number:
-                next_section_idx = sections.index(section) + 1
-                if next_section_idx < len(sections):
-                    next_section = sections[next_section_idx]
-                    if page_number < next_section.page_number:
-                        return section.chapter_number
-                else:
-                    return section.chapter_number
-        return None
+    async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
+        """Extract sections from the PDF with enhanced formatting detection"""
+        pdf_folder_name = self._get_pdf_folder_name(pdf_path)
+        paths = self._create_book_structure(base_output_dir, pdf_folder_name)
+        sections_dir = paths["sections_dir"]
+        histoire_dir = paths["histoire_dir"]
+        
+        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
+        sections = []
+        
+        try:
+            reader = PdfReader(pdf_path)
+            progress.total_pages = len(reader.pages)
+            progress.status = ProcessingStatus.EXTRACTING_SECTIONS
+            
+            # First pass: collect pre-section content
+            pre_section_content = []
+            first_section_page = None
+            
+            for page_num, page in enumerate(reader.pages):
+                text = page.extract_text()
+                if not text:
+                    continue
+                
+                page_lines = []
+                lines = text.splitlines()
+                
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    
+                    # Check for standalone section number
+                    chapter_num, _ = self._detect_chapter(line)
+                    if chapter_num is not None:
+                        first_section_page = page_num
+                        break
+                    
+                    page_lines.append(line)
+                
+                if first_section_page is not None:
+                    break
+                
+                if page_lines:
+                    pre_section_content.append("\n".join(page_lines))
+            
+            # Process pre-section content
+            if pre_section_content:
+                content = "\n".join(pre_section_content)
+                formatted_blocks = self._process_text_block(content, is_pre_section=True)
+                
+                # Use AI to detect chapter breaks
+                current_chapter = []
+                chapter_count = 0
+                
+                for block in formatted_blocks:
+                    is_chapter, title = await self._detect_chapter_with_ai(block.text)
+                    
+                    if is_chapter and current_chapter:
+                        # Save current chapter
+                        chapter_count += 1
+                        file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
+                        
+                        sections.append(Section(
+                            number=chapter_count,
+                            content="\n".join(text.text for text in current_chapter),
+                            page_number=1,
+                            file_path=file_path,
+                            pdf_name=pdf_folder_name,
+                            title=title,
+                            formatted_content=current_chapter,
+                            is_chapter=True,
+                            chapter_number=chapter_count
+                        ))
+                        self._save_section_content(sections[-1])
+                        current_chapter = []
+                    
+                    current_chapter.append(block)
+                
+                # Save last chapter if exists
+                if current_chapter:
+                    chapter_count += 1
+                    file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
+                    
+                    sections.append(Section(
+                        number=chapter_count,
+                        content="\n".join(text.text for text in current_chapter),
+                        page_number=1,
+                        file_path=file_path,
+                        pdf_name=pdf_folder_name,
+                        title=None,
+                        formatted_content=current_chapter,
+                        is_chapter=True,
+                        chapter_number=chapter_count
+                    ))
+                    self._save_section_content(sections[-1])
+            
+            # Process numbered sections
+            current_section = None
+            current_text = []
+            current_page = first_section_page or 0
+            
+            for page_num in range(current_page, len(reader.pages)):
+                page = reader.pages[page_num]
+                progress.current_page = page_num + 1
+                
+                try:
+                    text = page.extract_text()
+                    if not text:
+                        continue
+                    
+                    lines = text.splitlines()
+                    for line in lines:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        
+                        chapter_num, _ = self._detect_chapter(line)
+                        if chapter_num is not None:
+                            # Save previous section if exists
+                            if current_section is not None and current_text:
+                                file_path = os.path.join(sections_dir, f"{current_section}.md")
+                                formatted_content = self._process_text_block("\n".join(current_text))
+                                
+                                sections.append(Section(
+                                    number=len(sections),
+                                    content="\n".join(current_text),
+                                    page_number=page_num + 1,
+                                    file_path=file_path,
+                                    pdf_name=pdf_folder_name,
+                                    title=None,
+                                    formatted_content=formatted_content,
+                                    is_chapter=True,
+                                    chapter_number=current_section
+                                ))
+                                self._save_section_content(sections[-1])
+                                progress.processed_sections += 1
+                            
+                            # Start new section
+                            current_section = chapter_num
+                            current_text = []
+                        else:
+                            current_text.append(line)
+                
+                except Exception as e:
+                    print(f"Error processing page {page_num + 1}: {e}")
+                    continue
+            
+            # Save last section if exists
+            if current_section is not None and current_text:
+                file_path = os.path.join(sections_dir, f"{current_section}.md")
+                formatted_content = self._process_text_block("\n".join(current_text))
+                
+                sections.append(Section(
+                    number=len(sections),
+                    content="\n".join(current_text),
+                    page_number=progress.current_page,
+                    file_path=file_path,
+                    pdf_name=pdf_folder_name,
+                    title=None,
+                    formatted_content=formatted_content,
+                    is_chapter=True,
+                    chapter_number=current_section
+                ))
+                self._save_section_content(sections[-1])
+                progress.processed_sections += 1
+            
+            # Extract images
+            progress.status = ProcessingStatus.EXTRACTING_IMAGES
+            images = await self.extract_images(pdf_path, base_output_dir, sections)
+            
+            progress.status = ProcessingStatus.COMPLETED
+            return ProcessedPDF(
+                sections=sections,
+                images=images,
+                pdf_name=pdf_folder_name,
+                base_path=base_output_dir,
+                progress=progress
+            )
+            
+        except Exception as e:
+            progress.status = ProcessingStatus.FAILED
+            progress.error_message = str(e)
+            raise
 
     async def extract_images(self, pdf_path: str, base_output_dir: str = "sections", sections: Optional[List[Section]] = None) -> List[PDFImage]:
         """Extract images from the PDF with section information"""
@@ -292,10 +415,12 @@ class MuPDFProcessor(PDFProcessor):
                 page = doc[page_num]
                 image_list = page.get_images()
                 
-                # Determine section number for this page
+                # Find corresponding section for this page
                 section_number = None
                 if sections:
-                    section_number = self._get_section_number_for_page(page_num + 1, sections)
+                    for section in sections:
+                        if section.page_number <= page_num + 1:
+                            section_number = section.chapter_number
                 
                 for img_idx, img in enumerate(image_list):
                     try:
@@ -334,6 +459,7 @@ class MuPDFProcessor(PDFProcessor):
             
             doc.close()
 
+            # Save images metadata
             metadata_path = os.path.join(metadata_dir, "images.json")
             with open(metadata_path, 'w') as f:
                 json.dump(images_metadata, f, indent=2)
@@ -342,170 +468,3 @@ class MuPDFProcessor(PDFProcessor):
             print(f"Error processing PDF for images: {e}")
 
         return images
-
-    async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
-        """Extract sections from the PDF"""
-        pdf_folder_name = self._get_pdf_folder_name(pdf_path)
-        paths = self._create_book_structure(base_output_dir, pdf_folder_name)
-        sections_dir = paths["sections_dir"]
-        histoire_dir = paths["histoire_dir"]
-        
-        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
-        sections = []
-        
-        try:
-            reader = PdfReader(pdf_path)
-            progress.total_pages = len(reader.pages)
-            progress.status = ProcessingStatus.EXTRACTING_SECTIONS
-            
-            # First pass: collect all content until first standalone number
-            pre_section_content = []
-            first_section_page = None
-            first_section_number = None
-            
-            for page_num, page in enumerate(reader.pages):
-                text = page.extract_text()
-                if not text:
-                    continue
-                
-                page_lines = []
-                lines = text.splitlines()
-                
-                for line in lines:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    
-                    # Check for standalone section number
-                    chapter_num, _ = self._detect_chapter(line)
-                    if chapter_num is not None:
-                        first_section_page = page_num
-                        first_section_number = line
-                        break
-                    
-                    page_lines.append(line)
-                
-                if first_section_page is not None:
-                    break
-                
-                if page_lines:
-                    pre_section_content.append("\n".join(page_lines))
-            
-            # Process pre-section content into separate chapters
-            if pre_section_content:
-                content = "\n".join(pre_section_content)
-                pre_sections = self._split_pre_section_content(content, histoire_dir, pdf_folder_name)
-                
-                for section in pre_sections:
-                    self._save_section_content(section)
-                    sections.extend(pre_sections)
-                    progress.processed_sections += 1
-            
-            # Second pass: process numbered sections
-            current_section = None
-            current_text = []
-            current_page = first_section_page or 0
-            
-            # Start with the first section number if we found one
-            if first_section_number:
-                chapter_num, _ = self._detect_chapter(first_section_number)
-                if chapter_num is not None:
-                    current_section = {
-                        'chapter': chapter_num,
-                        'title': "",
-                        'page': current_page + 1
-                    }
-                    current_text = [first_section_number]
-            
-            # Process remaining pages
-            for page_num in range(current_page, len(reader.pages)):
-                page = reader.pages[page_num]
-                progress.current_page = page_num + 1
-                
-                try:
-                    text = page.extract_text()
-                    if not text:
-                        continue
-                    
-                    lines = text.splitlines()
-                    for line in lines:
-                        line = line.strip()
-                        if not line:
-                            continue
-                        
-                        # Skip the first section number we already processed
-                        if page_num == first_section_page and line == first_section_number:
-                            continue
-                        
-                        chapter_num, _ = self._detect_chapter(line)
-                        if chapter_num is not None:
-                            # Save previous section if exists
-                            if current_section is not None and current_text:
-                                file_path = os.path.join(sections_dir, f"{current_section['chapter']}.md")
-                                formatted_content = self._process_text_block("\n".join(current_text))
-                                
-                                sections.append(Section(
-                                    number=len(sections),
-                                    content="\n".join(current_text),
-                                    page_number=current_section['page'],
-                                    file_path=file_path,
-                                    pdf_name=pdf_folder_name,
-                                    title=current_section['title'],
-                                    formatted_content=formatted_content,
-                                    is_chapter=True,
-                                    chapter_number=current_section['chapter']
-                                ))
-                                self._save_section_content(sections[-1])
-                                progress.processed_sections += 1
-                            
-                            # Start new section
-                            current_section = {
-                                'chapter': chapter_num,
-                                'title': "",
-                                'page': page_num + 1
-                            }
-                            current_text = [line]
-                        else:
-                            if current_text or current_section:
-                                current_text.append(line)
-                
-                except Exception as e:
-                    print(f"Error processing page {page_num + 1}: {e}")
-                    continue
-            
-            # Save the last section if exists
-            if current_section is not None and current_text:
-                file_path = os.path.join(sections_dir, f"{current_section['chapter']}.md")
-                formatted_content = self._process_text_block("\n".join(current_text))
-                
-                sections.append(Section(
-                    number=len(sections),
-                    content="\n".join(current_text),
-                    page_number=current_section['page'],
-                    file_path=file_path,
-                    pdf_name=pdf_folder_name,
-                    title=current_section['title'],
-                    formatted_content=formatted_content,
-                    is_chapter=True,
-                    chapter_number=current_section['chapter']
-                ))
-                self._save_section_content(sections[-1])
-                progress.processed_sections += 1
-            
-            # Extract images with section information
-            progress.status = ProcessingStatus.EXTRACTING_IMAGES
-            images = await self.extract_images(pdf_path, base_output_dir, sections)
-            
-            progress.status = ProcessingStatus.COMPLETED
-            return ProcessedPDF(
-                sections=sections,
-                images=images,
-                pdf_name=pdf_folder_name,
-                base_path=base_output_dir,
-                progress=progress
-            )
-            
-        except Exception as e:
-            progress.status = ProcessingStatus.FAILED
-            progress.error_message = str(e)
-            raise
