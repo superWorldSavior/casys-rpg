@@ -31,24 +31,63 @@ class MuPDFProcessor(PDFProcessor):
         self.file_system_processor = FileSystemProcessor()
         self.ai_processor = AIProcessor()
         self.image_processor = ImageProcessor()
+        self.batch_size = 5  # Process 5 pages at a time
 
     async def process_pre_section_pages(self, pages: List[Dict[str, any]], progress: ProcessingProgress) -> List[List[FormattedText]]:
-        """Process multiple pre-section pages concurrently using GPT-4o-mini"""
+        """Process multiple pre-section pages concurrently using AI model"""
         progress.status = ProcessingStatus.PROCESSING_PRE_SECTIONS
-        logger.info("Starting pre-section processing with GPT-4o-mini")
+        logger.info("Starting pre-section processing with AI model")
         
         try:
             results = []
-            for page in pages:
-                try:
-                    # Process each page with GPT-4o-mini
-                    result = await self.ai_processor.analyze_page_content(page['text'], page['num'])
-                    results.append(result)
-                    logger.info(f"Successfully processed pre-section page {page['num']}")
-                except Exception as page_error:
-                    logger.error(f"Error processing pre-section page {page['num']}: {page_error}")
-                    # Fallback to basic text processing if AI fails
-                    results.append(self.text_processor.process_text_block(page['text'], is_pre_section=True))
+            total_pages = len(pages)
+            
+            # Process pages in batches
+            for i in range(0, total_pages, self.batch_size):
+                batch = pages[i:i + self.batch_size]
+                batch_tasks = []
+                
+                for page in batch:
+                    # Create task for each page in the batch
+                    task = self.ai_processor.analyze_page_content(
+                        page['text'],
+                        page['num']
+                    )
+                    batch_tasks.append(task)
+                
+                # Process batch concurrently
+                batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True)
+                
+                # Handle results and update progress
+                for j, result in enumerate(batch_results):
+                    current_page = batch[j]
+                    try:
+                        if isinstance(result, Exception):
+                            logger.error(f"Error in AI processing for page {current_page['num']}: {result}")
+                            # Fallback to basic text processing
+                            fallback_result = self.text_processor.process_text_block(
+                                current_page['text'],
+                                is_pre_section=True
+                            )
+                            results.append(fallback_result)
+                        else:
+                            results.append(result)
+                            logger.info(f"Successfully processed pre-section page {current_page['num']}")
+                    except Exception as e:
+                        logger.error(f"Error processing page {current_page['num']}: {e}")
+                        # Ensure we always append something for each page
+                        results.append([FormattedText(
+                            text=current_page['text'],
+                            format_type=TextFormatting.PARAGRAPH,
+                            metadata={"error": str(e)}
+                        )])
+                    
+                    # Update progress
+                    progress.current_page = current_page['num']
+                
+                # Log batch completion
+                logger.info(f"Completed batch processing: pages {i+1} to {min(i+self.batch_size, total_pages)}")
+            
             return results
         except Exception as e:
             logger.error(f"Error in batch processing pre-section pages: {e}")
@@ -118,10 +157,13 @@ class MuPDFProcessor(PDFProcessor):
                     'num': page_num + 1
                 })
 
-            # Second workflow: Process pre-section content with GPT-4o-mini
+            # Second workflow: Process pre-section content with AI
             pre_section_content = []
             if pre_section_pages:
-                pre_section_content = await self.process_pre_section_pages(pre_section_pages, progress)
+                pre_section_content = await self.process_pre_section_pages(
+                    pre_section_pages,
+                    progress
+                )
 
             # Process pre-section content into chapters
             if pre_section_content:
