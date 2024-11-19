@@ -1,5 +1,6 @@
 {pkgs}: {
   deps = [
+    pkgs.run
     pkgs.inter
     pkgs.zlib
     pkgs.tk

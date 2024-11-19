@@ -17,14 +17,14 @@ def create_test_pdf(filename="test_book.pdf"):
     abs_path = os.path.abspath(filename)
     c = canvas.Canvas(abs_path, pagesize=letter)
     width, height = letter
-    
+
     # Title Page
     centered_text(c, "THE DARK FORTRESS", height - 200, size=24)
     centered_text(c, "A Solo Adventure", height - 250, 'Helvetica', 18)
     centered_text(c, "By", height - 300, 'Helvetica', 14)
     centered_text(c, "John Developer", height - 330, 'Helvetica-Bold', 16)
     c.showPage()
-    
+
     # Introduction Chapter
     centered_text(c, "INTRODUCTION", height - 100, size=20)
     c.setFont('Helvetica', 12)
@@ -40,18 +40,18 @@ def create_test_pdf(filename="test_book.pdf"):
             c.drawString(100, y, line)
             y -= 20
     c.showPage()
-    
+
     # Combat Rules Chapter
     centered_text(c, "COMBAT RULES", height - 100, size=20)
     y = height - 150
     c.setFont('Helvetica-Bold', 14)
     c.drawString(100, y, "Basic Combat")
     y -= 30
-    
+
     c.setFont('Helvetica', 12)
     combat_text = """
     Combat in The Dark Fortress follows these simple steps:
-    
+
     1. Roll two dice and add your SKILL score
     2. Roll two dice and add the enemy's SKILL score
     3. The higher total wins that round
@@ -63,22 +63,22 @@ def create_test_pdf(filename="test_book.pdf"):
             c.drawString(100, y, line)
             y -= 20
     c.showPage()
-    
+
     # Game Rules Chapter
     centered_text(c, "GAME RULES", height - 100, size=20)
     y = height - 150
     c.setFont('Helvetica-Bold', 14)
     c.drawString(100, y, "Character Creation")
     y -= 30
-    
+
     c.setFont('Helvetica', 12)
     rules_text = """
     To create your character, you'll need to determine three key attributes:
-    
+
     SKILL - Roll one die and add 6
     STAMINA - Roll two dice and add 12
     LUCK - Roll one die and add 6
-    
+
     These scores represent your initial and maximum attribute scores.
     """
     for line in rules_text.split('\n'):
@@ -87,14 +87,14 @@ def create_test_pdf(filename="test_book.pdf"):
             c.drawString(100, y, line)
             y -= 20
     c.showPage()
-    
+
     # Equipment List
     centered_text(c, "EQUIPMENT", height - 100, size=20)
     y = height - 150
     c.setFont('Helvetica-Bold', 14)
     c.drawString(100, y, "Starting Items")
     y -= 30
-    
+
     equipment_list = [
         "• Sword (SKILL +2)",
         "• Leather Armor (reduces damage by 1)",
@@ -103,43 +103,60 @@ def create_test_pdf(filename="test_book.pdf"):
         "• 10 Gold Pieces",
         "• 2 Provisions (restore 4 STAMINA each)"
     ]
-    
+
     c.setFont('Helvetica', 12)
     for item in equipment_list:
         c.drawString(100, y, item)
         y -= 20
     c.showPage()
-    
+
     # Add blank page for spacing
     c.showPage()
-    
-    # Numbered Sections
-    # Section 1
-    c.setFont('Helvetica-Bold', 16)
-    c.drawString(100, height - 50, "1")
-    c.setFont('Helvetica', 12)
-    c.drawString(100, height - 80, "The dark fortress looms before you, its ancient stones casting long shadows")
-    c.drawString(100, height - 100, "in the dying light. You can:")
-    c.drawString(120, height - 140, "• Enter through the main gate (turn to 2)")
-    c.drawString(120, height - 160, "• Search for a side entrance (turn to 3)")
-    c.showPage()
-    
-    # Section 2
-    c.setFont('Helvetica-Bold', 16)
-    c.drawString(100, height - 50, "2")
-    c.setFont('Helvetica', 12)
-    c.drawString(100, height - 80, "The heavy iron gates creak as you push them open.")
-    c.drawString(100, height - 100, "You find yourself in a torch-lit courtyard. Turn to 3.")
-    c.showPage()
-    
-    # Section 3
-    c.setFont('Helvetica-Bold', 16)
-    c.drawString(100, height - 50, "3")
-    c.setFont('Helvetica', 12)
-    c.drawString(100, height - 80, "A guard spots you! Prepare for combat.")
-    c.drawString(100, height - 100, "GUARD: SKILL 7  STAMINA 6")
-    c.drawString(100, height - 140, "If you win, turn to 2. If you lose, your adventure ends here.")
-    
+
+    # Numbered Sections with centered numbers
+    sections = [
+        {
+            "number": "1",
+            "content": [
+                "The dark fortress looms before you, its ancient stones casting long shadows",
+                "in the dying light. You can:",
+                "• Enter through the main gate (turn to 2)",
+                "• Search for a side entrance (turn to 3)"
+            ]
+        },
+        {
+            "number": "2",
+            "content": [
+                "The heavy iron gates creak as you push them open.",
+                "You find yourself in a torch-lit courtyard. Turn to 3."
+            ]
+        },
+        {
+            "number": "3",
+            "content": [
+                "A guard spots you! Prepare for combat.",
+                "GUARD: SKILL 7  STAMINA 6",
+                "If you win, turn to 2. If you lose, your adventure ends here."
+            ]
+        }
+    ]
+
+    for section in sections:
+        # Center the section number
+        centered_text(c, section["number"], height - 50, font='Helvetica-Bold', size=16)
+
+        # Display section content
+        y = height - 80
+        c.setFont('Helvetica', 12)
+        for line in section["content"]:
+            line = line.strip()
+            if line.startswith("•"):
+                c.drawString(120, y, line)
+            else:
+                c.drawString(100, y, line)
+            y -= 20
+        c.showPage()
+
     c.save()
     return abs_path
 

@@ -4555,3 +4555,58 @@ RuntimeError: Event loop is closed
 2024-11-19 10:09:17,625 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:09:17] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
 2024-11-19 10:09:18,418 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:09:18] "GET /api/books HTTP/1.1" 200 -
 2024-11-19 10:09:18,961 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:09:18] "GET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:23:22,713 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.162:5000
+2024-11-19 10:23:22,713 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-19 10:23:22,714 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 10:23:23,740 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 10:23:23,743 - werkzeug - INFO -  * Debugger PIN: 123-853-791
+2024-11-19 10:23:25,306 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:25] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 10:23:25,866 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:25] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 10:23:26,350 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:26] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 10:23:28,138 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:28] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 10:23:28,138 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:28] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 10:23:28,999 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:23:29,480 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:29] "GET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_106_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:23:32,288 - werkzeug - INFO -  * Detected change in '/home/runner/TextFlowNavigator/pdf_processing/infrastructure/ai_processor.py', reloading
+2024-11-19 10:23:33,290 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 10:23:34,341 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 10:23:34,343 - werkzeug - INFO -  * Debugger PIN: 105-844-490
+2024-11-19 10:23:34,768 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:23:38,286 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.162:5000
+2024-11-19 10:23:38,286 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-19 10:23:38,287 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 10:23:39,454 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 10:23:39,456 - werkzeug - INFO -  * Debugger PIN: 922-400-547
+2024-11-19 10:23:39,613 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/uploads/test_book.pdf
+2024-11-19 10:23:39,619 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 9 pages
+2024-11-19 10:23:39,636 - pdf_processing.infrastructure.pdf_processor - INFO - Starting pre-section processing with GPT-4o-mini
+2024-11-19 10:23:39,953 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:39] "GET / HTTP/1.1" 200 -
+2024-11-19 10:23:40,026 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "GET /assets/index-FSzeO8vF.js HTTP/1.1" 200 -
+2024-11-19 10:23:40,028 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 200 -
+2024-11-19 10:23:40,224 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "GET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1" 200 -
+2024-11-19 10:23:40,227 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "GET /assets/index-B4pXWyNm.js HTTP/1.1" 200 -
+2024-11-19 10:23:40,344 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 10:23:40,455 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:23:40,756 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:23:40,902 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:40] "GET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_106_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:23:41,131 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:23:41,143 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed pre-section page 1
+2024-11-19 10:23:42,002 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:42] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 10:23:42,020 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:42] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 10:23:42,910 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:42] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 10:23:42,913 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:42] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 10:23:43,050 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:23:43,053 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed pre-section page 2
+2024-11-19 10:23:43,606 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:23:43,776 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/test_book.pdf
+2024-11-19 10:23:43,779 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 9 pages
+2024-11-19 10:23:43,794 - pdf_processing.infrastructure.pdf_processor - INFO - Starting pre-section processing with GPT-4o-mini
+2024-11-19 10:23:44,071 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:23:44] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_106_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:23:45,147 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:23:45,159 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed pre-section page 1

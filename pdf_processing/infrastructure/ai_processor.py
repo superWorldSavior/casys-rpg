@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class AIProcessor:
     def __init__(self):
         self.openai_client = openai.AsyncOpenAI()
-        self.model_name = "gpt-4o-mini"  # Updated model name
+        self.model_name = "gpt-3.5-turbo"  # Updated to use gpt-3.5-turbo
         self.max_concurrent = 5
 
     async def process_pages_concurrently(self, pages: List[Dict[str, any]]) -> List[List[FormattedText]]:
@@ -58,7 +58,9 @@ class AIProcessor:
                 }, {
                     "role": "user",
                     "content": f"Analyze this text block for chapter characteristics:\n{text}"
-                }])
+                }],
+                temperature=0.3  # Added lower temperature for more consistent results
+            )
 
             result = re.sub(r'^```json|```$', '',
                           response.choices[0].message.content.strip())
@@ -84,7 +86,9 @@ class AIProcessor:
                 }, {
                     "role": "user",
                     "content": f"Page {page_num}:\n{page_text}"
-                }])
+                }],
+                temperature=0.3  # Added lower temperature for more consistent results
+            )
 
             result = re.sub(r'^```json|```$', '',
                           response.choices[0].message.content.strip())
@@ -102,6 +106,7 @@ class AIProcessor:
             ]
         except Exception as e:
             logger.error(f"Error analyzing page {page_num}: {e}")
+            # Return a simple formatted text block as fallback
             return [FormattedText(
                 text=page_text,
                 format_type=TextFormatting.PARAGRAPH,
