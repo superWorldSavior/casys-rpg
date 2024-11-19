@@ -1,7 +1,6 @@
 import json
 import re
-import asyncio
-from typing import Tuple, Optional, List, Dict
+from typing import Tuple, Optional, List
 import openai
 import logging
 from ..domain.entities import FormattedText, TextFormatting
@@ -11,7 +10,7 @@ logger = logging.getLogger(__name__)
 class AIProcessor:
     def __init__(self):
         self.openai_client = openai.AsyncOpenAI()
-        self.model_name = "gpt-4"  # Default to GPT-4 since GPT-4-mini is not available yet
+        self.model_name = "gpt-4o-mini"
         self.max_tokens = 1000
         self.temperature = 0.3
 

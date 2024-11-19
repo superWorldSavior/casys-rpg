@@ -36,7 +36,7 @@ class MuPDFProcessor(PDFProcessor):
             for page_num in range(start_page, end_page + 1):
                 page = doc[page_num]
                 try:
-                    text = page.get_text("text")  # Specify text extraction mode
+                    text = page.get_text("text")
                 except AttributeError:
                     logger.warning(f"Could not extract text from page {page_num + 1}")
                     continue
@@ -45,15 +45,12 @@ class MuPDFProcessor(PDFProcessor):
                     logger.info(f"Skipping empty page {page_num + 1}")
                     continue
 
-                # Process page content with AI
                 blocks = await self.ai_processor.analyze_page_content(text, page_num + 1)
 
-                # Process blocks for chapter detection
                 for block in blocks:
                     is_chapter, title = await self.ai_processor.detect_chapter_with_ai(block.text)
 
                     if is_chapter:
-                        # Save previous chapter if exists
                         if current_chapter:
                             chapter_count += 1
                             section = await self.save_section(
@@ -71,7 +68,6 @@ class MuPDFProcessor(PDFProcessor):
 
                     current_chapter.append(block)
 
-            # Save last chapter if exists
             if current_chapter:
                 chapter_count += 1
                 section = await self.save_section(
@@ -92,8 +88,8 @@ class MuPDFProcessor(PDFProcessor):
 
         return sections
 
-    def process_numbered_sections(self, doc, start_page: int,
-                                sections_dir: str, pdf_folder_name: str) -> List[Section]:
+    async def process_numbered_sections(self, doc, start_page: int,
+                                     sections_dir: str, pdf_folder_name: str) -> List[Section]:
         """Process numbered sections without AI"""
         logger.info(f"Starting numbered section processing from page {start_page + 1}")
         sections = []
@@ -105,7 +101,7 @@ class MuPDFProcessor(PDFProcessor):
             for page_num in range(start_page, len(doc)):
                 page = doc[page_num]
                 try:
-                    text = page.get_text("text")  # Specify text extraction mode
+                    text = page.get_text("text")
                 except AttributeError:
                     logger.warning(f"Could not extract text from page {page_num + 1}")
                     continue
@@ -125,15 +121,13 @@ class MuPDFProcessor(PDFProcessor):
                     chapter_num, _ = self.chapter_processor.detect_chapter(line.strip())
 
                     if chapter_num is not None:
-                        # Validate section number sequence
                         if chapter_num <= last_section_number:
                             logger.warning(f"Non-sequential section number detected: {chapter_num} after {last_section_number}")
                         else:
                             last_section_number = chapter_num
 
-                        # Save previous section if exists
                         if current_section is not None and current_blocks:
-                            section = self.save_section_sync(
+                            section = await self.save_section(
                                 section_num=current_section,
                                 blocks=current_blocks,
                                 page_num=page_num + 1,
@@ -143,22 +137,18 @@ class MuPDFProcessor(PDFProcessor):
                             )
                             sections.append(section)
 
-                        # Start new section
                         current_section = chapter_num
                         current_blocks = []
                         logger.info(f"Starting new numbered section {chapter_num} on page {page_num + 1}")
                     else:
-                        # Process the line without AI
                         block = self.text_processor.process_text_block(line, is_pre_section=False)
                         line_blocks.extend(block)
 
-                # Add processed lines to current section
                 if current_section is not None:
                     current_blocks.extend(line_blocks)
 
-            # Save the last section if exists
             if current_section is not None and current_blocks:
-                section = self.save_section_sync(
+                section = await self.save_section(
                     section_num=current_section,
                     blocks=current_blocks,
                     page_num=len(doc),
@@ -210,13 +200,6 @@ class MuPDFProcessor(PDFProcessor):
             logger.error(f"Error saving section {section_num}: {e}")
             raise
 
-    def save_section_sync(self, section_num: int, blocks: List[FormattedText],
-                         page_num: int, output_dir: str, pdf_folder_name: str,
-                         is_chapter: bool = False, title: Optional[str] = None) -> Section:
-        """Synchronous version of save_section"""
-        return asyncio.run(self.save_section(
-            section_num, blocks, page_num, output_dir, pdf_folder_name, is_chapter, title))
-
     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
         """Extract sections from the PDF with distinct processing workflows"""
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
@@ -227,7 +210,6 @@ class MuPDFProcessor(PDFProcessor):
         doc = None
 
         try:
-            # Open PDF document
             doc = fitz.open(pdf_path)
             reader = PdfReader(pdf_path)
             progress.total_pages = len(reader.pages)
@@ -241,14 +223,13 @@ class MuPDFProcessor(PDFProcessor):
                 progress.current_page = page_num + 1
                 page = doc[page_num]
                 try:
-                    text = page.get_text("text")  # Specify text extraction mode
+                    text = page.get_text("text")
                 except AttributeError:
                     continue
 
                 if not text.strip():
                     continue
 
-                # Check for numbered section start
                 for line in text.splitlines():
                     chapter_num, _ = self.chapter_processor.detect_chapter(line.strip())
                     if chapter_num is not None:
@@ -274,7 +255,7 @@ class MuPDFProcessor(PDFProcessor):
             # Third workflow: Process numbered sections without AI
             if first_section_page < len(doc):
                 progress.status = ProcessingStatus.PROCESSING_NUMBERED_SECTIONS
-                numbered_sections = self.process_numbered_sections(
+                numbered_sections = await self.process_numbered_sections(
                     doc, first_section_page,
                     paths["sections_dir"], pdf_folder_name
                 )

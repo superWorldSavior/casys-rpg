@@ -1,8 +1,3 @@
-# Section 1
+# THE DARK FORTRESS
 
-## INTRODUCTION
-
-THE DARK FORTRESS
-A Solo Adventure
-By
-John Developer
+## THE DARK FORTRESS
