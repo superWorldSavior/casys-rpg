@@ -1,0 +1,706 @@
+[
+  {
+    "page_number": 1,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_1_img_1.png",
+    "width": 672,
+    "height": 1123,
+    "filename": "page_1_img_1.png",
+    "section_number": 1
+  },
+  {
+    "page_number": 2,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_2_img_1.png",
+    "width": 202,
+    "height": 214,
+    "filename": "page_2_img_1.png",
+    "section_number": 1
+  },
+  {
+    "page_number": 2,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_2_img_2.png",
+    "width": 238,
+    "height": 248,
+    "filename": "page_2_img_2.png",
+    "section_number": 1
+  },
+  {
+    "page_number": 14,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_14_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_14_img_1.png",
+    "section_number": 8
+  },
+  {
+    "page_number": 14,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_14_img_2.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_14_img_2.png",
+    "section_number": 8
+  },
+  {
+    "page_number": 16,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_16_img_1.png",
+    "width": 326,
+    "height": 555,
+    "filename": "page_16_img_1.png",
+    "section_number": 11
+  },
+  {
+    "page_number": 17,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_17_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_17_img_1.png",
+    "section_number": 15
+  },
+  {
+    "page_number": 20,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_20_img_1.png",
+    "width": 312,
+    "height": 546,
+    "filename": "page_20_img_1.png",
+    "section_number": 25
+  },
+  {
+    "page_number": 21,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_21_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_21_img_1.png",
+    "section_number": 27
+  },
+  {
+    "page_number": 21,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_21_img_2.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_21_img_2.png",
+    "section_number": 27
+  },
+  {
+    "page_number": 22,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_22_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_22_img_1.png",
+    "section_number": 32
+  },
+  {
+    "page_number": 23,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_23_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_23_img_1.png",
+    "section_number": 36
+  },
+  {
+    "page_number": 24,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_24_img_1.png",
+    "width": 355,
+    "height": 548,
+    "filename": "page_24_img_1.png",
+    "section_number": 37
+  },
+  {
+    "page_number": 25,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_25_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_25_img_1.png",
+    "section_number": 40
+  },
+  {
+    "page_number": 27,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_27_img_1.png",
+    "width": 352,
+    "height": 548,
+    "filename": "page_27_img_1.png",
+    "section_number": 48
+  },
+  {
+    "page_number": 28,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_28_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_28_img_1.png",
+    "section_number": 51
+  },
+  {
+    "page_number": 31,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_31_img_1.png",
+    "width": 306,
+    "height": 532,
+    "filename": "page_31_img_1.png",
+    "section_number": 60
+  },
+  {
+    "page_number": 31,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_31_img_2.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_31_img_2.png",
+    "section_number": 60
+  },
+  {
+    "page_number": 33,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_33_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_33_img_1.png",
+    "section_number": 67
+  },
+  {
+    "page_number": 36,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_36_img_1.png",
+    "width": 306,
+    "height": 533,
+    "filename": "page_36_img_1.png",
+    "section_number": 75
+  },
+  {
+    "page_number": 38,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_38_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_38_img_1.png",
+    "section_number": 86
+  },
+  {
+    "page_number": 39,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_39_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_39_img_1.png",
+    "section_number": 90
+  },
+  {
+    "page_number": 40,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_40_img_1.png",
+    "width": 314,
+    "height": 541,
+    "filename": "page_40_img_1.png",
+    "section_number": 92
+  },
+  {
+    "page_number": 42,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_42_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_42_img_1.png",
+    "section_number": 102
+  },
+  {
+    "page_number": 43,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_43_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_43_img_1.png",
+    "section_number": 107
+  },
+  {
+    "page_number": 44,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_44_img_1.png",
+    "width": 307,
+    "height": 539,
+    "filename": "page_44_img_1.png",
+    "section_number": 108
+  },
+  {
+    "page_number": 45,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_45_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_45_img_1.png",
+    "section_number": 114
+  },
+  {
+    "page_number": 46,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_46_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_46_img_1.png",
+    "section_number": 119
+  },
+  {
+    "page_number": 47,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_47_img_1.png",
+    "width": 340,
+    "height": 553,
+    "filename": "page_47_img_1.png",
+    "section_number": 122
+  },
+  {
+    "page_number": 49,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_49_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_49_img_1.png",
+    "section_number": 129
+  },
+  {
+    "page_number": 50,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_50_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_50_img_1.png",
+    "section_number": 132
+  },
+  {
+    "page_number": 51,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_51_img_1.png",
+    "width": 339,
+    "height": 554,
+    "filename": "page_51_img_1.png",
+    "section_number": 134
+  },
+  {
+    "page_number": 52,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_52_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_52_img_1.png",
+    "section_number": 138
+  },
+  {
+    "page_number": 54,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_54_img_1.png",
+    "width": 343,
+    "height": 544,
+    "filename": "page_54_img_1.png",
+    "section_number": 144
+  },
+  {
+    "page_number": 55,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_55_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_55_img_1.png",
+    "section_number": 147
+  },
+  {
+    "page_number": 58,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_58_img_1.png",
+    "width": 324,
+    "height": 544,
+    "filename": "page_58_img_1.png",
+    "section_number": 154
+  },
+  {
+    "page_number": 59,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_59_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_59_img_1.png",
+    "section_number": 159
+  },
+  {
+    "page_number": 60,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_60_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_60_img_1.png",
+    "section_number": 164
+  },
+  {
+    "page_number": 62,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_62_img_1.png",
+    "width": 337,
+    "height": 550,
+    "filename": "page_62_img_1.png",
+    "section_number": 168
+  },
+  {
+    "page_number": 63,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_63_img_1.png",
+    "width": 345,
+    "height": 541,
+    "filename": "page_63_img_1.png",
+    "section_number": 169
+  },
+  {
+    "page_number": 65,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_65_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_65_img_1.png",
+    "section_number": 176
+  },
+  {
+    "page_number": 66,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_66_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_66_img_1.png",
+    "section_number": 179
+  },
+  {
+    "page_number": 67,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_67_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_67_img_1.png",
+    "section_number": 183
+  },
+  {
+    "page_number": 69,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_69_img_1.png",
+    "width": 311,
+    "height": 567,
+    "filename": "page_69_img_1.png",
+    "section_number": 187
+  },
+  {
+    "page_number": 71,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_71_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_71_img_1.png",
+    "section_number": 196
+  },
+  {
+    "page_number": 73,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_73_img_1.png",
+    "width": 317,
+    "height": 536,
+    "filename": "page_73_img_1.png",
+    "section_number": 201
+  },
+  {
+    "page_number": 74,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_74_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_74_img_1.png",
+    "section_number": 205
+  },
+  {
+    "page_number": 75,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_75_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_75_img_1.png",
+    "section_number": 209
+  },
+  {
+    "page_number": 76,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_76_img_1.png",
+    "width": 321,
+    "height": 537,
+    "filename": "page_76_img_1.png",
+    "section_number": 210
+  },
+  {
+    "page_number": 77,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_77_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_77_img_1.png",
+    "section_number": 215
+  },
+  {
+    "page_number": 79,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_79_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_79_img_1.png",
+    "section_number": 223
+  },
+  {
+    "page_number": 81,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_81_img_1.png",
+    "width": 356,
+    "height": 573,
+    "filename": "page_81_img_1.png",
+    "section_number": 229
+  },
+  {
+    "page_number": 82,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_82_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_82_img_1.png",
+    "section_number": 235
+  },
+  {
+    "page_number": 83,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_83_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_83_img_1.png",
+    "section_number": 240
+  },
+  {
+    "page_number": 84,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_84_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_84_img_1.png",
+    "section_number": 244
+  },
+  {
+    "page_number": 85,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_85_img_1.png",
+    "width": 356,
+    "height": 575,
+    "filename": "page_85_img_1.png",
+    "section_number": 246
+  },
+  {
+    "page_number": 86,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_86_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_86_img_1.png",
+    "section_number": 248
+  },
+  {
+    "page_number": 88,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_88_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_88_img_1.png",
+    "section_number": 258
+  },
+  {
+    "page_number": 90,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_90_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_90_img_1.png",
+    "section_number": 268
+  },
+  {
+    "page_number": 90,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_90_img_2.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_90_img_2.png",
+    "section_number": 268
+  },
+  {
+    "page_number": 91,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_91_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_91_img_1.png",
+    "section_number": 271
+  },
+  {
+    "page_number": 93,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_93_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_93_img_1.png",
+    "section_number": 280
+  },
+  {
+    "page_number": 94,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_94_img_1.png",
+    "width": 330,
+    "height": 542,
+    "filename": "page_94_img_1.png",
+    "section_number": 282
+  },
+  {
+    "page_number": 96,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_96_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_96_img_1.png",
+    "section_number": 291
+  },
+  {
+    "page_number": 98,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_98_img_1.png",
+    "width": 322,
+    "height": 545,
+    "filename": "page_98_img_1.png",
+    "section_number": 298
+  },
+  {
+    "page_number": 99,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_99_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_99_img_1.png",
+    "section_number": 302
+  },
+  {
+    "page_number": 102,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_102_img_1.png",
+    "width": 322,
+    "height": 545,
+    "filename": "page_102_img_1.png",
+    "section_number": 313
+  },
+  {
+    "page_number": 103,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_103_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_103_img_1.png",
+    "section_number": 317
+  },
+  {
+    "page_number": 105,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_105_img_1.png",
+    "width": 361,
+    "height": 545,
+    "filename": "page_105_img_1.png",
+    "section_number": 326
+  },
+  {
+    "page_number": 106,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_106_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_106_img_1.png",
+    "section_number": 328
+  },
+  {
+    "page_number": 108,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_108_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_108_img_1.png",
+    "section_number": 338
+  },
+  {
+    "page_number": 108,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_108_img_2.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_108_img_2.png",
+    "section_number": 338
+  },
+  {
+    "page_number": 109,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_109_img_1.png",
+    "width": 318,
+    "height": 536,
+    "filename": "page_109_img_1.png",
+    "section_number": 339
+  },
+  {
+    "page_number": 109,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_109_img_2.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_109_img_2.png",
+    "section_number": 339
+  },
+  {
+    "page_number": 110,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_110_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_110_img_1.png",
+    "section_number": 342
+  },
+  {
+    "page_number": 111,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_111_img_1.png",
+    "width": 316,
+    "height": 540,
+    "filename": "page_111_img_1.png",
+    "section_number": 345
+  },
+  {
+    "page_number": 113,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_113_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_113_img_1.png",
+    "section_number": 353
+  },
+  {
+    "page_number": 114,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_114_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_114_img_1.png",
+    "section_number": 359
+  },
+  {
+    "page_number": 116,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_116_img_1.png",
+    "width": 316,
+    "height": 554,
+    "filename": "page_116_img_1.png",
+    "section_number": 363
+  },
+  {
+    "page_number": 118,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_118_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_118_img_1.png",
+    "section_number": 372
+  },
+  {
+    "page_number": 119,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_119_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_119_img_1.png",
+    "section_number": 377
+  },
+  {
+    "page_number": 120,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_120_img_1.png",
+    "width": 161,
+    "height": 82,
+    "filename": "page_120_img_1.png",
+    "section_number": 380
+  },
+  {
+    "page_number": 121,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_121_img_1.png",
+    "width": 333,
+    "height": 528,
+    "filename": "page_121_img_1.png",
+    "section_number": 381
+  },
+  {
+    "page_number": 122,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_122_img_1.png",
+    "width": 316,
+    "height": 131,
+    "filename": "page_122_img_1.png",
+    "section_number": 385
+  },
+  {
+    "page_number": 123,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_123_img_1.png",
+    "width": 189,
+    "height": 184,
+    "filename": "page_123_img_1.png",
+    "section_number": 389
+  },
+  {
+    "page_number": 124,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_124_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_124_img_1.png",
+    "section_number": 391
+  },
+  {
+    "page_number": 125,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_125_img_1.png",
+    "width": 323,
+    "height": 539,
+    "filename": "page_125_img_1.png",
+    "section_number": 393
+  },
+  {
+    "page_number": 127,
+    "image_path": "sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_127_img_1.png",
+    "width": 250,
+    "height": 109,
+    "filename": "page_127_img_1.png",
+    "section_number": 399
+  }
+]
