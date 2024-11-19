@@ -144,3 +144,28 @@
 2024-11-19 01:56:19,686 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T01:56:19.686818", "message": "Chapter number detected: 1"}
 2024-11-19 01:56:19,687 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T01:56:19.687584", "message": "Chapter number detected: 2"}
 2024-11-19 01:56:19,688 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T01:56:19.688732", "message": "Chapter number detected: 3"}
+2024-11-19 02:00:10,639 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:10.639110", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:10,641 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:10.641035", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:10,708 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:10.708706", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:10,709 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:10.709127", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:10,776 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:10.776903", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:10,777 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:10.777323", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:10,847 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:10.847398", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:10,847 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:10.847761", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,634 - MainProcessor - INFO - {"timestamp": "2024-11-19T02:00:29.634502", "message": "Initializing PDF processing components"}
+2024-11-19 02:00:29,696 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:29.696895", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:29,699 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:29.699906", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,747 - MainProcessor - INFO - {"timestamp": "2024-11-19T02:00:29.747061", "message": "PDF found", "path": "/home/runner/TextFlowNavigator/test_book.pdf"}
+2024-11-19 02:00:29,747 - PDFService - INFO - {"timestamp": "2024-11-19T02:00:29.747838", "message": "Validating PDF processing request", "pdf_path": "/home/runner/TextFlowNavigator/test_book.pdf", "base_output_dir": "sections"}
+2024-11-19 02:00:29,748 - PDFService - INFO - {"timestamp": "2024-11-19T02:00:29.748052", "message": "Starting PDF processing", "pdf_path": "/home/runner/TextFlowNavigator/test_book.pdf"}
+2024-11-19 02:00:29,754 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:29.754000", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:29,755 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:29.754967", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,757 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:29.757388", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:29,758 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:29.758773", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,758 - PDFService - ERROR - {"timestamp": "2024-11-19T02:00:29.758945", "message": "Error processing PDF", "pdf_path": "/home/runner/TextFlowNavigator/test_book.pdf", "base_output_dir": "sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,759 - MainProcessor - ERROR - {"timestamp": "2024-11-19T02:00:29.759057", "message": "Error processing PDF", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,759 - MainProcessor - ERROR - {"timestamp": "2024-11-19T02:00:29.759166", "message": "Fatal error in main process", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,817 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:29.817622", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:29,819 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:29.819206", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
+2024-11-19 02:00:29,897 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T02:00:29.897543", "message": "Chapter number detected: 1"}
+2024-11-19 02:00:29,898 - PreSectionAnalyzer - ERROR - {"timestamp": "2024-11-19T02:00:29.898287", "message": "Error analyzing pre-sections", "error_type": "NameError", "error_message": "name 'TextFormatting' is not defined"}
