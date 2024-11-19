@@ -20,7 +20,6 @@ class TextFormatting(Enum):
     LIST_ITEM = "list_item"
     QUOTE = "quote"
     CODE = "code"
-    CENTERED_HEADER = "centered_header"  # Added new format type
 
 @dataclass
 class ProcessingProgress:
