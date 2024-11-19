@@ -29,7 +29,7 @@ class TextAnalyzer:
             r'^[A-Z][^a-z]{0,2}[A-Z].*$',  # All caps or nearly all caps
             r'^[A-Z][a-zA-Z\s]{0,50}$',  # Title case, not too long
         ]
-        self.openai_client = openai.AsyncOpenAI()
+        self.openai_client = None  # Will be injected by container
 
     def _validate_openai_response(self, result: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
         """Validate OpenAI API response structure."""
@@ -54,24 +54,30 @@ class TextAnalyzer:
     )
     async def _make_openai_request(self, text: str) -> Dict[str, Any]:
         """Make OpenAI API request with retry mechanism and improved error handling."""
+        if not self.openai_client:
+            raise OpenAIRequestError("OpenAI client not initialized")
+            
         try:
             logger.info("Making OpenAI API request for text analysis")
             response = await self.openai_client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-4",  # Fixed model name
                 messages=[{
                     "role": "system",
                     "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
                 }, {
                     "role": "user",
                     "content": f"Analyze this text block for chapter characteristics:\n{text}"
-                }]
+                }],
+                temperature=0.3  # Added for more consistent responses
             )
             
-            if not response.choices:
-                raise OpenAIRequestError("No choices returned in OpenAI response")
+            if not response or not response.choices:
+                raise OpenAIRequestError("No response or choices returned from OpenAI")
                 
             result = response.choices[0].message.content
-            
+            if not result:
+                raise OpenAIRequestError("Empty response content from OpenAI")
+                
             try:
                 return json.loads(result)
             except json.JSONDecodeError as je:
@@ -93,7 +99,8 @@ class TextAnalyzer:
         try:
             logger.info("Starting chapter detection with AI")
             result = await self._make_openai_request(text)
-            return self._validate_openai_response(result)
+            is_chapter, title = self._validate_openai_response(result)
+            return is_chapter, title
             
         except (OpenAIRequestError, JSONValidationError) as e:
             logger.error(f"Error in chapter detection: {e}", exc_info=True)
