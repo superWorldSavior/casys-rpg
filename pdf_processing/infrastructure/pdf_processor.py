@@ -40,11 +40,11 @@ class MuPDFProcessor(PDFProcessor):
         results = []
         try:
             for page in pages:
+                logger.info(f"Processing pre-section page {page['num']}")
                 # Process each page sequentially with AI
                 response = await self.ai_processor.analyze_page_content(page['text'], page['num'])
                 results.append(response)
                 logger.info(f"Successfully processed pre-section page {page['num']}")
-            
             return results
         except Exception as e:
             logger.error(f"Error in pre-section pages processing: {e}")
@@ -54,7 +54,14 @@ class MuPDFProcessor(PDFProcessor):
         """Process a single numbered section page using text processor without AI"""
         try:
             # Use text_processor directly without any AI processing or batching
-            formatted_blocks = self.text_processor.process_text_block(text, is_pre_section=False)
+            lines = text.splitlines()
+            formatted_blocks = []
+            
+            for line in lines:
+                if line.strip():
+                    block = self.text_processor.process_text_block(line, is_pre_section=False)
+                    formatted_blocks.extend(block)
+                    
             logger.info(f"Successfully processed numbered section page {page_num} with {len(formatted_blocks)} blocks")
             return formatted_blocks
         except Exception as e:
@@ -126,21 +133,24 @@ class MuPDFProcessor(PDFProcessor):
                 text = page.get_text()
 
                 if not text.strip():
+                    logger.info(f"Skipping empty page {page_num + 1}")
                     continue
 
-                # Check for numbered section start
-                lines = text.splitlines()
-                for line in lines:
+                # Check each line for numbered section start
+                found_section = False
+                for line in text.splitlines():
                     chapter_num, _ = self.chapter_processor.detect_chapter(line.strip())
                     if chapter_num is not None:
                         first_section_page = page_num
+                        found_section = True
                         logger.info(f"Found first numbered section at page {page_num + 1}, section {chapter_num}")
                         break
 
-                if first_section_page is not None:
+                if found_section:
                     break
 
-                # Add page to pre-section batch
+                # Add page to pre-section batch if no numbered section found
+                logger.info(f"Adding page {page_num + 1} to pre-sections")
                 pre_section_pages.append({
                     'text': text,
                     'num': page_num + 1
@@ -182,6 +192,7 @@ class MuPDFProcessor(PDFProcessor):
                             sections.append(section)
                             self.file_system_processor.save_section_content(section)
                             progress.processed_sections += 1
+                            logger.info(f"Saved pre-section chapter {chapter_count}")
                             current_chapter = []
 
                         current_chapter.append(block)
@@ -205,10 +216,7 @@ class MuPDFProcessor(PDFProcessor):
                     sections.append(section)
                     self.file_system_processor.save_section_content(section)
                     progress.processed_sections += 1
-
-            # Reset AI processor after pre-sections are done
-            self.ai_processor = AIProcessor()
-            logger.info("Reset AI processor after pre-section processing")
+                    logger.info(f"Saved final pre-section chapter {chapter_count}")
 
             # Third workflow: Process numbered sections without AI
             if first_section_page is not None:
@@ -217,7 +225,7 @@ class MuPDFProcessor(PDFProcessor):
                 current_blocks: List[FormattedText] = []
                 last_section_number = 0
 
-                # Process one page at a time without concurrency
+                # Process one page at a time sequentially
                 for page_num in range(first_section_page, len(doc)):
                     progress.current_page = page_num + 1
                     try:
@@ -228,12 +236,17 @@ class MuPDFProcessor(PDFProcessor):
                             logger.info(f"Skipping empty page {page_num + 1}")
                             continue
 
-                        # Process the entire page without AI
-                        formatted_blocks = self.process_numbered_section_page(text, page_num + 1)
+                        logger.info(f"Processing numbered section page {page_num + 1}")
                         
-                        # Analyze each block for section numbers using chapter_processor only
-                        for block in formatted_blocks:
-                            chapter_num, _ = self.chapter_processor.detect_chapter(block.text)
+                        # Process each line to check for section numbers
+                        lines = text.splitlines()
+                        line_blocks: List[FormattedText] = []
+                        
+                        for line in lines:
+                            if not line.strip():
+                                continue
+                                
+                            chapter_num, _ = self.chapter_processor.detect_chapter(line.strip())
                             
                             if chapter_num is not None:
                                 # Validate section number sequence
@@ -254,7 +267,13 @@ class MuPDFProcessor(PDFProcessor):
                                 current_blocks = []
                                 logger.info(f"Starting new numbered section {chapter_num} on page {page_num + 1}")
                             else:
-                                current_blocks.append(block)
+                                # Process the line without AI
+                                block = self.text_processor.process_text_block(line, is_pre_section=False)
+                                line_blocks.extend(block)
+                        
+                        # Add processed lines to current section
+                        if current_section is not None:
+                            current_blocks.extend(line_blocks)
 
                     except Exception as e:
                         logger.error(f"Error processing page {page_num + 1}: {e}")

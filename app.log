@@ -14352,3 +14352,42 @@ RuntimeError: Event loop is closed
 2024-11-19 11:27:12,543 - werkzeug - INFO - 172.31.196.15 - - [19/Nov/2024 11:27:12] "GET /api/books HTTP/1.1" 200 -
 2024-11-19 11:27:16,320 - werkzeug - INFO - 172.31.196.15 - - [19/Nov/2024 11:27:16] "GET /api/books HTTP/1.1" 200 -
 2024-11-19 11:27:22,522 - werkzeug - INFO - 172.31.196.15 - - [19/Nov/2024 11:27:22] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 14:21:42,785 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/test_book.pdf
+2024-11-19 14:21:42,799 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 9 pages
+2024-11-19 14:21:42,805 - pdf_processing.infrastructure.pdf_processor - INFO - Adding page 1 to pre-sections
+2024-11-19 14:21:42,806 - pdf_processing.infrastructure.pdf_processor - INFO - Adding page 2 to pre-sections
+2024-11-19 14:21:42,807 - pdf_processing.infrastructure.pdf_processor - INFO - Adding page 3 to pre-sections
+2024-11-19 14:21:42,807 - pdf_processing.infrastructure.pdf_processor - INFO - Adding page 4 to pre-sections
+2024-11-19 14:21:42,808 - pdf_processing.infrastructure.pdf_processor - INFO - Adding page 5 to pre-sections
+2024-11-19 14:21:42,808 - pdf_processing.infrastructure.pdf_processor - INFO - Skipping empty page 6
+2024-11-19 14:21:42,808 - pdf_processing.infrastructure.pdf_processor - INFO - Found first numbered section at page 7, section 1
+2024-11-19 14:21:42,809 - pdf_processing.infrastructure.pdf_processor - INFO - Starting sequential pre-section processing with AI model
+2024-11-19 14:21:42,809 - pdf_processing.infrastructure.pdf_processor - INFO - Processing pre-section page 1
+2024-11-19 14:21:47,176 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 14:21:47,181 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed pre-section page 1
+2024-11-19 14:21:47,181 - pdf_processing.infrastructure.pdf_processor - INFO - Processing pre-section page 2
+2024-11-19 14:21:50,775 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 14:21:50,776 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed pre-section page 2
+2024-11-19 14:21:50,776 - pdf_processing.infrastructure.pdf_processor - INFO - Processing pre-section page 3
+2024-11-19 14:21:54,579 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.10:5000
+2024-11-19 14:21:54,580 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-19 14:21:54,583 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 14:21:55,386 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 14:21:55,395 - werkzeug - INFO -  * Debugger PIN: 560-054-443
+2024-11-19 14:21:56,153 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 14:21:56,154 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed pre-section page 3
+2024-11-19 14:21:56,155 - pdf_processing.infrastructure.pdf_processor - INFO - Processing pre-section page 4
+2024-11-19 14:21:56,234 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:21:56] "GET / HTTP/1.1" 200 -
+2024-11-19 14:21:56,247 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:21:56] "GET /assets/index-FSzeO8vF.js HTTP/1.1" 200 -
+2024-11-19 14:21:56,265 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:21:56] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 200 -
+2024-11-19 14:21:56,457 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:21:56] "GET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1" 200 -
+2024-11-19 14:21:56,460 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:21:56] "GET /assets/index-B4pXWyNm.js HTTP/1.1" 200 -
+2024-11-19 14:21:57,761 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:21:57] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 14:21:57,810 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:21:57] "GET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 14:22:01,243 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 14:22:01,245 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed pre-section page 4
+2024-11-19 14:22:01,245 - pdf_processing.infrastructure.pdf_processor - INFO - Processing pre-section page 5
+2024-11-19 14:22:02,922 - werkzeug - INFO - 172.31.196.10 - - [19/Nov/2024 14:22:02] "[36mGET / HTTP/1.1[0m" 304 -
