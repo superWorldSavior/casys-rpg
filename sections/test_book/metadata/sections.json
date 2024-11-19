@@ -1,56 +1,88 @@
-[
-  {
-    "section_number": 1,
-    "file_path": "test_book/histoire/1.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 2,
-    "file_path": "test_book/histoire/2.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 3,
-    "file_path": "test_book/histoire/3.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 4,
-    "file_path": "test_book/histoire/4.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 5,
-    "file_path": "test_book/histoire/5.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 6,
-    "file_path": "test_book/histoire/6.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 7,
-    "file_path": "test_book/histoire/7.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 8,
-    "file_path": "test_book/histoire/8.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  },
-  {
-    "section_number": 9,
-    "file_path": "test_book/histoire/9.md",
-    "pdf_name": "test_book",
-    "page_number": 7
-  }
-]
+{
+  "sections": [
+    {
+      "section_number": 1,
+      "chapter_number": 1,
+      "file_path": "test_book/histoire/1.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "A Solo Adventure"
+    },
+    {
+      "section_number": 2,
+      "chapter_number": 2,
+      "file_path": "test_book/histoire/2.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "INTRODUCTION"
+    },
+    {
+      "section_number": 3,
+      "chapter_number": 3,
+      "file_path": "test_book/histoire/3.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "COMBAT RULES"
+    },
+    {
+      "section_number": 4,
+      "chapter_number": 4,
+      "file_path": "test_book/histoire/4.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "Basic Combat"
+    },
+    {
+      "section_number": 5,
+      "chapter_number": 5,
+      "file_path": "test_book/histoire/5.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "GAME RULES"
+    },
+    {
+      "section_number": 6,
+      "chapter_number": 6,
+      "file_path": "test_book/histoire/6.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "Character Creation"
+    },
+    {
+      "section_number": 7,
+      "chapter_number": 7,
+      "file_path": "test_book/histoire/7.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "EQUIPMENT"
+    },
+    {
+      "section_number": 8,
+      "chapter_number": 8,
+      "file_path": "test_book/histoire/8.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "Starting Items"
+    },
+    {
+      "section_number": 9,
+      "chapter_number": 9,
+      "file_path": "test_book/histoire/9.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": null
+    }
+  ],
+  "total_sections": 9,
+  "pre_section_count": 9,
+  "numbered_section_count": 0
+}

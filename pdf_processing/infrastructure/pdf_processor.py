@@ -96,7 +96,6 @@ class MuPDFProcessor(PDFProcessor):
     def process_numbered_section_page(self, text: str, page_num: int) -> List[FormattedText]:
         """Process a single numbered section page using direct text formatting without AI"""
         try:
-            # Use only text processor for numbered sections
             formatted_blocks = self.text_processor.process_text_block(text, is_pre_section=False)
             logger.info(f"Successfully processed numbered section page {page_num}")
             return formatted_blocks
@@ -104,8 +103,41 @@ class MuPDFProcessor(PDFProcessor):
             logger.error(f"Error processing numbered section page {page_num}: {e}")
             raise
 
-    async def extract_sections(self, pdf_path: str,
-                             base_output_dir: str = "sections") -> ProcessedPDF:
+    async def save_current_section(self, current_section: int, current_blocks: List[FormattedText],
+                                 page_num: int, sections_dir: str, pdf_folder_name: str,
+                                 sections: List[Section], progress: ProcessingProgress) -> None:
+        """Save current section with proper validation and error handling"""
+        try:
+            if current_section is not None and current_blocks:
+                file_path = os.path.join(sections_dir, f"{current_section}.md")
+                
+                # Validate file path
+                if not os.path.exists(os.path.dirname(file_path)):
+                    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                    logger.info(f"Created section directory: {os.path.dirname(file_path)}")
+                
+                section = Section(
+                    number=current_section,  # Use the actual section number
+                    content="\n".join(block.text for block in current_blocks),
+                    page_number=page_num,
+                    file_path=file_path,
+                    pdf_name=pdf_folder_name,
+                    title=None,
+                    formatted_content=current_blocks,
+                    is_chapter=False,
+                    chapter_number=current_section
+                )
+                sections.append(section)
+                self.file_system_processor.save_section_content(section)
+                progress.processed_sections += 1
+                logger.info(f"Successfully saved numbered section {current_section}")
+                return True
+        except Exception as e:
+            logger.error(f"Error saving section {current_section}: {e}")
+            raise
+        return False
+
+    async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
         """Extract sections from the PDF with distinct processing workflows"""
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
         paths = self.file_system_processor.create_book_structure(base_output_dir,
@@ -239,50 +271,25 @@ class MuPDFProcessor(PDFProcessor):
                             
                             if chapter_num is not None:
                                 # Save previous section if exists
-                                if current_section is not None and current_blocks:
-                                    file_path = os.path.join(sections_dir, f"{current_section}.md")
-                                    
-                                    section = Section(
-                                        number=len(sections),
-                                        content="\n".join(block.text for block in current_blocks),
-                                        page_number=page_num + 1,
-                                        file_path=file_path,
-                                        pdf_name=pdf_folder_name,
-                                        title=None,
-                                        formatted_content=current_blocks,
-                                        is_chapter=True,
-                                        chapter_number=current_section
-                                    )
-                                    sections.append(section)
-                                    self.file_system_processor.save_section_content(section)
-                                    progress.processed_sections += 1
-                                    current_blocks = []
-
+                                await self.save_current_section(
+                                    current_section, current_blocks, page_num,
+                                    sections_dir, pdf_folder_name, sections, progress
+                                )
                                 current_section = chapter_num
+                                current_blocks = []
+                                logger.info(f"Starting new section: {chapter_num}")
                             else:
                                 current_blocks.append(block)
 
                     except Exception as e:
                         logger.error(f"Error processing page {page_num + 1}: {e}")
+                        raise
 
-                # Save the last section if exists
-                if current_section is not None and current_blocks:
-                    file_path = os.path.join(sections_dir, f"{current_section}.md")
-                    
-                    section = Section(
-                        number=len(sections),
-                        content="\n".join(block.text for block in current_blocks),
-                        page_number=progress.current_page,
-                        file_path=file_path,
-                        pdf_name=pdf_folder_name,
-                        title=None,
-                        formatted_content=current_blocks,
-                        is_chapter=True,
-                        chapter_number=current_section
-                    )
-                    sections.append(section)
-                    self.file_system_processor.save_section_content(section)
-                    progress.processed_sections += 1
+            # Save the last section if exists
+            await self.save_current_section(
+                current_section, current_blocks, progress.current_page,
+                sections_dir, pdf_folder_name, sections, progress
+            )
 
             # Fourth workflow: Process images
             progress.status = ProcessingStatus.EXTRACTING_IMAGES
