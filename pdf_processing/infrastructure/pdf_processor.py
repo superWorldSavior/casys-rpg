@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Tuple
 import logging
 import fitz  # PyMuPDF
 from PyPDF2 import PdfReader
+import asyncio
 from ..domain.ports import PDFProcessor
 from ..domain.entities import (Section, ProcessedPDF, PDFImage,
                              ProcessingStatus, ProcessingProgress, FormattedText, TextFormatting)
@@ -31,6 +32,23 @@ class MuPDFProcessor(PDFProcessor):
         self.ai_processor = AIProcessor()
         self.image_processor = ImageProcessor()
 
+    async def process_pre_section_pages(self, pages: List[Dict[str, any]]) -> List[List[FormattedText]]:
+        """Process multiple pre-section pages concurrently"""
+        try:
+            return await self.ai_processor.process_pages_concurrently(pages)
+        except Exception as e:
+            logger.error(f"Error in batch processing pre-section pages: {e}")
+            # Fallback to sequential processing
+            results = []
+            for page in pages:
+                try:
+                    result = await self.process_pre_section_page(page['text'], page['num'])
+                    results.append(result)
+                except Exception as page_error:
+                    logger.error(f"Error processing page {page['num']}: {page_error}")
+                    results.append(self.text_processor.process_text_block(page['text'], is_pre_section=True))
+            return results
+
     async def process_pre_section_page(self, text: str, page_num: int) -> List[FormattedText]:
         """Process a single pre-section page using GPT-4-mini"""
         try:
@@ -49,7 +67,7 @@ class MuPDFProcessor(PDFProcessor):
         """Extract sections from the PDF with enhanced formatting"""
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
         paths = self.file_system_processor.create_book_structure(base_output_dir,
-                                                               pdf_folder_name)
+                                                                pdf_folder_name)
         sections_dir = paths["sections_dir"]
         histoire_dir = paths["histoire_dir"]
         images_dir = paths["images_dir"]
@@ -68,8 +86,9 @@ class MuPDFProcessor(PDFProcessor):
 
             # First pass: Identify where numbered sections begin
             first_section_page = None
-            pre_section_content: List[List[FormattedText]] = []
+            pre_section_pages = []
 
+            # Collect pre-section pages
             for page_num in range(len(doc)):
                 progress.current_page = page_num + 1
                 page = doc[page_num]
@@ -89,10 +108,16 @@ class MuPDFProcessor(PDFProcessor):
                 if first_section_page is not None:
                     break
 
-                # Process pre-section content with GPT-4-mini
-                formatted_blocks = await self.process_pre_section_page(text, page_num + 1)
-                if formatted_blocks:
-                    pre_section_content.append(formatted_blocks)
+                # Add page to pre-section batch
+                pre_section_pages.append({
+                    'text': text,
+                    'num': page_num + 1
+                })
+
+            # Process pre-section pages concurrently
+            pre_section_content = []
+            if pre_section_pages:
+                pre_section_content = await self.process_pre_section_pages(pre_section_pages)
 
             # Process pre-section content into chapters
             if pre_section_content:

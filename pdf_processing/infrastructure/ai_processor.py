@@ -1,26 +1,60 @@
 import json
 import re
-from typing import Tuple, Optional, List
+import asyncio
+from typing import Tuple, Optional, List, Dict
 import openai
+import logging
 from ..domain.entities import FormattedText, TextFormatting
 
+logger = logging.getLogger(__name__)
 
 class AIProcessor:
-
     def __init__(self):
         self.openai_client = openai.AsyncOpenAI()
+        self.model_name = "gpt-4o-mini"  # Updated model name
+        self.max_concurrent = 5
 
-    async def detect_chapter_with_ai(self,
-                                   text: str) -> Tuple[bool, Optional[str]]:
+    async def process_pages_concurrently(self, pages: List[Dict[str, any]]) -> List[List[FormattedText]]:
+        """Process multiple pages concurrently using asyncio.gather()"""
+        try:
+            # Create batches of max_concurrent size
+            results = []
+            for i in range(0, len(pages), self.max_concurrent):
+                batch = pages[i:i + self.max_concurrent]
+                tasks = [
+                    self.analyze_page_content(page['text'], page['num'])
+                    for page in batch
+                ]
+                batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+                
+                # Handle any exceptions in the batch
+                for j, result in enumerate(batch_results):
+                    if isinstance(result, Exception):
+                        logger.error(f"Error processing page {batch[j]['num']}: {str(result)}")
+                        # Use basic text processing as fallback
+                        results.append([
+                            FormattedText(
+                                text=batch[j]['text'],
+                                format_type=TextFormatting.PARAGRAPH,
+                                metadata={"error": str(result)}
+                            )
+                        ])
+                    else:
+                        results.append(result)
+            
+            return results
+        except Exception as e:
+            logger.error(f"Error in concurrent page processing: {e}")
+            raise
+
+    async def detect_chapter_with_ai(self, text: str) -> Tuple[bool, Optional[str]]:
         """Use OpenAI to detect chapter breaks and determine titles"""
         try:
             response = await self.openai_client.chat.completions.create(
-                model="gpt-4o-mini",  # Updated model name
+                model=self.model_name,
                 messages=[{
-                    "role":
-                    "system",
-                    "content":
-                    "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
+                    "role": "system",
+                    "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
                 }, {
                     "role": "user",
                     "content": f"Analyze this text block for chapter characteristics:\n{text}"
@@ -31,7 +65,7 @@ class AIProcessor:
             result_json = json.loads(result)
             return result_json.get("is_chapter", False), result_json.get("title")
         except Exception as e:
-            print(f"Error using OpenAI for chapter detection: {e}")
+            logger.error(f"Error using OpenAI for chapter detection: {e}")
             return False, None
 
     async def analyze_page_content(self, page_text: str,
@@ -39,21 +73,17 @@ class AIProcessor:
         """Analyze page content and return formatted text blocks"""
         try:
             response = await self.openai_client.chat.completions.create(
-                model="gpt-4o-mini",  # Updated model name
+                model=self.model_name,
                 messages=[{
-                    "role":
-                    "system",
-                    "content":
-                    """You are a text formatting analyzer. Analyze the given page content and identify text blocks with their formatting attributes. 
+                    "role": "system",
+                    "content": """You are a text formatting analyzer. Analyze the given page content and identify text blocks with their formatting attributes. 
                     Return a JSON array where each object has:
                     - text: the content
                     - format_type: string ('header', 'subheader', 'paragraph', 'list_item', 'quote', 'code')
                     - metadata: object with additional properties like indentation_level (0-3) and formatting (['bold', 'italic', 'underline'])"""
                 }, {
-                    "role":
-                    "user",
-                    "content":
-                    f"Page {page_num}:\n{page_text}"
+                    "role": "user",
+                    "content": f"Page {page_num}:\n{page_text}"
                 }])
 
             result = re.sub(r'^```json|```$', '',
@@ -71,7 +101,7 @@ class AIProcessor:
                 ) for block in blocks
             ]
         except Exception as e:
-            print(f"Error analyzing page {page_num}: {e}")
+            logger.error(f"Error analyzing page {page_num}: {e}")
             return [FormattedText(
                 text=page_text,
                 format_type=TextFormatting.PARAGRAPH,
