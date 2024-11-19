@@ -62,8 +62,8 @@ class MuPDFProcessor(PDFProcessor):
         """Save current section with proper validation and error handling"""
         try:
             if current_section is not None and current_blocks:
-                # Ensure correct path under sections directory
-                section_path = os.path.join(sections_dir, 'sections', f"{current_section}.md")
+                # Save numbered sections directly in sections directory
+                section_path = os.path.join(sections_dir, f"{current_section}.md")
                 
                 # Create sections directory if it doesn't exist
                 os.makedirs(os.path.dirname(section_path), exist_ok=True)
