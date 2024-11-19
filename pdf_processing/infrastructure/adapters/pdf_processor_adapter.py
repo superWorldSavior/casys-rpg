@@ -1,1 +1,0 @@
-\n{fmt_text.text}\n

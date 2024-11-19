@@ -8,11 +8,22 @@ from PIL import Image
 import io
 from concurrent.futures import ThreadPoolExecutor
 from PyPDF2 import PdfReader
+import logging
 from ..domain.ports import PDFProcessor
 from ..domain.entities import (Section, PDFImage, ProcessedPDF,
                                ProcessingStatus, ProcessingProgress,
                                TextFormatting, FormattedText)
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 class MuPDFProcessor(PDFProcessor):
 
@@ -70,7 +81,7 @@ class MuPDFProcessor(PDFProcessor):
                     f"Analyze this text block for chapter characteristics:\n{text}"
                 }])
 
-            result = response.choices[0].message.content
+            result = re.sub(r'^```json|```$', '', response.choices[0].message.content.strip())
             result_json = json.loads(result)
             return result_json.get("is_chapter",
                                    False), result_json.get("title")
