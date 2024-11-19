@@ -1237,3 +1237,134 @@ RuntimeError: Event loop is closed
 2024-11-19 09:28:18,298 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:18] "GET /api/books HTTP/1.1" 200 -
 2024-11-19 09:28:18,394 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:18] "GET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1" 200 -
 2024-11-19 09:28:23,213 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:26,982 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:26] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:26,993 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:26] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 09:28:27,833 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:27] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 09:28:28,293 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:28] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 09:28:29,377 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:29] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 09:28:29,381 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:29] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 09:28:30,068 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:30,531 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:30] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 09:28:31,957 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:31] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:35,047 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:36,946 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:36] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:40,013 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:41,936 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:41] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:45,022 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:46,976 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:46] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:50,034 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:51,937 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:51] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:55,011 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:28:58,247 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:28:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:00,025 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:01,954 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:01] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:05,026 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:06,961 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:06] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:10,033 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:11,968 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:11] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:15,019 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:16,925 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:16] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:18,475 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 404 Not Found"
+2024-11-19 09:29:18,477 - pdf_processing.infrastructure.pdf_processor - ERROR - Error processing PDF: FormattedText.__init__() got an unexpected keyword argument 'is_title'
+2024-11-19 09:29:18,554 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:18] "POST /api/books/upload HTTP/1.1" 200 -
+2024-11-19 09:29:19,197 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:19] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:20,021 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:21,937 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:21] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:25,002 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:26,936 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:26] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:30,015 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:31,941 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:31] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:35,015 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:36,960 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:36] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:40,003 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:41,940 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:41] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:45,005 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:46,921 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:46] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:50,025 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:51,944 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:51] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:55,011 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:56,941 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:56] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:29:59,996 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:29:59] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:02,000 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:02] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:05,043 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:06,944 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:06] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:10,021 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:11,940 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:11] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:15,018 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:17,046 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:17] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:20,014 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:21,942 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:21] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:26,940 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:26] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:33,139 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:36,937 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:36] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:43,176 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:46,927 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:46] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:53,157 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:30:56,932 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:30:56] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:01,678 - werkzeug - INFO -  * Detected change in '/home/runner/TextFlowNavigator/pdf_processing/infrastructure/ai_processor.py', reloading
+2024-11-19 09:31:01,866 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 09:31:03,403 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 09:31:03,405 - werkzeug - INFO -  * Debugger PIN: 697-402-956
+2024-11-19 09:31:03,722 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:06,957 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:06] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:07,162 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:09,970 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:13,177 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:16,952 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:16] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:18,131 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:23,195 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:23,757 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:26,934 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:26] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:29,909 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:32,261 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:32,891 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:33,345 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:33,553 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:33,956 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:34,655 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:35,205 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:35,662 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:36,268 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:36,754 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:36,955 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:36] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:37,503 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:38,407 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:39,013 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:39,736 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:40,586 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:41,214 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:41,973 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:42,910 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:43,156 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:44,691 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:45,181 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:45,717 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:46,133 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:46,762 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:46,980 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:46] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:47,404 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:47,930 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:48,463 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:49,911 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:50,404 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:50,934 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:51,474 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:53,170 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:54,869 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:56,941 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:31:56] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:31:57,138 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:31:57,599 - werkzeug - INFO -  * Detected change in '/home/runner/TextFlowNavigator/pdf_processing/infrastructure/pdf_processor.py', reloading
+2024-11-19 09:31:58,677 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 09:31:59,774 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 09:31:59,776 - werkzeug - INFO -  * Debugger PIN: 249-955-146
+2024-11-19 09:32:00,643 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:00] "GET / HTTP/1.1" 200 -
+2024-11-19 09:32:00,653 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:00] "GET /assets/index-FSzeO8vF.js HTTP/1.1" 200 -
+2024-11-19 09:32:00,670 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:00] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 200 -
+2024-11-19 09:32:00,768 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:00] "GET /assets/index-B4pXWyNm.js HTTP/1.1" 200 -
+2024-11-19 09:32:00,769 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:00] "GET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1" 200 -
+2024-11-19 09:32:01,095 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:01] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:01,187 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:01] "GET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 09:32:02,264 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:03,196 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:05,057 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:06,979 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:06] "GET /api/books HTTP/1.1" 200 -

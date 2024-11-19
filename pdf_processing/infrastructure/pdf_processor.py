@@ -4,7 +4,7 @@ import logging
 from PyPDF2 import PdfReader
 from ..domain.ports import PDFProcessor
 from ..domain.entities import (Section, ProcessedPDF, PDFImage,
-                             ProcessingStatus, ProcessingProgress, FormattedText)
+                             ProcessingStatus, ProcessingProgress, FormattedText, TextFormatting)
 from .text_format_processor import TextFormatProcessor
 from .chapter_processor import ChapterProcessor
 from .file_system_processor import FileSystemProcessor
@@ -54,6 +54,7 @@ class MuPDFProcessor(PDFProcessor):
             pre_section_pages: List[List[FormattedText]] = []
             first_section_page = None
 
+            # First pass: Identify where numbered sections begin
             for page_num, page in enumerate(reader.pages):
                 progress.current_page = page_num + 1
                 text = page.extract_text()
@@ -61,7 +62,7 @@ class MuPDFProcessor(PDFProcessor):
                 if not text:
                     continue
 
-                # Check for standalone section number that indicates start of numbered sections
+                # Check for standalone section number
                 lines = text.splitlines()
                 for line in lines:
                     chapter_num, _ = self.chapter_processor.detect_chapter(line.strip())
@@ -72,7 +73,7 @@ class MuPDFProcessor(PDFProcessor):
                 if first_section_page is not None:
                     break
 
-                # Process page content using AI
+                # Process page content using AI for pre-sections
                 formatted_blocks = await self.ai_processor.analyze_page_content(text, page_num + 1)
                 if formatted_blocks:
                     pre_section_pages.append(formatted_blocks)
@@ -96,7 +97,7 @@ class MuPDFProcessor(PDFProcessor):
                             sections.append(
                                 Section(number=chapter_count,
                                        content="\n".join(
-                                           text.text for text in current_chapter),
+                                           block.text for block in current_chapter),
                                        page_number=progress.current_page,
                                        file_path=file_path,
                                        pdf_name=pdf_folder_name,
@@ -117,8 +118,7 @@ class MuPDFProcessor(PDFProcessor):
                     
                     sections.append(
                         Section(number=chapter_count,
-                               content="\n".join(
-                                   text.text for text in current_chapter),
+                               content="\n".join(block.text for block in current_chapter),
                                page_number=progress.current_page,
                                file_path=file_path,
                                pdf_name=pdf_folder_name,

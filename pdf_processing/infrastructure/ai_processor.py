@@ -2,7 +2,7 @@ import json
 import re
 from typing import Tuple, Optional, List
 import openai
-from ..domain.entities import FormattedText
+from ..domain.entities import FormattedText, TextFormatting
 
 
 class AIProcessor:
@@ -15,7 +15,7 @@ class AIProcessor:
         """Use OpenAI to detect chapter breaks and determine titles"""
         try:
             response = await self.openai_client.chat.completions.create(
-                model="gpt-4-mini",  # Fixed model name
+                model="gpt-4o-mini",  # Updated model name
                 messages=[{
                     "role":
                     "system",
@@ -39,7 +39,7 @@ class AIProcessor:
         """Analyze page content and return formatted text blocks"""
         try:
             response = await self.openai_client.chat.completions.create(
-                model="gpt-4-mini",
+                model="gpt-4o-mini",  # Updated model name
                 messages=[{
                     "role":
                     "system",
@@ -47,10 +47,8 @@ class AIProcessor:
                     """You are a text formatting analyzer. Analyze the given page content and identify text blocks with their formatting attributes. 
                     Return a JSON array where each object has:
                     - text: the content
-                    - is_title: boolean if it's a title
-                    - is_header: boolean if it's a header
-                    - indentation_level: number (0-3)
-                    - formatting: array of strings ('bold', 'italic', 'underline')"""
+                    - format_type: string ('header', 'subheader', 'paragraph', 'list_item', 'quote', 'code')
+                    - metadata: object with additional properties like indentation_level (0-3) and formatting (['bold', 'italic', 'underline'])"""
                 }, {
                     "role":
                     "user",
@@ -65,12 +63,17 @@ class AIProcessor:
             return [
                 FormattedText(
                     text=block["text"],
-                    is_title=block.get("is_title", False),
-                    is_header=block.get("is_header", False),
-                    indentation_level=block.get("indentation_level", 0),
-                    formatting=block.get("formatting", [])
+                    format_type=TextFormatting[block.get("format_type", "PARAGRAPH").upper()],
+                    metadata={
+                        "indentation_level": block.get("metadata", {}).get("indentation_level", 0),
+                        "formatting": block.get("metadata", {}).get("formatting", [])
+                    }
                 ) for block in blocks
             ]
         except Exception as e:
             print(f"Error analyzing page {page_num}: {e}")
-            return [FormattedText(text=page_text, is_title=False, is_header=False, indentation_level=0, formatting=[])]
+            return [FormattedText(
+                text=page_text,
+                format_type=TextFormatting.PARAGRAPH,
+                metadata={"indentation_level": 0, "formatting": []}
+            )]
