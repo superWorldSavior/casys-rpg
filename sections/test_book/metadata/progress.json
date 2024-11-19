@@ -1,8 +1,8 @@
 {
-  "status": "failed",
-  "current_page": 1,
+  "status": "completed",
+  "current_page": 9,
   "total_pages": 9,
   "processed_sections": 0,
   "processed_images": 0,
-  "error_message": "FormattedText.__init__() got an unexpected keyword argument 'is_title'"
+  "error_message": null
 }

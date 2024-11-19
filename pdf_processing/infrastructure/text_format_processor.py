@@ -1,6 +1,6 @@
 import re
 from ..domain.entities import TextFormatting, FormattedText
-from typing import List
+from typing import List, Dict, Any
 
 class TextFormatProcessor:
     def __init__(self):
@@ -31,6 +31,28 @@ class TextFormatProcessor:
         ]
 
         return any(indicators)
+
+    def detect_format_type(self, text: str) -> TextFormatting:
+        """Detect the format type of a text block without AI assistance."""
+        return self.detect_formatting(text, is_pre_section=False)
+
+    def analyze_formatting(self, text: str) -> Dict[str, Any]:
+        """Analyze text formatting attributes."""
+        metadata = {
+            "is_centered": self.is_centered_text(text),
+            "is_capitalized": text.isupper(),
+            "is_title_case": text.istitle(),
+            "indentation": len(text) - len(text.lstrip()),
+            "line_length": len(text),
+        }
+
+        # Detect if it's a list item
+        if re.match(r'^\s*[-•*]\s+', text):
+            metadata["list_type"] = "bullet"
+        elif re.match(r'^\s*\d+\.\s+', text):
+            metadata["list_type"] = "numbered"
+        
+        return metadata
 
     def detect_formatting(self, text: str, is_pre_section: bool = False) -> TextFormatting:
         text = text.strip()
@@ -79,7 +101,8 @@ class TextFormatProcessor:
                     formatted_texts.append(
                         FormattedText(
                             text="\n".join(current_text),
-                            format_type=current_format or TextFormatting.PARAGRAPH
+                            format_type=current_format or TextFormatting.PARAGRAPH,
+                            metadata=self.analyze_formatting("\n".join(current_text))
                         )
                     )
                     current_text = []
@@ -94,7 +117,8 @@ class TextFormatProcessor:
                     formatted_texts.append(
                         FormattedText(
                             text="\n".join(current_text),
-                            format_type=current_format or TextFormatting.PARAGRAPH
+                            format_type=current_format or TextFormatting.PARAGRAPH,
+                            metadata=self.analyze_formatting("\n".join(current_text))
                         )
                     )
                     current_text = []
@@ -106,7 +130,8 @@ class TextFormatProcessor:
             formatted_texts.append(
                 FormattedText(
                     text="\n".join(current_text),
-                    format_type=current_format or TextFormatting.PARAGRAPH
+                    format_type=current_format or TextFormatting.PARAGRAPH,
+                    metadata=self.analyze_formatting("\n".join(current_text))
                 )
             )
 

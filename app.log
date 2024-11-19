@@ -1368,3 +1368,1341 @@ RuntimeError: Event loop is closed
 2024-11-19 09:32:03,196 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:03] "GET /api/books HTTP/1.1" 200 -
 2024-11-19 09:32:05,057 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
 2024-11-19 09:32:06,979 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:06] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:08,756 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:08] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 09:32:09,592 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:09] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 09:32:10,038 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:10] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 09:32:11,156 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:11] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 09:32:11,608 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:11] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 09:32:12,237 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:12] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:12,924 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:12] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:13,374 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:13] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 09:32:14,061 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:16,931 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:16] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:17,561 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:17] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:20,758 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:23,263 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:23,882 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:26,952 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:26] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:27,563 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:27] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:31,445 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:31,965 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:33,300 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:33,782 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:33,994 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:34,313 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:34,626 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:36,550 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:36,977 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:36] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:37,175 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:37,437 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:37,587 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:37] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:37,731 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:38,308 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:39,087 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:39,570 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:40,176 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:40,890 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:40,998 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:41,401 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:42,098 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:42,758 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:43,223 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:43,255 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:43,842 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:43,854 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:44,367 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:45,276 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:45,782 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:46,314 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:47,079 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:47,624 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:48,132 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:48,287 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:48,865 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:48,873 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:49,421 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:50,195 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:50,681 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:51,598 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:51,711 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:53,160 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:53,759 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:54,993 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:56,885 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:32:58,196 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:58,807 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:32:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:32:59,510 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:33:03,180 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:03,841 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:08,149 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:08,759 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:13,164 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:13,770 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:15,743 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:33:16,952 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:16] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:17,615 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:17] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:23,176 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:23,799 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:26,955 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:26] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:52,172 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.3:5000
+2024-11-19 09:33:52,173 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-19 09:33:52,174 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 09:33:53,377 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 09:33:53,381 - werkzeug - INFO -  * Debugger PIN: 334-948-289
+2024-11-19 09:33:54,421 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:54] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 09:33:54,879 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:54] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 09:33:55,332 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:55] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 09:33:55,340 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:55] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 09:33:55,773 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:55] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 09:33:56,168 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:56] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 09:33:57,360 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:57] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 09:33:57,361 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:57] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 09:33:57,993 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:57] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 09:33:57,994 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:57] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 09:33:58,453 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:58,991 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:58] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 09:33:59,073 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:59] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:33:59,528 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:33:59] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 09:34:04,552 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:05,188 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:08,340 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:08,975 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:14,905 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:15,568 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:18,333 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:18,973 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:24,530 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:25,159 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:28,357 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:28,948 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:34,541 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:35,199 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:38,333 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:38,972 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:39,344 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:34:44,506 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:34:44,555 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:45,188 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:48,320 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:48,955 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:54,990 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:55,606 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:58,341 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:34:58,983 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:34:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:04,562 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:05,172 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:06,314 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:35:08,373 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:09,012 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:09] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:14,598 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:15,226 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:18,375 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:18,969 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:23,796 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:35:24,563 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:25,194 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:28,353 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:28,977 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:34,556 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:35,226 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:38,172 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:35:38,330 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:38,941 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:44,539 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:45,175 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:48,331 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:48,957 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:50,164 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:35:52,352 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:35:54,542 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:55,153 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:55,501 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:35:58,345 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:35:58,955 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:35:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:04,547 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:04,665 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:05,170 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:06,858 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:08,344 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:09,005 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:09] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:14,544 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:15,155 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:18,334 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:18,359 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:18,987 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:22,682 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:24,725 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:25,338 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:28,550 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:29,520 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:32,181 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:34,744 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:35,384 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:36,988 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:38,532 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:39,514 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:39] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:43,512 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:44,502 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:47,558 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:48,213 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:48,531 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:49,519 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:52,977 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:53,554 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:54,548 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:57,454 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:58,094 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:36:58,571 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:36:59,536 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:36:59] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:03,515 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:04,440 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:04,513 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:04,567 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:09,607 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:09] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:09,620 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:10,228 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:13,342 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:14,038 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:19,097 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:19,641 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:19] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:19,913 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:20,244 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:22,595 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:23,347 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:24,000 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:26,870 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:29,564 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:30,161 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:31,026 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:33,340 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:33,979 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:34,439 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:38,733 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:39,595 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:39] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:40,214 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:43,314 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:43,945 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:48,781 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:49,546 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:49,859 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:50,951 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:51,325 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:53,326 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:53,962 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:57,177 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:37:59,615 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:37:59] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:37:59,904 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:00,248 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:03,330 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:03,945 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:04,030 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:04,959 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:09,094 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:09,633 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:09] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:10,305 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:13,081 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:13,329 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:13,968 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:15,415 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:18,321 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:18,943 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:19,330 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:21,944 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:24,540 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:24,963 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:25,155 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:27,808 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:27,891 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:28,356 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:28,388 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:28,889 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:29,021 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:29,441 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:30,027 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:30,694 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:31,989 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:32,600 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:33,320 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:34,129 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:34,586 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:34,834 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:35,235 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:35,498 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:35,557 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:36,042 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:36,600 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:36,850 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:37,202 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:37,429 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:37,759 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:38,335 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:38,389 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:38,990 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:39,055 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:39,773 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:40,322 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:40,842 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:41,337 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:43,127 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:44,352 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:44,571 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:45,056 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:45,169 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:45,675 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:46,306 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:47,348 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:47,379 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:48,342 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:48,634 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:48,761 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:48,957 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:49,187 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:49,742 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:50,373 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:50,868 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:51,342 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:52,077 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:52,330 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:52,511 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:53,093 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:53,580 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:54,170 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:54,422 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:54,634 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:55,062 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:55,258 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:55,814 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:56,331 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:58,317 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:58,332 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:58,924 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:58,992 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:38:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:38:59,404 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:38:59,449 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:00,148 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:00,588 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:01,253 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:01,821 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:02,310 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:02,791 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:02,806 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:02,839 - openai._base_client - INFO - Retrying request to /chat/completions in 0.485927 seconds
+2024-11-19 09:39:02,840 - openai._base_client - INFO - Retrying request to /chat/completions in 0.458065 seconds
+2024-11-19 09:39:03,249 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:03,892 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:04,450 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:04,591 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:05,176 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:05,270 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:05,675 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:06,148 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:06,657 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:07,328 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:08,012 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:08,407 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:08,553 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:09,067 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:09] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:09,070 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:09,290 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:09,642 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:09,772 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:10,084 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:10,642 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:11,232 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:11,659 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:13,115 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:13,585 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:14,187 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:14,605 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:14,864 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:15,228 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:15,422 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:16,274 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:16,899 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:17,122 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:17,426 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:18,182 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:18,327 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:18,369 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:18,843 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:19,030 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:19] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:19,365 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:20,067 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:21,070 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:21,161 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:21,295 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:21,938 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:22,045 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:22,440 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:22,576 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:23,039 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:23,065 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:23,081 - openai._base_client - INFO - Retrying request to /chat/completions in 0.403614 seconds
+2024-11-19 09:39:23,082 - openai._base_client - INFO - Retrying request to /chat/completions in 0.455176 seconds
+2024-11-19 09:39:24,065 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:24,268 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:24,579 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:24,647 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:24,751 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:25,193 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:25,202 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:25,331 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:25,748 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:26,019 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:26,212 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:26,666 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:26,888 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:27,279 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:27,766 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:28,526 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:28,691 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:29,042 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:29,338 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:29,540 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:29,940 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:30,196 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:30,662 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:30,820 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:31,128 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:31,340 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:31,562 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:32,026 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:32,187 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:32,357 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:32,575 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:32,717 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:33,284 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:33,847 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:34,012 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:34,352 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:34,847 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:34,903 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:35,450 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:35,482 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:35,898 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:35,955 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:36,385 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:36,622 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:36,839 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:37,634 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:38,118 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:38,501 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:38,763 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:39,269 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:39,292 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:39,537 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:39] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:39,779 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:39,819 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:40,406 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:40,561 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:40,824 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:40,985 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:41,493 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:41,570 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:41,818 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:42,131 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:42,595 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:42,607 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:43,079 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:43,226 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:43,700 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:43,751 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:44,618 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:44,697 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:44,818 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:45,253 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:45,292 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:45,424 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:45,779 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:45,800 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:46,231 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:46,735 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:46,911 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:47,261 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:47,426 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:47,659 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:48,049 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:48,253 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:48,324 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:48,549 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:48,746 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:49,067 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:49,384 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:49,597 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:49,933 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:50,036 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:50,356 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:50,486 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:50,904 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:51,048 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:51,526 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:51,708 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:52,051 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:52,273 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:52,970 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:53,172 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:53,620 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:54,127 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:54,286 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:54,680 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:54,754 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:54,943 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:55,183 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:55,429 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:55,488 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:55,732 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:55,941 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:56,061 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:56,295 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:56,551 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:56,848 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:57,100 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:57,378 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:57,481 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:57,700 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:58,109 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:58,260 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:58,401 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:58,682 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:58,805 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:59,001 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:39:59] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:39:59,233 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:59,400 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:39:59,805 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:00,002 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:00,464 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:00,517 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:01,134 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:01,164 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:01,827 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:02,093 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:02,572 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:02,647 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:03,199 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:03,335 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:03,859 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:03,866 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:04,329 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:04,501 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:04,585 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:04,622 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:04,796 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:05,264 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:05,510 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:05,778 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:06,071 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:06,233 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:06,525 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:06,847 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:07,304 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:07,463 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:07,837 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:07,956 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:08,369 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:08,382 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:08,545 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:08,983 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:09,101 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:09,365 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:09,670 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:09,851 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:10,263 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:10,502 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:10,549 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:10,829 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:10,963 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:11,098 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:11,328 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:11,492 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:11,589 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:11,807 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:12,019 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:12,031 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:12,334 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:12,466 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:12,575 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:12,836 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:13,122 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:13,164 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:13,728 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:14,007 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:14,327 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:14,553 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:14,600 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:14,857 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:14,902 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:15,104 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:15,232 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:15,371 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:15,516 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:15,625 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:15,699 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:16,072 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:16,108 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:16,572 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:16,708 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:16,732 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:17,125 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:17,185 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:17,307 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:17,495 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:17,754 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:17,786 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:17,832 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:18,310 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:18,322 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:18,347 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:18,705 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:18,951 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:19,003 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:19,436 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:20,017 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:20,882 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:21,064 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:21,438 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:21,702 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:21,750 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:22,178 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:22,296 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:22,471 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:22,807 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:22,984 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:23,189 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:23,322 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:23,500 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:23,744 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:23,979 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:24,061 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:24,281 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:24,577 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:24,652 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:25,058 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:25,159 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:25,192 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:25,224 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:25,650 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:25,745 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:25,847 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:26,208 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:26,410 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:26,417 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:26,780 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:27,039 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:27,076 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:27,344 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:27,564 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:27,574 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:27,913 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:28,077 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:28,203 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:28,317 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:28,331 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:28,811 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:28,819 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:28,883 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:29,032 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:29,263 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:29,382 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:29,508 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:29,741 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:29,862 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:30,019 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:30,158 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:30,464 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:30,555 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:30,622 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:30,993 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:31,225 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:31,252 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:31,358 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:31,730 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:31,876 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:32,119 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:32,248 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:32,339 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:32,721 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:32,824 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:33,132 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:33,404 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:34,137 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:34,179 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:34,476 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:34,552 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:34,599 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:34,775 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:35,116 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:35,168 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:35,213 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:35,268 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:35,600 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:35,677 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:35,861 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:36,061 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:36,541 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:36,602 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:36,681 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:36,982 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:37,162 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:37,311 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:37,568 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:37,861 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:38,004 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:38,093 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:38,128 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:38,374 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:38,687 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:38,715 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:38,967 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:39,017 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:39,124 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:39,459 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:39,562 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:39,645 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:40,081 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:40,191 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:40,359 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:40,581 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:40,705 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:41,073 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:41,294 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:41,518 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:41,812 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:41,856 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:42,006 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:42,471 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:42,492 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:42,550 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:43,071 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:43,166 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:43,267 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:43,783 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:43,817 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:44,339 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:44,657 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:44,732 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:44,840 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:45,043 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:45,267 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:45,694 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:45,998 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:46,180 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:46,624 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:46,955 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:47,056 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:47,767 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:47,956 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:48,325 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:48,356 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:48,836 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:48,852 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:48,967 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:49,535 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:49,804 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:50,231 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:50,436 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:50,832 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:50,975 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:51,300 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:51,608 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:51,775 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:52,596 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:53,627 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:54,494 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:54,613 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:54,623 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:54,931 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:54,958 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:55,238 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:55,388 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:55,527 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:55,947 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:56,178 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:56,415 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:56,460 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:56,999 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:57,170 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:57,697 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:58,032 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:58,346 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:58,359 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:58,680 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:58,969 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:40:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:40:58,995 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:59,140 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:59,596 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:59,724 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:40:59,892 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:00,364 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:00,477 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:00,861 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:00,973 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:01,360 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:01,480 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:01,939 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:02,036 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:02,636 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:02,694 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:03,175 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:03,210 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:03,657 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:03,688 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:04,271 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:04,325 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:04,607 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:04,850 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:05,021 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:05,223 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:05,253 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:05,358 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:05,585 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:06,181 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:06,235 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:06,840 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:07,171 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:07,535 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:07,794 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:08,064 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:08,348 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:08,397 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:08,570 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:08,949 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:09,048 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:09,078 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:09,128 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:09,641 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:09,706 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:10,225 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:10,664 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:10,927 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:11,100 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:11,578 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:11,953 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:12,047 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:12,440 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:12,547 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:13,148 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:13,200 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:13,753 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:13,885 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:14,351 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:14,400 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:14,436 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:14,572 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:14,887 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:14,935 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:15,185 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:15,447 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:15,778 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:15,943 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:16,382 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:16,554 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:17,082 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:17,703 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:18,290 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:18,356 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:18,897 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:18,959 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:19,361 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:19,625 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:20,161 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:21,264 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:21,858 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:22,401 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:22,949 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:23,486 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:24,456 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:24,556 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:24,997 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:25,154 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:25,645 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:26,095 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:26,236 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:26,935 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:27,044 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:27,406 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:27,553 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:27,772 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:28,055 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:28,345 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:28,394 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:28,531 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:28,737 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:29,046 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:29,147 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:29,242 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:29,623 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:29,873 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:30,226 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:30,376 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:30,542 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:30,830 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:30,921 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:31,347 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:31,536 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:31,599 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:31,860 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:32,089 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:32,412 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:32,633 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:33,053 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:33,426 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:33,738 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:34,334 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:34,555 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:34,920 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:35,186 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:35,724 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:36,201 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:36,275 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:36,762 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:36,894 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:37,383 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:37,611 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:38,114 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:38,404 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:38,550 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:38,959 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:38,998 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:39,138 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:39,480 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:39,622 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:39,916 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:40,029 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:40,480 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:40,595 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:40,614 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:41,189 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:41,240 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:41,730 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:41,732 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:42,320 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:42,354 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:42,821 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:44,608 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:44,864 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:45,213 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:45,604 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:46,059 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:46,573 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:47,057 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:47,732 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:47,933 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:48,041 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:48,242 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:48,383 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:48,513 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:48,681 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:48,972 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:49,004 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:49,025 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:49,182 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:49,568 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:49,703 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:50,153 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:50,374 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:50,701 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:51,215 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:51,689 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:51,933 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:52,199 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:52,637 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:52,689 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:53,251 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:53,341 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:53,939 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:53,946 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:54,533 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:54,597 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:54,791 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:55,141 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:55,200 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:55,593 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:55,630 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:56,066 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:56,145 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:56,317 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:56,647 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:57,225 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:57,281 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:57,958 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:58,417 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:58,455 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:58,474 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:58,909 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:59,006 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:41:59,046 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:41:59] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:41:59,604 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:00,111 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:00,163 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:00,970 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:01,485 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:02,087 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:02,674 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:03,266 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:03,852 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:04,344 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:04,571 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:04,946 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:05,215 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:05,596 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:06,099 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:06,116 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:06,124 - openai._base_client - INFO - Retrying request to /chat/completions in 0.381901 seconds
+2024-11-19 09:42:06,140 - openai._base_client - INFO - Retrying request to /chat/completions in 0.473938 seconds
+2024-11-19 09:42:07,220 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:08,379 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:08,872 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:09,022 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:09] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:09,399 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:09,942 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:10,219 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:10,636 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:10,852 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:11,439 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:11,987 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:12,855 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:13,508 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:14,043 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:14,617 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:14,665 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:15,211 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:15,298 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:15,722 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:15,949 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:16,338 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:16,849 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:17,440 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:18,064 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:18,525 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:18,576 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:19,175 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:19] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:19,231 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:19,696 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:20,459 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:21,039 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:21,236 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:21,518 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:21,536 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:21,549 - openai._base_client - INFO - Retrying request to /chat/completions in 0.406930 seconds
+2024-11-19 09:42:21,592 - openai._base_client - INFO - Retrying request to /chat/completions in 0.469377 seconds
+2024-11-19 09:42:21,634 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:22,527 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:23,030 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:23,697 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:24,276 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:24,660 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:24,936 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:25,270 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:25,379 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:25,818 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:26,435 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:26,470 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:26,950 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:27,585 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:28,134 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:28,228 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:28,384 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:28,649 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:29,016 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:29,033 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:29,509 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:29,985 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:30,561 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:30,970 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:31,539 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:31,985 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:32,744 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:32,842 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:33,320 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:33,901 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:34,395 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:34,585 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:34,784 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:34,878 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:35,215 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:35,481 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:35,554 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:36,841 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:38,406 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:38,538 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:39,052 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:39] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:39,065 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:42,852 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:43,041 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:43,162 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:43,311 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:43,693 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:43,746 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:44,443 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:44,582 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:44] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:45,044 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:45,201 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:45,739 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:46,378 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:47,276 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:47,859 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:48,031 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:48,417 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:48,829 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:49,046 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:49,413 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:50,013 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:50,685 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:51,255 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:51,280 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:51,767 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:52,067 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:52,352 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:52,988 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:53,393 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:53,459 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:53,966 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:54,525 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:54,596 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:55,332 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:55,755 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:55,769 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:55,778 - openai._base_client - INFO - Retrying request to /chat/completions in 0.431646 seconds
+2024-11-19 09:42:55,779 - openai._base_client - INFO - Retrying request to /chat/completions in 0.453926 seconds
+2024-11-19 09:42:56,731 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:56,755 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:57,625 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:58,152 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:58,399 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:58,649 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:59,039 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:42:59] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:42:59,674 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:42:59,970 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:00,310 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:00,535 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:00,831 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:01,024 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:01,223 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:01,413 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:01,526 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:01,937 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:02,575 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:02,670 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:03,167 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:03,285 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:03,771 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:03,893 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:04,422 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:04,636 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:04,995 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:05,140 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:05,292 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:05,330 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:05,519 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:05,659 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:06,341 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:06,537 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:06,826 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:07,132 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:07,388 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:07,778 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:07,850 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:08,352 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:08,360 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:08,522 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:08,982 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:09,071 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:09,182 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:09,298 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:09,501 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:09,578 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:10,263 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:10,718 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:10,729 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:10,767 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:11,167 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:11,591 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:11,621 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:12,228 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:12,333 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:12,746 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:12,907 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:13,240 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:13,377 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:13,723 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:13,729 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:13,943 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:14,425 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:14,484 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:14,931 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:14,956 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:15,374 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:15,599 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:15,875 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:16,152 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:16,481 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:16,749 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:16,966 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:17,283 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:17,518 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:18,111 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:18,122 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:18,410 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:18,710 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:18,725 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:19,047 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:19] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:19,188 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:19,230 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:19,309 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:19,657 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:19,715 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:20,237 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:20,446 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:20,473 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:20,494 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:20,511 - openai._base_client - INFO - Retrying request to /chat/completions in 0.424182 seconds
+2024-11-19 09:43:20,515 - openai._base_client - INFO - Retrying request to /chat/completions in 0.420942 seconds
+2024-11-19 09:43:21,074 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:21,481 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:21,967 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:21,976 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:22,558 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:22,564 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:23,048 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:23,090 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:23,378 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:24,011 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:24,255 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:24,524 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:24,793 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:25,003 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:25,324 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:25,916 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:26,890 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:26,914 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:27,212 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:27,396 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:27,573 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:28,029 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:28,049 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:28,167 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:28,331 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:28,525 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:28,526 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:28,653 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:29,081 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:29,081 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:29,153 - openai._base_client - INFO - Retrying request to /chat/completions in 0.445070 seconds
+2024-11-19 09:43:29,183 - openai._base_client - INFO - Retrying request to /chat/completions in 0.432821 seconds
+2024-11-19 09:43:29,281 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:30,130 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:30,139 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:30,780 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:31,015 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:31,224 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:31,554 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:31,736 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:32,158 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:32,470 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:32,661 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:33,002 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:33,317 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:33,434 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:33,759 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:34,005 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:43:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:43:34,274 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:34,335 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:34,770 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:35,598 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:36,147 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:36,948 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:43:37,259 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:36,312 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:40,304 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:46,059 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:51,302 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:56,693 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:57,352 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:57,923 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:58,403 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:45:59,429 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:00,218 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:00,722 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:01,259 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:01,913 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:02,477 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:02,911 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:03,506 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:03,986 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:04,763 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:05,356 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:05,907 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:06,520 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:06,980 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:07,599 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:08,134 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:08,612 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:09,199 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:09,687 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:10,126 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:11,104 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:11,580 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:12,305 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:13,098 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:13,588 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:14,210 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:14,213 - pdf_processing.infrastructure.pdf_processor - ERROR - Error processing page 7: 'TextFormatProcessor' object has no attribute 'detect_format_type'
+2024-11-19 09:46:14,214 - pdf_processing.infrastructure.pdf_processor - ERROR - Error processing page 8: 'TextFormatProcessor' object has no attribute 'detect_format_type'
+2024-11-19 09:46:14,215 - pdf_processing.infrastructure.pdf_processor - ERROR - Error processing page 9: 'TextFormatProcessor' object has no attribute 'detect_format_type'
+2024-11-19 09:46:36,002 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:40,367 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:46:45,528 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:47:00,391 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.3:5000
+2024-11-19 09:47:00,392 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-19 09:47:00,395 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 09:47:01,675 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 09:47:01,718 - werkzeug - INFO -  * Debugger PIN: 537-259-666
+2024-11-19 09:47:02,897 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:02] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 09:47:03,763 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:03] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 09:47:04,198 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:04] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 09:47:05,728 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:05] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 09:47:05,731 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:05] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 09:47:06,587 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:06] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:11,569 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:11] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:16,569 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:16] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:21,529 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:21] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:26,606 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:26] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:31,566 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:31] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:36,532 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:36] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:41,563 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:41] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:46,542 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:46] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:51,540 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:51] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:47:53,742 - werkzeug - INFO -  * Detected change in '/home/runner/TextFlowNavigator/pdf_processing/infrastructure/pdf_processor.py', reloading
+2024-11-19 09:47:54,338 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 09:47:56,049 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 09:47:56,055 - werkzeug - INFO -  * Debugger PIN: 652-398-456
+2024-11-19 09:47:56,758 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:47:56] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:48:00,376 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.3:5000
+2024-11-19 09:48:00,376 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-19 09:48:00,377 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 09:48:02,698 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 09:48:02,701 - werkzeug - INFO -  * Debugger PIN: 138-326-880
+2024-11-19 09:48:03,049 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:48:05,850 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:48:06,261 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:48:06,581 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:06] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:48:08,950 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:48:09,256 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:48:09,906 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:09] "GET / HTTP/1.1" 200 -
+2024-11-19 09:48:09,955 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:09] "GET /assets/index-FSzeO8vF.js HTTP/1.1" 200 -
+2024-11-19 09:48:10,004 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:10] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 200 -
+2024-11-19 09:48:10,154 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:10] "GET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1" 200 -
+2024-11-19 09:48:10,157 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:10] "GET /assets/index-B4pXWyNm.js HTTP/1.1" 200 -
+2024-11-19 09:48:10,676 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:48:11,617 - werkzeug - INFO - 172.31.196.3 - - [19/Nov/2024 09:48:11] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 09:48:13,642 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 09:48:14,865 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
