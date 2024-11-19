@@ -74,26 +74,39 @@ async def process_pdf_file(file):
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(file_path)
     
-    # Process the PDF
-    await pdf_service.process_pdf(file_path)
-    
-    metadata = {
-        "title": os.path.splitext(filename)[0],
-        "author": "Unknown",
-        "filename": filename,
-        "id": filename,
-        "uploadDate": datetime.now().isoformat(),
-        "status": "processing",
-        "current_page": 0,
-        "total_pages": 0,
-        "processed_sections": 0,
-        "processed_images": 0,
-        "error_message": None,
-        "cover_image": None
-    }
-    
-    db[f"pdf_{filename}"] = json.dumps(metadata)
-    return metadata
+    try:
+        # Process the PDF
+        processed_pdf = await pdf_service.process_pdf(file_path)
+        
+        metadata = {
+            "title": os.path.splitext(filename)[0],
+            "author": "Unknown",
+            "filename": filename,
+            "id": filename,
+            "uploadDate": datetime.now().isoformat(),
+            "status": processed_pdf.progress.status.value,
+            "current_page": processed_pdf.progress.current_page,
+            "total_pages": processed_pdf.progress.total_pages,
+            "processed_sections": processed_pdf.progress.processed_sections,
+            "processed_images": len(processed_pdf.images),
+            "error_message": processed_pdf.progress.error_message,
+            "cover_image": None
+        }
+        
+        db[f"pdf_{filename}"] = json.dumps(metadata)
+        return metadata
+    except Exception as e:
+        error_metadata = {
+            "title": os.path.splitext(filename)[0],
+            "author": "Unknown",
+            "filename": filename,
+            "id": filename,
+            "uploadDate": datetime.now().isoformat(),
+            "status": "failed",
+            "error_message": str(e)
+        }
+        db[f"pdf_{filename}"] = json.dumps(error_metadata)
+        raise
 
 @app.route('/api/books/upload', methods=['POST'])
 async def upload_pdfs():

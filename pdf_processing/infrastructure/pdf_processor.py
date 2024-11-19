@@ -50,7 +50,7 @@ class MuPDFProcessor(PDFProcessor):
             return results
 
     async def process_pre_section_page(self, text: str, page_num: int) -> List[FormattedText]:
-        """Process a single pre-section page using GPT-4-mini"""
+        """Process a single pre-section page using GPT-4o-mini"""
         try:
             return await self.ai_processor.analyze_page_content(text, page_num)
         except Exception as e:
