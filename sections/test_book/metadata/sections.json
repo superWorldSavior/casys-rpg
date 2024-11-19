@@ -3,92 +3,29 @@
     {
       "section_number": 1,
       "chapter_number": 1,
-      "file_path": "test_book/histoire/1.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": "A Solo Adventure"
-    },
-    {
-      "section_number": 2,
-      "chapter_number": 2,
-      "file_path": "test_book/histoire/2.md",
+      "file_path": "test_book/histoire/chapitre_1.md",
       "pdf_name": "test_book",
       "page_number": 7,
       "is_chapter": true,
       "title": "INTRODUCTION"
     },
     {
-      "section_number": 3,
-      "chapter_number": 3,
-      "file_path": "test_book/histoire/3.md",
+      "section_number": 2,
+      "chapter_number": 2,
+      "file_path": "test_book/histoire/chapitre_2.md",
       "pdf_name": "test_book",
       "page_number": 7,
       "is_chapter": true,
       "title": "COMBAT RULES"
     },
     {
-      "section_number": 4,
-      "chapter_number": 4,
-      "file_path": "test_book/histoire/4.md",
+      "section_number": 3,
+      "chapter_number": 3,
+      "file_path": "test_book/histoire/chapitre_3.md",
       "pdf_name": "test_book",
       "page_number": 7,
       "is_chapter": true,
-      "title": "Basic Combat"
-    },
-    {
-      "section_number": 5,
-      "chapter_number": 5,
-      "file_path": "test_book/histoire/5.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": "The higher total wins that round"
-    },
-    {
-      "section_number": 6,
-      "chapter_number": 6,
-      "file_path": "test_book/histoire/6.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": "The loser loses 2 STAMINA points"
-    },
-    {
-      "section_number": 7,
-      "chapter_number": 7,
-      "file_path": "test_book/histoire/7.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": "GAME RULES"
-    },
-    {
-      "section_number": 8,
-      "chapter_number": 8,
-      "file_path": "test_book/histoire/8.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": "Character Creation"
-    },
-    {
-      "section_number": 9,
-      "chapter_number": 9,
-      "file_path": "test_book/histoire/9.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": "EQUIPMENT"
-    },
-    {
-      "section_number": 10,
-      "chapter_number": 10,
-      "file_path": "test_book/histoire/10.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": null
+      "title": "Chapitre 3"
     },
     {
       "section_number": 1,
@@ -97,7 +34,7 @@
       "pdf_name": "test_book",
       "page_number": 7,
       "is_chapter": false,
-      "title": null
+      "title": "Section 1"
     },
     {
       "section_number": 2,
@@ -106,7 +43,7 @@
       "pdf_name": "test_book",
       "page_number": 8,
       "is_chapter": false,
-      "title": null
+      "title": "Section 2"
     },
     {
       "section_number": 3,
@@ -115,10 +52,10 @@
       "pdf_name": "test_book",
       "page_number": 9,
       "is_chapter": false,
-      "title": null
+      "title": "Section 3"
     }
   ],
-  "total_sections": 13,
-  "pre_section_count": 10,
+  "total_sections": 6,
+  "pre_section_count": 3,
   "numbered_section_count": 3
 }

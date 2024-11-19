@@ -2,12 +2,12 @@
   "status": "completed",
   "current_page": 9,
   "total_pages": 9,
-  "processed_sections": 13,
+  "processed_sections": 6,
   "processed_images": 0,
   "error_message": null,
   "section_counts": {
-    "total": 13,
-    "pre_sections": 10,
+    "total": 6,
+    "pre_sections": 3,
     "numbered_sections": 3
   }
 }

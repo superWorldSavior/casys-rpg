@@ -11,13 +11,14 @@ logger = logging.getLogger(__name__)
 class AIProcessor:
     def __init__(self):
         self.openai_client = openai.AsyncOpenAI()
-        self.model_name = "gpt-4"  # Default to GPT-4 since GPT-4-mini is not available
+        self.model_name = "gpt-4"  # Default to GPT-4 since GPT-4-mini is not available yet
         self.max_tokens = 1000
         self.temperature = 0.3
 
     async def analyze_page_content(self, page_text: str, page_num: int) -> List[FormattedText]:
         """Analyze page content sequentially and return formatted text blocks"""
         try:
+            logger.info(f"Processing page {page_num} with AI")
             response = await self.openai_client.chat.completions.create(
                 model=self.model_name,
                 messages=[{
@@ -35,22 +36,32 @@ class AIProcessor:
                 max_tokens=self.max_tokens
             )
 
-            result = re.sub(r'^```json|```$', '', response.choices[0].message.content.strip())
-            blocks = json.loads(result)
-            
-            return [
-                FormattedText(
-                    text=block["text"],
-                    format_type=TextFormatting[block.get("format_type", "PARAGRAPH").upper()],
-                    metadata={
-                        "indentation_level": block.get("metadata", {}).get("indentation_level", 0),
-                        "formatting": block.get("metadata", {}).get("formatting", [])
-                    }
-                ) for block in blocks
-            ]
+            content = response.choices[0].message.content
+            if content:
+                result = re.sub(r'^```json|```$', '', content.strip())
+                blocks = json.loads(result)
+                
+                formatted_blocks = [
+                    FormattedText(
+                        text=block["text"],
+                        format_type=TextFormatting[block.get("format_type", "PARAGRAPH").upper()],
+                        metadata={
+                            "indentation_level": block.get("metadata", {}).get("indentation_level", 0),
+                            "formatting": block.get("metadata", {}).get("formatting", [])
+                        }
+                    ) for block in blocks
+                ]
+                logger.info(f"Successfully processed page {page_num} with AI: {len(formatted_blocks)} blocks")
+                return formatted_blocks
+            else:
+                logger.warning(f"Empty response from AI for page {page_num}")
+                return [FormattedText(
+                    text=page_text,
+                    format_type=TextFormatting.PARAGRAPH,
+                    metadata={"indentation_level": 0, "formatting": []}
+                )]
         except Exception as e:
             logger.error(f"Error analyzing page {page_num}: {e}")
-            # Return a simple formatted text block as fallback
             return [FormattedText(
                 text=page_text,
                 format_type=TextFormatting.PARAGRAPH,
@@ -73,9 +84,14 @@ class AIProcessor:
                 max_tokens=100
             )
 
-            result = re.sub(r'^```json|```$', '', response.choices[0].message.content.strip())
-            result_json = json.loads(result)
-            return result_json.get("is_chapter", False), result_json.get("title")
+            content = response.choices[0].message.content
+            if content:
+                result = re.sub(r'^```json|```$', '', content.strip())
+                result_json = json.loads(result)
+                return result_json.get("is_chapter", False), result_json.get("title")
+            else:
+                logger.warning("Empty response from AI for chapter detection")
+                return False, None
         except Exception as e:
             logger.error(f"Error using OpenAI for chapter detection: {e}")
             return False, None
