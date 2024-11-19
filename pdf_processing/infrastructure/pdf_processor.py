@@ -1,11 +1,11 @@
 import os
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Tuple, Set
 import logging
 from PyPDF2 import PdfReader
 from ..domain.ports import PDFProcessor
 from ..domain.entities import (Section, ProcessedPDF, PDFImage,
-                             ProcessingStatus, ProcessingProgress)
-from .text_format_processor import TextFormatProcessor
+                             ProcessingStatus, ProcessingProgress, ProcessingError)
+from .text_processor import TextProcessor
 from .chapter_processor import ChapterProcessor
 from .file_system_processor import FileSystemProcessor
 from .ai_processor import AIProcessor
@@ -24,18 +24,33 @@ logger = logging.getLogger(__name__)
 
 class MuPDFProcessor(PDFProcessor):
     def __init__(self):
-        self.text_processor = TextFormatProcessor()
+        self.text_processor = TextProcessor()
         self.chapter_processor = ChapterProcessor()
         self.file_system_processor = FileSystemProcessor()
         self.ai_processor = AIProcessor()
         self.image_processor = ImageProcessor()
+        self._processed_blocks: Set[str] = set()
+
+    def _get_block_hash(self, text: str, page_num: int) -> str:
+        """Generate a unique hash for a text block"""
+        return f"{page_num}_{hash(text.strip())}"
+
+    def _is_processed(self, text: str, page_num: int) -> bool:
+        """Check if a text block has been processed"""
+        block_hash = self._get_block_hash(text, page_num)
+        return block_hash in self._processed_blocks
+
+    def _mark_processed(self, text: str, page_num: int) -> None:
+        """Mark a text block as processed"""
+        block_hash = self._get_block_hash(text, page_num)
+        self._processed_blocks.add(block_hash)
 
     async def extract_sections(self, pdf_path: str,
                              base_output_dir: str = "sections") -> ProcessedPDF:
         """Extract sections from the PDF with enhanced formatting detection"""
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
         paths = self.file_system_processor.create_book_structure(base_output_dir,
-                                                               pdf_folder_name)
+                                                                pdf_folder_name)
         sections_dir = paths["sections_dir"]
         histoire_dir = paths["histoire_dir"]
         images_dir = paths["images_dir"]
@@ -64,16 +79,18 @@ class MuPDFProcessor(PDFProcessor):
 
                 for line in lines:
                     line = line.strip()
-                    if not line:
+                    if not line or self._is_processed(line, page_num):
                         continue
 
                     # Check for standalone section number
                     chapter_num, _ = self.chapter_processor.detect_chapter(line)
                     if chapter_num is not None:
                         first_section_page = page_num
+                        self._mark_processed(line, page_num)
                         break
 
                     page_lines.append(line)
+                    self._mark_processed(line, page_num)
 
                 if first_section_page is not None:
                     break
@@ -87,31 +104,37 @@ class MuPDFProcessor(PDFProcessor):
                 formatted_blocks = self.text_processor.process_text_block(
                     content, is_pre_section=True)
 
-                # Use AI to detect chapter breaks
+                # Process blocks for chapter detection
                 current_chapter = []
                 chapter_count = 0
 
                 for block in formatted_blocks:
+                    # Skip already processed blocks
+                    if self._is_processed(block.text, 0):
+                        continue
+
                     is_chapter, title = await self.ai_processor.detect_chapter_with_ai(
                         block.text)
+
+                    self._mark_processed(block.text, 0)
 
                     if is_chapter and current_chapter:
                         # Save current chapter
                         chapter_count += 1
                         file_path = os.path.join(histoire_dir,
-                                               f"{chapter_count}.md")
+                                                f"{chapter_count}.md")
 
                         sections.append(
                             Section(number=chapter_count,
-                                  content="\n".join(
-                                      text.text for text in current_chapter),
-                                  page_number=1,
-                                  file_path=file_path,
-                                  pdf_name=pdf_folder_name,
-                                  title=title,
-                                  formatted_content=current_chapter,
-                                  is_chapter=True,
-                                  chapter_number=chapter_count))
+                                   content="\n".join(
+                                       text.text for text in current_chapter),
+                                   page_number=1,
+                                   file_path=file_path,
+                                   pdf_name=pdf_folder_name,
+                                   title=title,
+                                   formatted_content=current_chapter,
+                                   is_chapter=True,
+                                   chapter_number=chapter_count))
                         self.file_system_processor.save_section_content(sections[-1])
                         current_chapter = []
 
@@ -121,19 +144,19 @@ class MuPDFProcessor(PDFProcessor):
                 if current_chapter:
                     chapter_count += 1
                     file_path = os.path.join(histoire_dir,
-                                           f"{chapter_count}.md")
+                                            f"{chapter_count}.md")
 
                     sections.append(
                         Section(number=chapter_count,
-                               content="\n".join(text.text
-                                               for text in current_chapter),
-                               page_number=1,
-                               file_path=file_path,
-                               pdf_name=pdf_folder_name,
-                               title=None,
-                               formatted_content=current_chapter,
-                               is_chapter=True,
-                               chapter_number=chapter_count))
+                                content="\n".join(text.text
+                                                for text in current_chapter),
+                                page_number=1,
+                                file_path=file_path,
+                                pdf_name=pdf_folder_name,
+                                title=None,
+                                formatted_content=current_chapter,
+                                is_chapter=True,
+                                chapter_number=chapter_count))
                     self.file_system_processor.save_section_content(sections[-1])
 
             # Process numbered sections
@@ -153,7 +176,7 @@ class MuPDFProcessor(PDFProcessor):
                     lines = text.splitlines()
                     for line in lines:
                         line = line.strip()
-                        if not line:
+                        if not line or self._is_processed(line, page_num):
                             continue
 
                         chapter_num, _ = self.chapter_processor.detect_chapter(line)
@@ -181,11 +204,14 @@ class MuPDFProcessor(PDFProcessor):
                                 current_text = []
 
                             current_section = chapter_num
+                            self._mark_processed(line, page_num)
                         else:
                             current_text.append(line)
+                            self._mark_processed(line, page_num)
 
                 except Exception as e:
                     logger.error(f"Error processing page {page_num + 1}: {e}")
+                    continue
 
             # Save the last section if exists
             if current_section is not None and current_text:
@@ -213,20 +239,20 @@ class MuPDFProcessor(PDFProcessor):
 
             progress.status = ProcessingStatus.COMPLETED
             return ProcessedPDF(sections=sections,
-                              images=images,
-                              pdf_name=pdf_folder_name,
-                              base_path=base_output_dir,
-                              progress=progress)
+                               images=images,
+                               pdf_name=pdf_folder_name,
+                               base_path=base_output_dir,
+                               progress=progress)
 
         except Exception as e:
             logger.error(f"Error processing PDF: {e}")
             progress.status = ProcessingStatus.FAILED
             progress.error_message = str(e)
             return ProcessedPDF(sections=sections,
-                              images=images,
-                              pdf_name=pdf_folder_name,
-                              base_path=base_output_dir,
-                              progress=progress)
+                               images=images,
+                               pdf_name=pdf_folder_name,
+                               base_path=base_output_dir,
+                               progress=progress)
 
     async def extract_images(
             self,
