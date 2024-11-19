@@ -1,6 +1,6 @@
 """Domain ports (interfaces) for PDF processing."""
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Protocol
 from .entities import Section, PDFImage, ProcessedPDF
 
 class PDFRepository(ABC):
@@ -53,4 +53,11 @@ class ImageAnalyzer(ABC):
     @abstractmethod
     def process_image(self, image_data: bytes, page_number: int, pdf_name: str, output_path: str) -> PDFImage:
         """Process image data into a PDFImage entity."""
+        pass
+
+class ProcessPDFUseCasePort(Protocol):
+    """Interface for PDF processing use case."""
+    
+    async def execute(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
+        """Execute the PDF processing use case."""
         pass
