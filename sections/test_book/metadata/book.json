@@ -1,0 +1,14 @@
+{
+  "title": "test_book",
+  "total_sections": 1,
+  "total_images": 0,
+  "sections": [
+    {
+      "number": 1,
+      "page_number": 7,
+      "file_path": "sections/test_book/histoire/1.md"
+    }
+  ],
+  "base_path": "sections",
+  "processing_status": "completed"
+}
