@@ -33,13 +33,18 @@ class MuPDFProcessor(PDFProcessor):
         self.image_processor = ImageProcessor()
 
     async def process_pre_section_pages(self, pages: List[Dict[str, any]], progress: ProcessingProgress) -> List[List[FormattedText]]:
-        """Process multiple pre-section pages concurrently using AI model"""
+        """Process pre-section pages sequentially using AI model"""
         progress.status = ProcessingStatus.PROCESSING_PRE_SECTIONS
-        logger.info("Starting pre-section processing with AI model")
+        logger.info("Starting sequential pre-section processing with AI model")
         
+        results = []
         try:
-            results = await self.ai_processor.process_pages_concurrently(pages)
-            logger.info(f"Successfully processed {len(results)} pre-section pages")
+            for page in pages:
+                # Process each page sequentially with AI
+                response = await self.ai_processor.analyze_page_content(page['text'], page['num'])
+                results.append(response)
+                logger.info(f"Successfully processed pre-section page {page['num']}")
+            
             return results
         except Exception as e:
             logger.error(f"Error in pre-section pages processing: {e}")
@@ -48,7 +53,7 @@ class MuPDFProcessor(PDFProcessor):
     def process_numbered_section_page(self, text: str, page_num: int) -> List[FormattedText]:
         """Process a single numbered section page using text processor without AI"""
         try:
-            # Use text_processor directly without AI processing
+            # Use text_processor directly without any AI processing or batching
             formatted_blocks = self.text_processor.process_text_block(text, is_pre_section=False)
             logger.info(f"Successfully processed numbered section page {page_num} with {len(formatted_blocks)} blocks")
             return formatted_blocks
@@ -62,7 +67,6 @@ class MuPDFProcessor(PDFProcessor):
         """Save current section with proper validation and error handling"""
         try:
             if current_section is not None and current_blocks:
-                # Save numbered sections directly in sections directory
                 section_path = os.path.join(sections_dir, f"{current_section}.md")
                 
                 # Create sections directory if it doesn't exist
@@ -202,6 +206,10 @@ class MuPDFProcessor(PDFProcessor):
                     self.file_system_processor.save_section_content(section)
                     progress.processed_sections += 1
 
+            # Reset AI processor after pre-sections are done
+            self.ai_processor = AIProcessor()
+            logger.info("Reset AI processor after pre-section processing")
+
             # Third workflow: Process numbered sections without AI
             if first_section_page is not None:
                 progress.status = ProcessingStatus.PROCESSING_NUMBERED_SECTIONS
@@ -209,7 +217,7 @@ class MuPDFProcessor(PDFProcessor):
                 current_blocks: List[FormattedText] = []
                 last_section_number = 0
 
-                # Process one page at a time
+                # Process one page at a time without concurrency
                 for page_num in range(first_section_page, len(doc)):
                     progress.current_page = page_num + 1
                     try:
@@ -220,10 +228,10 @@ class MuPDFProcessor(PDFProcessor):
                             logger.info(f"Skipping empty page {page_num + 1}")
                             continue
 
-                        # Process the entire page
+                        # Process the entire page without AI
                         formatted_blocks = self.process_numbered_section_page(text, page_num + 1)
                         
-                        # Analyze each block for section numbers
+                        # Analyze each block for section numbers using chapter_processor only
                         for block in formatted_blocks:
                             chapter_num, _ = self.chapter_processor.detect_chapter(block.text)
                             

@@ -1,6 +1,6 @@
 {
   "title": "Defis_Fantastiques_18_-_La_Planete_Rebelle",
-  "total_sections": 31,
+  "total_sections": 32,
   "total_images": 68,
   "sections": [
     {
@@ -74,89 +74,94 @@
       "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/14.md"
     },
     {
+      "number": 15,
+      "page_number": 19,
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/15.md"
+    },
+    {
       "number": 1,
       "page_number": 29,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/1.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/1.md"
     },
     {
       "number": 7,
       "page_number": 70,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/7.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/7.md"
     },
     {
       "number": 8,
       "page_number": 70,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/8.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/8.md"
     },
     {
       "number": 6,
       "page_number": 95,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/6.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/6.md"
     },
     {
       "number": 8,
       "page_number": 95,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/8.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/8.md"
     },
     {
       "number": 8,
       "page_number": 125,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/8.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/8.md"
     },
     {
       "number": 230,
       "page_number": 128,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/230.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/230.md"
     },
     {
       "number": 6,
       "page_number": 128,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/6.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/6.md"
     },
     {
       "number": 6,
       "page_number": 133,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/6.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/6.md"
     },
     {
       "number": 6,
       "page_number": 133,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/6.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/6.md"
     },
     {
       "number": 5,
       "page_number": 151,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/5.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/5.md"
     },
     {
       "number": 8,
       "page_number": 151,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/8.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/8.md"
     },
     {
       "number": 7,
       "page_number": 151,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/7.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/7.md"
     },
     {
       "number": 7,
       "page_number": 151,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/7.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/7.md"
     },
     {
       "number": 6,
       "page_number": 181,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/6.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/6.md"
     },
     {
       "number": 8,
       "page_number": 183,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/8.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/8.md"
     },
     {
       "number": 7,
       "page_number": 199,
-      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/sections/7.md"
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/sections/7.md"
     }
   ],
   "base_path": "sections",
