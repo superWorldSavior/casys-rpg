@@ -11,36 +11,32 @@ logger = logging.getLogger(__name__)
 class AIProcessor:
     def __init__(self):
         self.openai_client = openai.AsyncOpenAI()
-        self.model_name = "gpt-3.5-turbo"  # Updated to use gpt-3.5-turbo
+        self.model_name = "gpt-4o-mini"  # Updated to use gpt-4o-mini
         self.max_concurrent = 5
 
     async def process_pages_concurrently(self, pages: List[Dict[str, any]]) -> List[List[FormattedText]]:
         """Process multiple pages concurrently using asyncio.gather()"""
         try:
-            # Create batches of max_concurrent size
+            tasks = []
+            for page in pages:
+                tasks.append(self.analyze_page_content(page['text'], page['num']))
+            
+            batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
             results = []
-            for i in range(0, len(pages), self.max_concurrent):
-                batch = pages[i:i + self.max_concurrent]
-                tasks = [
-                    self.analyze_page_content(page['text'], page['num'])
-                    for page in batch
-                ]
-                batch_results = await asyncio.gather(*tasks, return_exceptions=True)
-                
-                # Handle any exceptions in the batch
-                for j, result in enumerate(batch_results):
-                    if isinstance(result, Exception):
-                        logger.error(f"Error processing page {batch[j]['num']}: {str(result)}")
-                        # Use basic text processing as fallback
-                        results.append([
-                            FormattedText(
-                                text=batch[j]['text'],
-                                format_type=TextFormatting.PARAGRAPH,
-                                metadata={"error": str(result)}
-                            )
-                        ])
-                    else:
-                        results.append(result)
+            for i, result in enumerate(batch_results):
+                if isinstance(result, Exception):
+                    logger.error(f"Error processing page {pages[i]['num']}: {str(result)}")
+                    # Use basic text processing as fallback
+                    results.append([
+                        FormattedText(
+                            text=pages[i]['text'],
+                            format_type=TextFormatting.PARAGRAPH,
+                            metadata={"error": str(result)}
+                        )
+                    ])
+                else:
+                    results.append(result)
             
             return results
         except Exception as e:
@@ -59,7 +55,7 @@ class AIProcessor:
                     "role": "user",
                     "content": f"Analyze this text block for chapter characteristics:\n{text}"
                 }],
-                temperature=0.3  # Added lower temperature for more consistent results
+                temperature=0.3
             )
 
             result = re.sub(r'^```json|```$', '',
@@ -87,7 +83,7 @@ class AIProcessor:
                     "role": "user",
                     "content": f"Page {page_num}:\n{page_text}"
                 }],
-                temperature=0.3  # Added lower temperature for more consistent results
+                temperature=0.3
             )
 
             result = re.sub(r'^```json|```$', '',

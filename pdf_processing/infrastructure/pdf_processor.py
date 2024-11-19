@@ -31,7 +31,6 @@ class MuPDFProcessor(PDFProcessor):
         self.file_system_processor = FileSystemProcessor()
         self.ai_processor = AIProcessor()
         self.image_processor = ImageProcessor()
-        self.batch_size = 5  # Process 5 pages at a time
 
     async def process_pre_section_pages(self, pages: List[Dict[str, any]], progress: ProcessingProgress) -> List[List[FormattedText]]:
         """Process multiple pre-section pages concurrently using AI model"""
@@ -39,58 +38,12 @@ class MuPDFProcessor(PDFProcessor):
         logger.info("Starting pre-section processing with AI model")
         
         try:
-            results = []
-            total_pages = len(pages)
-            
-            # Process pages in batches
-            for i in range(0, total_pages, self.batch_size):
-                batch = pages[i:i + self.batch_size]
-                batch_tasks = []
-                
-                for page in batch:
-                    # Create task for each page in the batch
-                    task = self.ai_processor.analyze_page_content(
-                        page['text'],
-                        page['num']
-                    )
-                    batch_tasks.append(task)
-                
-                # Process batch concurrently
-                batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True)
-                
-                # Handle results and update progress
-                for j, result in enumerate(batch_results):
-                    current_page = batch[j]
-                    try:
-                        if isinstance(result, Exception):
-                            logger.error(f"Error in AI processing for page {current_page['num']}: {result}")
-                            # Fallback to basic text processing
-                            fallback_result = self.text_processor.process_text_block(
-                                current_page['text'],
-                                is_pre_section=True
-                            )
-                            results.append(fallback_result)
-                        else:
-                            results.append(result)
-                            logger.info(f"Successfully processed pre-section page {current_page['num']}")
-                    except Exception as e:
-                        logger.error(f"Error processing page {current_page['num']}: {e}")
-                        # Ensure we always append something for each page
-                        results.append([FormattedText(
-                            text=current_page['text'],
-                            format_type=TextFormatting.PARAGRAPH,
-                            metadata={"error": str(e)}
-                        )])
-                    
-                    # Update progress
-                    progress.current_page = current_page['num']
-                
-                # Log batch completion
-                logger.info(f"Completed batch processing: pages {i+1} to {min(i+self.batch_size, total_pages)}")
-            
+            # Process all pages concurrently using AI
+            results = await self.ai_processor.process_pages_concurrently(pages)
+            logger.info(f"Successfully processed {len(results)} pre-section pages")
             return results
         except Exception as e:
-            logger.error(f"Error in batch processing pre-section pages: {e}")
+            logger.error(f"Error in pre-section pages processing: {e}")
             raise
 
     def process_numbered_section_page(self, text: str, page_num: int) -> List[FormattedText]:
@@ -105,7 +58,7 @@ class MuPDFProcessor(PDFProcessor):
 
     async def save_current_section(self, current_section: int, current_blocks: List[FormattedText],
                                  page_num: int, sections_dir: str, pdf_folder_name: str,
-                                 sections: List[Section], progress: ProcessingProgress) -> None:
+                                 sections: List[Section], progress: ProcessingProgress) -> bool:
         """Save current section with proper validation and error handling"""
         try:
             if current_section is not None and current_blocks:
@@ -117,7 +70,7 @@ class MuPDFProcessor(PDFProcessor):
                     logger.info(f"Created section directory: {os.path.dirname(file_path)}")
                 
                 section = Section(
-                    number=current_section,  # Use the actual section number
+                    number=current_section,
                     content="\n".join(block.text for block in current_blocks),
                     page_number=page_num,
                     file_path=file_path,
@@ -130,7 +83,7 @@ class MuPDFProcessor(PDFProcessor):
                 sections.append(section)
                 self.file_system_processor.save_section_content(section)
                 progress.processed_sections += 1
-                logger.info(f"Successfully saved numbered section {current_section}")
+                logger.info(f"Successfully saved section {current_section}")
                 return True
         except Exception as e:
             logger.error(f"Error saving section {current_section}: {e}")
@@ -255,6 +208,7 @@ class MuPDFProcessor(PDFProcessor):
                 current_section = None
                 current_blocks: List[FormattedText] = []
 
+                # Process one page at a time
                 for page_num in range(first_section_page, len(doc)):
                     progress.current_page = page_num + 1
                     try:
@@ -266,15 +220,19 @@ class MuPDFProcessor(PDFProcessor):
 
                         formatted_blocks = self.process_numbered_section_page(text, page_num + 1)
                         
+                        # Process each block in the page
                         for block in formatted_blocks:
                             chapter_num, _ = self.chapter_processor.detect_chapter(block.text)
                             
                             if chapter_num is not None:
                                 # Save previous section if exists
-                                await self.save_current_section(
-                                    current_section, current_blocks, page_num,
-                                    sections_dir, pdf_folder_name, sections, progress
-                                )
+                                if current_section is not None and current_blocks:
+                                    await self.save_current_section(
+                                        current_section, current_blocks, page_num,
+                                        sections_dir, pdf_folder_name, sections, progress
+                                    )
+                                
+                                # Start new section
                                 current_section = chapter_num
                                 current_blocks = []
                                 logger.info(f"Starting new section: {chapter_num}")
@@ -285,11 +243,12 @@ class MuPDFProcessor(PDFProcessor):
                         logger.error(f"Error processing page {page_num + 1}: {e}")
                         raise
 
-            # Save the last section if exists
-            await self.save_current_section(
-                current_section, current_blocks, progress.current_page,
-                sections_dir, pdf_folder_name, sections, progress
-            )
+                # Save the last section if exists
+                if current_section is not None and current_blocks:
+                    await self.save_current_section(
+                        current_section, current_blocks, progress.current_page,
+                        sections_dir, pdf_folder_name, sections, progress
+                    )
 
             # Fourth workflow: Process images
             progress.status = ProcessingStatus.EXTRACTING_IMAGES
