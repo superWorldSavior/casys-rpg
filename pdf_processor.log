@@ -1,0 +1,8 @@
+2024-11-19 01:49:13,730 - MainProcessor - INFO - {"timestamp": "2024-11-19T01:49:13.730802", "message": "Initializing PDF processing components"}
+2024-11-19 01:49:13,892 - MainProcessor - INFO - {"timestamp": "2024-11-19T01:49:13.892766", "message": "PDF found", "path": "/home/runner/TextFlowNavigator/test_book.pdf"}
+2024-11-19 01:49:13,896 - PDFService - INFO - {"timestamp": "2024-11-19T01:49:13.896758", "message": "Validating PDF processing request", "pdf_path": "/home/runner/TextFlowNavigator/test_book.pdf", "base_output_dir": "sections"}
+2024-11-19 01:49:13,897 - PDFService - INFO - {"timestamp": "2024-11-19T01:49:13.896996", "message": "Starting PDF processing", "pdf_path": "/home/runner/TextFlowNavigator/test_book.pdf"}
+2024-11-19 01:49:30,851 - PDFService - INFO - {"timestamp": "2024-11-19T01:49:30.850998", "message": "Saving sections", "count": 4}
+2024-11-19 01:49:30,852 - PDFService - INFO - {"timestamp": "2024-11-19T01:49:30.852630", "message": "Saving images", "count": 0}
+2024-11-19 01:49:30,853 - PDFService - INFO - {"timestamp": "2024-11-19T01:49:30.853488", "message": "PDF processing completed successfully", "pdf_name": "test_book", "total_sections": 4, "total_images": 0}
+2024-11-19 01:49:30,853 - MainProcessor - INFO - {"timestamp": "2024-11-19T01:49:30.853715", "message": "PDF processed successfully", "pdf_name": "test_book", "sections": 4, "images": 0}
