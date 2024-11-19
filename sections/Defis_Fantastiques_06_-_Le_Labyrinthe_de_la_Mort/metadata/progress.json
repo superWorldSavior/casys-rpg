@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "current_page": 128,
+  "total_pages": 128,
+  "processed_sections": 24,
+  "processed_images": 88,
+  "error_message": null,
+  "section_counts": {
+    "total": 24,
+    "pre_sections": 22,
+    "numbered_sections": 2
+  }
+}

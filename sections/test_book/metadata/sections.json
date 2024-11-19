@@ -5,7 +5,7 @@
       "chapter_number": 1,
       "file_path": "test_book/histoire/1.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
       "title": "A Solo Adventure"
     },
@@ -14,7 +14,7 @@
       "chapter_number": 2,
       "file_path": "test_book/histoire/2.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
       "title": "INTRODUCTION"
     },
@@ -23,7 +23,7 @@
       "chapter_number": 3,
       "file_path": "test_book/histoire/3.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
       "title": "COMBAT RULES"
     },
@@ -32,7 +32,7 @@
       "chapter_number": 4,
       "file_path": "test_book/histoire/4.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
       "title": "Basic Combat"
     },
@@ -41,48 +41,57 @@
       "chapter_number": 5,
       "file_path": "test_book/histoire/5.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
-      "title": "GAME RULES"
+      "title": "The higher total wins that round"
     },
     {
       "section_number": 6,
       "chapter_number": 6,
       "file_path": "test_book/histoire/6.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
-      "title": "Character Creation"
+      "title": "The loser loses 2 STAMINA points"
     },
     {
       "section_number": 7,
       "chapter_number": 7,
       "file_path": "test_book/histoire/7.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
-      "title": "EQUIPMENT"
+      "title": "GAME RULES"
     },
     {
       "section_number": 8,
       "chapter_number": 8,
       "file_path": "test_book/histoire/8.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
       "is_chapter": true,
-      "title": "Starting Items"
+      "title": "Character Creation"
     },
     {
       "section_number": 9,
       "chapter_number": 9,
       "file_path": "test_book/histoire/9.md",
       "pdf_name": "test_book",
-      "page_number": 5,
+      "page_number": 7,
+      "is_chapter": true,
+      "title": "EQUIPMENT"
+    },
+    {
+      "section_number": 10,
+      "chapter_number": 10,
+      "file_path": "test_book/histoire/10.md",
+      "pdf_name": "test_book",
+      "page_number": 7,
       "is_chapter": true,
       "title": null
     }
   ],
-  "total_sections": 9,
-  "pre_section_count": 9,
+  "total_sections": 10,
+  "pre_section_count": 10,
   "numbered_section_count": 0
 }

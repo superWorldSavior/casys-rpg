@@ -38,7 +38,6 @@ class MuPDFProcessor(PDFProcessor):
         logger.info("Starting pre-section processing with AI model")
         
         try:
-            # Process all pages concurrently using AI
             results = await self.ai_processor.process_pages_concurrently(pages)
             logger.info(f"Successfully processed {len(results)} pre-section pages")
             return results
@@ -47,10 +46,11 @@ class MuPDFProcessor(PDFProcessor):
             raise
 
     def process_numbered_section_page(self, text: str, page_num: int) -> List[FormattedText]:
-        """Process a single numbered section page using direct text formatting without AI"""
+        """Process a single numbered section page using text processor without AI"""
         try:
+            # Use text_processor directly without AI processing
             formatted_blocks = self.text_processor.process_text_block(text, is_pre_section=False)
-            logger.info(f"Successfully processed numbered section page {page_num}")
+            logger.info(f"Successfully processed numbered section page {page_num} with {len(formatted_blocks)} blocks")
             return formatted_blocks
         except Exception as e:
             logger.error(f"Error processing numbered section page {page_num}: {e}")
@@ -62,18 +62,18 @@ class MuPDFProcessor(PDFProcessor):
         """Save current section with proper validation and error handling"""
         try:
             if current_section is not None and current_blocks:
-                file_path = os.path.join(sections_dir, f"{current_section}.md")
+                # Ensure correct path under sections directory
+                section_path = os.path.join(sections_dir, 'sections', f"{current_section}.md")
                 
-                # Validate file path
-                if not os.path.exists(os.path.dirname(file_path)):
-                    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-                    logger.info(f"Created section directory: {os.path.dirname(file_path)}")
+                # Create sections directory if it doesn't exist
+                os.makedirs(os.path.dirname(section_path), exist_ok=True)
+                logger.info(f"Section directory ensured: {os.path.dirname(section_path)}")
                 
                 section = Section(
                     number=current_section,
                     content="\n".join(block.text for block in current_blocks),
                     page_number=page_num,
-                    file_path=file_path,
+                    file_path=section_path,
                     pdf_name=pdf_folder_name,
                     title=None,
                     formatted_content=current_blocks,
@@ -83,7 +83,7 @@ class MuPDFProcessor(PDFProcessor):
                 sections.append(section)
                 self.file_system_processor.save_section_content(section)
                 progress.processed_sections += 1
-                logger.info(f"Successfully saved section {current_section}")
+                logger.info(f"Successfully saved numbered section {current_section} at page {page_num}")
                 return True
         except Exception as e:
             logger.error(f"Error saving section {current_section}: {e}")
@@ -93,8 +93,7 @@ class MuPDFProcessor(PDFProcessor):
     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
         """Extract sections from the PDF with distinct processing workflows"""
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
-        paths = self.file_system_processor.create_book_structure(base_output_dir,
-                                                               pdf_folder_name)
+        paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
         sections_dir = paths["sections_dir"]
         histoire_dir = paths["histoire_dir"]
         images_dir = paths["images_dir"]
@@ -131,6 +130,7 @@ class MuPDFProcessor(PDFProcessor):
                     chapter_num, _ = self.chapter_processor.detect_chapter(line.strip())
                     if chapter_num is not None:
                         first_section_page = page_num
+                        logger.info(f"Found first numbered section at page {page_num + 1}, section {chapter_num}")
                         break
 
                 if first_section_page is not None:
@@ -207,6 +207,7 @@ class MuPDFProcessor(PDFProcessor):
                 progress.status = ProcessingStatus.PROCESSING_NUMBERED_SECTIONS
                 current_section = None
                 current_blocks: List[FormattedText] = []
+                last_section_number = 0
 
                 # Process one page at a time
                 for page_num in range(first_section_page, len(doc)):
@@ -216,15 +217,23 @@ class MuPDFProcessor(PDFProcessor):
                         text = page.get_text()
                         
                         if not text.strip():
+                            logger.info(f"Skipping empty page {page_num + 1}")
                             continue
 
+                        # Process the entire page
                         formatted_blocks = self.process_numbered_section_page(text, page_num + 1)
                         
-                        # Process each block in the page
+                        # Analyze each block for section numbers
                         for block in formatted_blocks:
                             chapter_num, _ = self.chapter_processor.detect_chapter(block.text)
                             
                             if chapter_num is not None:
+                                # Validate section number sequence
+                                if chapter_num <= last_section_number:
+                                    logger.warning(f"Non-sequential section number detected: {chapter_num} after {last_section_number}")
+                                else:
+                                    last_section_number = chapter_num
+
                                 # Save previous section if exists
                                 if current_section is not None and current_blocks:
                                     await self.save_current_section(
@@ -235,7 +244,7 @@ class MuPDFProcessor(PDFProcessor):
                                 # Start new section
                                 current_section = chapter_num
                                 current_blocks = []
-                                logger.info(f"Starting new section: {chapter_num}")
+                                logger.info(f"Starting new numbered section {chapter_num} on page {page_num + 1}")
                             else:
                                 current_blocks.append(block)
 

@@ -7654,3 +7654,781 @@ RuntimeError: Event loop is closed
 2024-11-19 10:43:25,280 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
 2024-11-19 10:43:25,292 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed 5 pre-section pages
 2024-11-19 10:43:25,903 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:26,438 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:27,320 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:27] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 10:43:27,723 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:28,228 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:28] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 10:43:28,318 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:28,677 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:28] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 10:43:29,103 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:29,299 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:29] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:29,735 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:30,072 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:30] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 10:43:30,081 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:30] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 10:43:30,333 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:30,829 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:30,938 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:31,290 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:31] "GET /sections/Defis_Fantastiques_07_-_LIle_du_Roi_Lezard/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:43:31,888 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:32,471 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:32] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:43:32,676 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:33,216 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:33,360 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:33,731 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:35,907 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:38,065 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:38,383 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:38,568 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:39,176 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:39,861 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:41,055 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:41,569 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:42,155 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:42,177 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:42] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:42,623 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:43,136 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:43,433 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:43,934 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:44,551 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:45,163 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:45,877 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:46,131 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:46,343 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/uploads/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort.pdf
+2024-11-19 10:43:46,395 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 128 pages
+2024-11-19 10:43:46,436 - pdf_processing.infrastructure.pdf_processor - INFO - Starting pre-section processing with AI model
+2024-11-19 10:43:46,821 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:47,465 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:48,028 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:48,439 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:48,480 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:48,526 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 7
+2024-11-19 10:43:48,529 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 8
+2024-11-19 10:43:48,530 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 9
+2024-11-19 10:43:48,534 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 1 to sections/test_book/histoire/1.md
+2024-11-19 10:43:48,534 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 2 to sections/test_book/histoire/2.md
+2024-11-19 10:43:48,535 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 3 to sections/test_book/histoire/3.md
+2024-11-19 10:43:48,535 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 4 to sections/test_book/histoire/4.md
+2024-11-19 10:43:48,536 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 5 to sections/test_book/histoire/5.md
+2024-11-19 10:43:48,536 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 6 to sections/test_book/histoire/6.md
+2024-11-19 10:43:48,537 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 7 to sections/test_book/histoire/7.md
+2024-11-19 10:43:48,538 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 8 to sections/test_book/histoire/8.md
+2024-11-19 10:43:48,538 - pdf_processing.infrastructure.pdf_repository - INFO - Created metadata directory: sections/test_book/metadata
+2024-11-19 10:43:48,539 - pdf_processing.infrastructure.pdf_repository - INFO - Saved sections metadata: 8 sections
+2024-11-19 10:43:48,541 - pdf_processing.infrastructure.pdf_repository - INFO - Saved progress metadata with section counts
+2024-11-19 10:43:48,541 - pdf_processing.application.pdf_service - INFO - Successfully completed processing PDF: /home/runner/TextFlowNavigator/test_book.pdf
+2024-11-19 10:43:50,870 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:50,976 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:51,493 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:53,357 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:54,267 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:55,830 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:43:57,229 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:43:58,383 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:43:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:00,211 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:00,819 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:01,452 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:03,295 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:03,374 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:04,255 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:04,927 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:05,832 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:08,350 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:08,373 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:10,773 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:11,081 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:11,091 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed 11 pre-section pages
+2024-11-19 10:44:11,860 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:12,623 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:13,359 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:13,730 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:14,231 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:15,250 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:15,835 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:15,999 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:16,478 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:17,439 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:17,988 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:18,355 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:18,882 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:19,556 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:20,226 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:20,815 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:20,860 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:21,490 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:22,125 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:23,347 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:23,423 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:24,214 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:24,836 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:25,561 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:25,852 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:26,175 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:26,696 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:27,271 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:28,122 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:28,393 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:29,163 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:29,811 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:30,379 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:30,842 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:30,990 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:31,623 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:32,084 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:32,667 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:33,316 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:33,386 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:33,881 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:34,828 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:35,342 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:35,829 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:36,020 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:36,717 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:37,525 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:38,143 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:38,371 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:38,807 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:39,301 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:39,808 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:40,534 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:40,859 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:41,469 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:42,265 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:42,811 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:43,352 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:43,543 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:44,869 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:45,633 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:45,838 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:46,354 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:47,009 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:48,005 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:48,767 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:49,280 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:49,602 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:49,804 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:50,396 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:50,828 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:50,975 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:51,672 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:52,176 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:53,333 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:53,832 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/uploads/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort.pdf
+2024-11-19 10:44:53,906 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 128 pages
+2024-11-19 10:44:53,961 - pdf_processing.infrastructure.pdf_processor - INFO - Starting pre-section processing with AI model
+2024-11-19 10:44:55,486 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:55,817 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:55,969 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:56,708 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:57,339 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:57,699 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:57,952 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:58,243 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:58,383 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:44:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:44:58,948 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:44:59,447 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:00,367 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:00,851 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:01,083 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:02,161 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:02,291 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:02,789 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:03,349 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:03,384 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:03,876 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:04,717 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:05,085 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:05,201 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:05,744 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:05,846 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:06,275 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:06,298 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:07,033 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:07,702 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:08,335 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:08] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:08,713 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:09,342 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:09,785 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:09,995 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:10,750 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:10,819 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:10,826 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:11,538 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:12,058 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:13,393 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:14,107 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:15,482 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:15,661 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:15,840 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:16,453 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:16,456 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed 11 pre-section pages
+2024-11-19 10:45:17,194 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:18,392 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:18,403 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:18] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:18,954 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:19,078 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:19,549 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:19,629 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:20,269 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:20,500 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:20,798 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:20,853 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:21,247 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:22,134 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:22,688 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:23,387 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:23,861 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:24,715 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:24,793 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:25,207 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:25,380 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:25,828 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:25,851 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:25,988 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:26,480 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:26,620 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:27,028 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:27,531 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:28,194 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:28,385 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:28] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:28,790 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:29,795 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:30,335 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:30,568 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:30,794 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:31,045 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:31,604 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:31,777 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:32,222 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:32,399 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:32,918 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:33,039 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:33,463 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:33,537 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:34,406 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:34,620 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:34,781 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:35,339 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:35,795 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:35,860 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:35,900 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:36,518 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:36,880 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:37,484 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:37,617 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:38,045 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:38,310 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:38,370 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:38] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:38,944 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:39,106 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:39,550 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:39,961 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:40,319 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:40,534 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:40,833 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:40,876 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:40,976 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:41,498 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:41,654 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:41,955 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:42,137 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:42,733 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:43,135 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:43,376 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:43,390 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:43] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:43,707 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:44,013 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:44,216 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:44,224 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 13
+2024-11-19 10:45:44,228 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 14
+2024-11-19 10:45:44,233 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 15
+2024-11-19 10:45:44,235 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 16
+2024-11-19 10:45:44,238 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 17
+2024-11-19 10:45:44,242 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 18
+2024-11-19 10:45:44,261 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 19
+2024-11-19 10:45:44,266 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 20
+2024-11-19 10:45:44,271 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 21
+2024-11-19 10:45:44,276 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 22
+2024-11-19 10:45:44,279 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 23
+2024-11-19 10:45:44,280 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 24
+2024-11-19 10:45:44,281 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 25
+2024-11-19 10:45:44,283 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 26
+2024-11-19 10:45:44,284 - pdf_processing.infrastructure.pdf_processor - INFO - Starting new section: 48
+2024-11-19 10:45:44,284 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 27
+2024-11-19 10:45:44,300 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 28
+2024-11-19 10:45:44,308 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 29
+2024-11-19 10:45:44,326 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 30
+2024-11-19 10:45:44,327 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 31
+2024-11-19 10:45:44,333 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 32
+2024-11-19 10:45:44,335 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 33
+2024-11-19 10:45:44,337 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 34
+2024-11-19 10:45:44,339 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 35
+2024-11-19 10:45:44,340 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 36
+2024-11-19 10:45:44,344 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 37
+2024-11-19 10:45:44,351 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 38
+2024-11-19 10:45:44,354 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 39
+2024-11-19 10:45:44,355 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 40
+2024-11-19 10:45:44,358 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 41
+2024-11-19 10:45:44,360 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 42
+2024-11-19 10:45:44,369 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 43
+2024-11-19 10:45:44,370 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 44
+2024-11-19 10:45:44,372 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 45
+2024-11-19 10:45:44,373 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully saved section 48
+2024-11-19 10:45:44,373 - pdf_processing.infrastructure.pdf_processor - INFO - Starting new section: 114
+2024-11-19 10:45:44,376 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 46
+2024-11-19 10:45:44,378 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 47
+2024-11-19 10:45:44,381 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 48
+2024-11-19 10:45:44,383 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 49
+2024-11-19 10:45:44,386 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 50
+2024-11-19 10:45:44,387 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 51
+2024-11-19 10:45:44,390 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 52
+2024-11-19 10:45:44,392 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 53
+2024-11-19 10:45:44,394 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 54
+2024-11-19 10:45:44,396 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 55
+2024-11-19 10:45:44,398 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 56
+2024-11-19 10:45:44,400 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 57
+2024-11-19 10:45:44,402 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 58
+2024-11-19 10:45:44,404 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 59
+2024-11-19 10:45:44,407 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 60
+2024-11-19 10:45:44,410 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 61
+2024-11-19 10:45:44,411 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 62
+2024-11-19 10:45:44,412 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 63
+2024-11-19 10:45:44,415 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 64
+2024-11-19 10:45:44,418 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 65
+2024-11-19 10:45:44,421 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 66
+2024-11-19 10:45:44,425 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 67
+2024-11-19 10:45:44,428 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 68
+2024-11-19 10:45:44,430 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 69
+2024-11-19 10:45:44,433 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 70
+2024-11-19 10:45:44,435 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 71
+2024-11-19 10:45:44,438 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 72
+2024-11-19 10:45:44,440 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 73
+2024-11-19 10:45:44,446 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 74
+2024-11-19 10:45:44,449 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 75
+2024-11-19 10:45:44,450 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 76
+2024-11-19 10:45:44,454 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 77
+2024-11-19 10:45:44,465 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 78
+2024-11-19 10:45:44,468 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 79
+2024-11-19 10:45:44,471 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 80
+2024-11-19 10:45:44,473 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 81
+2024-11-19 10:45:44,476 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 82
+2024-11-19 10:45:44,481 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 83
+2024-11-19 10:45:44,485 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 84
+2024-11-19 10:45:44,487 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 85
+2024-11-19 10:45:44,489 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 86
+2024-11-19 10:45:44,492 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 87
+2024-11-19 10:45:44,495 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 88
+2024-11-19 10:45:44,497 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 89
+2024-11-19 10:45:44,500 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 90
+2024-11-19 10:45:44,502 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 91
+2024-11-19 10:45:44,510 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 92
+2024-11-19 10:45:44,517 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 93
+2024-11-19 10:45:44,519 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 94
+2024-11-19 10:45:44,523 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 95
+2024-11-19 10:45:44,527 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 96
+2024-11-19 10:45:44,542 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 97
+2024-11-19 10:45:44,547 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 98
+2024-11-19 10:45:44,553 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 99
+2024-11-19 10:45:44,556 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 100
+2024-11-19 10:45:44,558 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 101
+2024-11-19 10:45:44,558 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 102
+2024-11-19 10:45:44,563 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 103
+2024-11-19 10:45:44,566 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 104
+2024-11-19 10:45:44,568 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 105
+2024-11-19 10:45:44,570 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 106
+2024-11-19 10:45:44,572 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 107
+2024-11-19 10:45:44,575 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 108
+2024-11-19 10:45:44,576 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 109
+2024-11-19 10:45:44,579 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 110
+2024-11-19 10:45:44,584 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 111
+2024-11-19 10:45:44,587 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 112
+2024-11-19 10:45:44,590 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 113
+2024-11-19 10:45:44,593 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 114
+2024-11-19 10:45:44,598 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 115
+2024-11-19 10:45:44,601 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 116
+2024-11-19 10:45:44,605 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 117
+2024-11-19 10:45:44,608 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 118
+2024-11-19 10:45:44,613 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 119
+2024-11-19 10:45:44,616 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 120
+2024-11-19 10:45:44,630 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 121
+2024-11-19 10:45:44,635 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 122
+2024-11-19 10:45:44,653 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 123
+2024-11-19 10:45:44,658 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 124
+2024-11-19 10:45:44,659 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 125
+2024-11-19 10:45:44,663 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 126
+2024-11-19 10:45:44,664 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 127
+2024-11-19 10:45:44,665 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 128
+2024-11-19 10:45:44,668 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully saved section 114
+2024-11-19 10:45:44,710 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:44,720 - openai._base_client - INFO - Retrying request to /chat/completions in 0.446417 seconds
+2024-11-19 10:45:45,662 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:45,863 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:46,157 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:46,806 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:47,546 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:48,027 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:48,416 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:48,748 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 1 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/1.md
+2024-11-19 10:45:48,749 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 2 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/2.md
+2024-11-19 10:45:48,749 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 3 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/3.md
+2024-11-19 10:45:48,749 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 4 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/4.md
+2024-11-19 10:45:48,749 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 5 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/5.md
+2024-11-19 10:45:48,749 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 6 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/6.md
+2024-11-19 10:45:48,750 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 7 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/7.md
+2024-11-19 10:45:48,750 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 8 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/8.md
+2024-11-19 10:45:48,750 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 9 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/9.md
+2024-11-19 10:45:48,750 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 10 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/10.md
+2024-11-19 10:45:48,751 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 11 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/11.md
+2024-11-19 10:45:48,751 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 12 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/12.md
+2024-11-19 10:45:48,751 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 13 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/13.md
+2024-11-19 10:45:48,751 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 14 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/14.md
+2024-11-19 10:45:48,754 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 15 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/15.md
+2024-11-19 10:45:48,754 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 16 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/16.md
+2024-11-19 10:45:48,754 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 17 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/17.md
+2024-11-19 10:45:48,754 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 18 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/18.md
+2024-11-19 10:45:48,754 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 19 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/19.md
+2024-11-19 10:45:48,755 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 20 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/20.md
+2024-11-19 10:45:48,755 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 21 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/21.md
+2024-11-19 10:45:48,755 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 22 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/histoire/22.md
+2024-11-19 10:45:48,756 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 48 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/sections/48.md
+2024-11-19 10:45:48,756 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 114 to sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/sections/114.md
+2024-11-19 10:45:48,756 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,756 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,756 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,757 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,758 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,759 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,760 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,761 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,762 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,763 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,763 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,763 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,763 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,763 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,763 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,763 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,764 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,764 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,764 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,764 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,764 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,764 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,765 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,765 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,765 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,765 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,765 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,765 - pdf_processing.infrastructure.pdf_repository - INFO - Image directory validated: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images
+2024-11-19 10:45:48,765 - pdf_processing.infrastructure.pdf_repository - INFO - Created metadata directory: sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/metadata
+2024-11-19 10:45:48,767 - pdf_processing.infrastructure.pdf_repository - INFO - Saved sections metadata: 24 sections
+2024-11-19 10:45:48,767 - pdf_processing.infrastructure.pdf_repository - INFO - Saved progress metadata with section counts
+2024-11-19 10:45:48,767 - pdf_processing.application.pdf_service - INFO - Successfully completed processing PDF: /home/runner/TextFlowNavigator/uploads/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort.pdf
+2024-11-19 10:45:48,787 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:48,843 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:48] "POST /api/books/upload HTTP/1.1" 200 -
+2024-11-19 10:45:49,303 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:50,335 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:50,898 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:51,343 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:51,424 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:51] "GET /sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:45:51,913 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:52,619 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:54,041 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:54,155 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:54,483 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:54] "[36mGET /sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:45:54,847 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:55,421 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:55,864 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:56,078 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:56,679 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:57,265 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:57,891 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:58,370 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:45:58] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:45:58,374 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:58,818 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:45:59,593 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:00,301 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:00,803 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:46:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:46:00,962 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:01,716 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/uploads/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort.pdf
+2024-11-19 10:46:01,760 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:01,772 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 128 pages
+2024-11-19 10:46:01,805 - pdf_processing.infrastructure.pdf_processor - INFO - Starting pre-section processing with AI model
+2024-11-19 10:46:02,552 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:03,220 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:03,413 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:46:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:46:03,816 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:05,830 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:46:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:46:05,842 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:06,183 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:08,149 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:46:08,844 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:49:40,768 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.162:5000
+2024-11-19 10:49:40,768 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-19 10:49:40,769 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 10:49:41,944 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 10:49:41,946 - werkzeug - INFO -  * Debugger PIN: 119-169-935
+2024-11-19 10:49:44,215 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:44] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 10:49:44,710 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:44] "[36mGET / HTTP/1.1[0m" 304 -
+2024-11-19 10:49:45,289 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:45] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 10:49:45,663 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:45] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 10:49:46,516 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:46] "[36mGET /assets/index-BcO3ECpr.css HTTP/1.1[0m" 304 -
+2024-11-19 10:49:46,552 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:46] "[36mGET /assets/index-FSzeO8vF.js HTTP/1.1[0m" 304 -
+2024-11-19 10:49:47,583 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:47] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 10:49:47,584 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:47] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 10:49:48,501 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:48] "[36mGET /assets/index-B4pXWyNm.js HTTP/1.1[0m" 304 -
+2024-11-19 10:49:48,504 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:48] "[36mGET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1[0m" 304 -
+2024-11-19 10:49:49,111 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:49:49,726 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:49] "[36mGET /sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:49:49,727 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:49] "[36mGET /sections/Defis_Fantastiques_07_-_LIle_du_Roi_Lezard/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:49:49,771 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:49] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:49:49,796 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:49:50,296 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:50] "[36mGET /sections/Defis_Fantastiques_07_-_LIle_du_Roi_Lezard/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:49:50,304 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:50] "[36mGET /sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:49:50,307 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:50] "[36mGET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1[0m" 304 -
+2024-11-19 10:49:53,997 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:53] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:49:54,817 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:49:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:00,264 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:00,961 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:03,970 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:04,676 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:04] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:05,507 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/uploads/test_book.pdf
+2024-11-19 10:50:05,511 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 9 pages
+2024-11-19 10:50:05,522 - pdf_processing.infrastructure.pdf_processor - INFO - Starting pre-section processing with AI model
+2024-11-19 10:50:08,536 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:09,029 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:10,174 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:10,845 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:11,669 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:11,675 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:12,093 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:12,095 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed 5 pre-section pages
+2024-11-19 10:50:12,714 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:13,218 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:13,698 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:13,996 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:13] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:14,372 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:14,693 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:14] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:15,065 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:15,698 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:16,287 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:16,864 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:17,445 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:17,996 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:18,540 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:19,108 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:19,665 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:20,283 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:20,322 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:20,873 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:20,947 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:21,362 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:22,580 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:23,165 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:23,670 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:23,962 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:23] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:24,363 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:24,640 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:24] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:25,687 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:26,769 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:27,265 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:27,759 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:28,600 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:29,147 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:30,298 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:30,993 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:31,724 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:32,147 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:32,738 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:50:32,742 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 7
+2024-11-19 10:50:32,742 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 8
+2024-11-19 10:50:32,743 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed numbered section page 9
+2024-11-19 10:50:32,745 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 1 to sections/test_book/histoire/1.md
+2024-11-19 10:50:32,745 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 2 to sections/test_book/histoire/2.md
+2024-11-19 10:50:32,745 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 3 to sections/test_book/histoire/3.md
+2024-11-19 10:50:32,745 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 4 to sections/test_book/histoire/4.md
+2024-11-19 10:50:32,746 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 5 to sections/test_book/histoire/5.md
+2024-11-19 10:50:32,746 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 6 to sections/test_book/histoire/6.md
+2024-11-19 10:50:32,746 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 7 to sections/test_book/histoire/7.md
+2024-11-19 10:50:32,746 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 8 to sections/test_book/histoire/8.md
+2024-11-19 10:50:32,746 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 9 to sections/test_book/histoire/9.md
+2024-11-19 10:50:32,747 - pdf_processing.infrastructure.pdf_repository - INFO - Successfully saved section 10 to sections/test_book/histoire/10.md
+2024-11-19 10:50:32,747 - pdf_processing.infrastructure.pdf_repository - INFO - Created metadata directory: sections/test_book/metadata
+2024-11-19 10:50:32,747 - pdf_processing.infrastructure.pdf_repository - INFO - Saved sections metadata: 10 sections
+2024-11-19 10:50:32,748 - pdf_processing.infrastructure.pdf_repository - INFO - Saved progress metadata with section counts
+2024-11-19 10:50:32,748 - pdf_processing.application.pdf_service - INFO - Successfully completed processing PDF: /home/runner/TextFlowNavigator/uploads/test_book.pdf
+2024-11-19 10:50:32,815 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:32] "POST /api/books/upload HTTP/1.1" 200 -
+2024-11-19 10:50:33,514 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:33] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:34,202 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:34,920 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:40,184 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:40,853 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:45,751 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:46,491 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:46] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:48,948 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:48] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:49,650 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:55,180 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:50:55,944 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:50:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:00,169 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:00,842 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:05,180 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:05,871 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:10,204 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:10,902 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:15,202 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:15,918 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:20,331 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:21,103 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:21] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:25,172 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:25,866 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:30,177 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:30,869 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:35,277 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:35,955 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:40,182 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:40,853 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:45,207 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:45,880 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:50,259 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:50,960 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:55,166 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:51:55,847 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:51:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:00,283 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:00,960 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:05,175 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:05,847 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:10,180 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:10,870 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:15,473 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:16,189 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:16] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:20,217 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:20,920 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:25,268 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:25,985 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:30,232 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:30,905 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:35,546 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:35] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:40,536 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:45,634 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:45] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:50,560 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:50] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:52:55,603 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:52:55] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:00,545 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:05,622 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:10,520 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:10] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:15,520 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:15] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:20,509 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:20] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:25,544 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:25] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:30,532 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:30] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:34,293 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:34] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:40,547 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:40] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:42,722 - werkzeug - INFO -  * Detected change in '/home/runner/TextFlowNavigator/pdf_processing/infrastructure/pdf_processor.py', reloading
+2024-11-19 10:53:43,664 - werkzeug - INFO -  * Restarting with stat
+2024-11-19 10:53:46,218 - werkzeug - WARNING -  * Debugger is active!
+2024-11-19 10:53:46,221 - werkzeug - INFO -  * Debugger PIN: 145-931-282
+2024-11-19 10:53:46,818 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:46] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:49,216 - pdf_processing.application.pdf_service - INFO - Starting PDF processing for: /home/runner/TextFlowNavigator/test_book.pdf
+2024-11-19 10:53:49,233 - pdf_processing.infrastructure.pdf_processor - INFO - Processing PDF with 9 pages
+2024-11-19 10:53:49,257 - pdf_processing.infrastructure.pdf_processor - INFO - Found first numbered section at page 7, section 1
+2024-11-19 10:53:49,257 - pdf_processing.infrastructure.pdf_processor - INFO - Starting pre-section processing with AI model
+2024-11-19 10:53:49,420 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:49] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:51,436 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:53,311 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:54,421 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:53:54] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:53:54,673 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:54,773 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:55,163 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:55,169 - pdf_processing.infrastructure.pdf_processor - INFO - Successfully processed 5 pre-section pages
+2024-11-19 10:53:56,054 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:56,600 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:57,766 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:58,313 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:59,068 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:53:59,514 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:00,176 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:00,620 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:00] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:54:01,511 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:02,506 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:02,545 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:02] "GET / HTTP/1.1" 200 -
+2024-11-19 10:54:02,677 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:02] "GET /assets/index-FSzeO8vF.js HTTP/1.1" 200 -
+2024-11-19 10:54:02,706 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:02] "GET /assets/index-BcO3ECpr.css HTTP/1.1" 200 -
+2024-11-19 10:54:03,020 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:03,235 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:03] "GET /assets/NavigateBefore-EuMyyXZM.js HTTP/1.1" 200 -
+2024-11-19 10:54:03,268 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:03] "GET /assets/index-B4pXWyNm.js HTTP/1.1" 200 -
+2024-11-19 10:54:03,552 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:03,773 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:03] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:54:04,050 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:04] "GET /sections/Defis_Fantastiques_07_-_LIle_du_Roi_Lezard/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:54:04,056 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:04] "GET /sections/Defis_Fantastiques_06_-_Le_Labyrinthe_de_la_Mort/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:54:04,075 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:04] "GET /sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/images/page_1_img_1.png HTTP/1.1" 200 -
+2024-11-19 10:54:04,241 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:04,922 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:05,547 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:05] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:54:06,010 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:06,679 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:07,214 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:07,762 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:08,810 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:09,351 - werkzeug - INFO - 172.31.196.162 - - [19/Nov/2024 10:54:09] "GET /api/books HTTP/1.1" 200 -
+2024-11-19 10:54:09,414 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-19 10:54:10,080 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
