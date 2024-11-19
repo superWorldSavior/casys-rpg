@@ -2,10 +2,6 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 from enum import Enum
 
-class ProcessingError(Exception):
-    """Base exception class for PDF processing errors."""
-    pass
-
 class ProcessingStatus(Enum):
     NOT_STARTED = "not_started"
     INITIALIZING = "initializing"
