@@ -11,64 +11,12 @@ logger = logging.getLogger(__name__)
 class AIProcessor:
     def __init__(self):
         self.openai_client = openai.AsyncOpenAI()
-        self.model_name = "gpt-4o-mini"  # Updated to use gpt-4o-mini
-        self.max_concurrent = 5
+        self.model_name = "gpt-4"  # Default to GPT-4 since GPT-4-mini is not available
+        self.max_tokens = 1000
+        self.temperature = 0.3
 
-    async def process_pages_concurrently(self, pages: List[Dict[str, any]]) -> List[List[FormattedText]]:
-        """Process multiple pages concurrently using asyncio.gather()"""
-        try:
-            tasks = []
-            for page in pages:
-                tasks.append(self.analyze_page_content(page['text'], page['num']))
-            
-            batch_results = await asyncio.gather(*tasks, return_exceptions=True)
-            
-            results = []
-            for i, result in enumerate(batch_results):
-                if isinstance(result, Exception):
-                    logger.error(f"Error processing page {pages[i]['num']}: {str(result)}")
-                    # Use basic text processing as fallback
-                    results.append([
-                        FormattedText(
-                            text=pages[i]['text'],
-                            format_type=TextFormatting.PARAGRAPH,
-                            metadata={"error": str(result)}
-                        )
-                    ])
-                else:
-                    results.append(result)
-            
-            return results
-        except Exception as e:
-            logger.error(f"Error in concurrent page processing: {e}")
-            raise
-
-    async def detect_chapter_with_ai(self, text: str) -> Tuple[bool, Optional[str]]:
-        """Use OpenAI to detect chapter breaks and determine titles"""
-        try:
-            response = await self.openai_client.chat.completions.create(
-                model=self.model_name,
-                messages=[{
-                    "role": "system",
-                    "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
-                }, {
-                    "role": "user",
-                    "content": f"Analyze this text block for chapter characteristics:\n{text}"
-                }],
-                temperature=0.3
-            )
-
-            result = re.sub(r'^```json|```$', '',
-                          response.choices[0].message.content.strip())
-            result_json = json.loads(result)
-            return result_json.get("is_chapter", False), result_json.get("title")
-        except Exception as e:
-            logger.error(f"Error using OpenAI for chapter detection: {e}")
-            return False, None
-
-    async def analyze_page_content(self, page_text: str,
-                                 page_num: int) -> List[FormattedText]:
-        """Analyze page content and return formatted text blocks"""
+    async def analyze_page_content(self, page_text: str, page_num: int) -> List[FormattedText]:
+        """Analyze page content sequentially and return formatted text blocks"""
         try:
             response = await self.openai_client.chat.completions.create(
                 model=self.model_name,
@@ -77,17 +25,17 @@ class AIProcessor:
                     "content": """You are a text formatting analyzer. Analyze the given page content and identify text blocks with their formatting attributes. 
                     Return a JSON array where each object has:
                     - text: the content
-                    - format_type: string ('header', 'subheader', 'paragraph', 'list_item', 'quote', 'code')
-                    - metadata: object with additional properties like indentation_level (0-3) and formatting (['bold', 'italic', 'underline'])"""
+                    - format_type: string ('HEADER', 'SUBHEADER', 'PARAGRAPH', 'LIST_ITEM', 'QUOTE', 'CODE')
+                    - metadata: object with additional properties like indentation_level and formatting (['bold', 'italic', 'underline'])"""
                 }, {
                     "role": "user",
                     "content": f"Page {page_num}:\n{page_text}"
                 }],
-                temperature=0.3
+                temperature=self.temperature,
+                max_tokens=self.max_tokens
             )
 
-            result = re.sub(r'^```json|```$', '',
-                          response.choices[0].message.content.strip())
+            result = re.sub(r'^```json|```$', '', response.choices[0].message.content.strip())
             blocks = json.loads(result)
             
             return [
@@ -108,3 +56,26 @@ class AIProcessor:
                 format_type=TextFormatting.PARAGRAPH,
                 metadata={"indentation_level": 0, "formatting": []}
             )]
+
+    async def detect_chapter_with_ai(self, text: str) -> Tuple[bool, Optional[str]]:
+        """Use OpenAI to detect chapter breaks and determine titles"""
+        try:
+            response = await self.openai_client.chat.completions.create(
+                model=self.model_name,
+                messages=[{
+                    "role": "system",
+                    "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
+                }, {
+                    "role": "user",
+                    "content": f"Analyze this text block for chapter characteristics:\n{text}"
+                }],
+                temperature=self.temperature,
+                max_tokens=100
+            )
+
+            result = re.sub(r'^```json|```$', '', response.choices[0].message.content.strip())
+            result_json = json.loads(result)
+            return result_json.get("is_chapter", False), result_json.get("title")
+        except Exception as e:
+            logger.error(f"Error using OpenAI for chapter detection: {e}")
+            return False, None

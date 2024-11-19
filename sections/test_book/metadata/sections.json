@@ -89,9 +89,36 @@
       "page_number": 7,
       "is_chapter": true,
       "title": null
+    },
+    {
+      "section_number": 1,
+      "chapter_number": 1,
+      "file_path": "test_book/sections/1.md",
+      "pdf_name": "test_book",
+      "page_number": 7,
+      "is_chapter": false,
+      "title": null
+    },
+    {
+      "section_number": 2,
+      "chapter_number": 2,
+      "file_path": "test_book/sections/2.md",
+      "pdf_name": "test_book",
+      "page_number": 8,
+      "is_chapter": false,
+      "title": null
+    },
+    {
+      "section_number": 3,
+      "chapter_number": 3,
+      "file_path": "test_book/sections/3.md",
+      "pdf_name": "test_book",
+      "page_number": 9,
+      "is_chapter": false,
+      "title": null
     }
   ],
-  "total_sections": 10,
+  "total_sections": 13,
   "pre_section_count": 10,
-  "numbered_section_count": 0
+  "numbered_section_count": 3
 }
