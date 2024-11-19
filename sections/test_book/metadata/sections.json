@@ -5,7 +5,7 @@
       "chapter_number": 1,
       "file_path": "test_book/histoire/chapitre_1.md",
       "pdf_name": "test_book",
-      "page_number": 7,
+      "page_number": 2,
       "is_chapter": true,
       "title": "INTRODUCTION"
     },
@@ -14,48 +14,12 @@
       "chapter_number": 2,
       "file_path": "test_book/histoire/chapitre_2.md",
       "pdf_name": "test_book",
-      "page_number": 7,
+      "page_number": 6,
       "is_chapter": true,
-      "title": "COMBAT RULES"
-    },
-    {
-      "section_number": 3,
-      "chapter_number": 3,
-      "file_path": "test_book/histoire/chapitre_3.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": true,
-      "title": "Chapitre 3"
-    },
-    {
-      "section_number": 1,
-      "chapter_number": 1,
-      "file_path": "test_book/sections/1.md",
-      "pdf_name": "test_book",
-      "page_number": 7,
-      "is_chapter": false,
-      "title": "Section 1"
-    },
-    {
-      "section_number": 2,
-      "chapter_number": 2,
-      "file_path": "test_book/sections/2.md",
-      "pdf_name": "test_book",
-      "page_number": 8,
-      "is_chapter": false,
-      "title": "Section 2"
-    },
-    {
-      "section_number": 3,
-      "chapter_number": 3,
-      "file_path": "test_book/sections/3.md",
-      "pdf_name": "test_book",
-      "page_number": 9,
-      "is_chapter": false,
-      "title": "Section 3"
+      "title": "Chapitre 2"
     }
   ],
-  "total_sections": 6,
-  "pre_section_count": 3,
-  "numbered_section_count": 3
+  "total_sections": 2,
+  "pre_section_count": 2,
+  "numbered_section_count": 0
 }

@@ -30,11 +30,16 @@ class MuPDFProcessor(PDFProcessor):
         sections = []
         current_chapter: List[FormattedText] = []
         chapter_count = 0
+        current_title = None
 
         try:
             for page_num in range(start_page, end_page + 1):
                 page = doc[page_num]
-                text = page.get_text()
+                try:
+                    text = page.get_text("text")  # Specify text extraction mode
+                except AttributeError:
+                    logger.warning(f"Could not extract text from page {page_num + 1}")
+                    continue
 
                 if not text.strip():
                     logger.info(f"Skipping empty page {page_num + 1}")
@@ -47,21 +52,22 @@ class MuPDFProcessor(PDFProcessor):
                 for block in blocks:
                     is_chapter, title = await self.ai_processor.detect_chapter_with_ai(block.text)
 
-                    if is_chapter and current_chapter:
-                        # Save current chapter
-                        chapter_count += 1
-                        section = await self.save_section(
-                            section_num=chapter_count,
-                            blocks=current_chapter,
-                            page_num=page_num + 1,
-                            output_dir=histoire_dir,
-                            pdf_folder_name=pdf_folder_name,
-                            is_chapter=True,
-                            title=title
-                        )
-                        sections.append(section)
-                        current_chapter = []
-                        logger.info(f"Saved chapter {chapter_count} with title: {title}")
+                    if is_chapter:
+                        # Save previous chapter if exists
+                        if current_chapter:
+                            chapter_count += 1
+                            section = await self.save_section(
+                                section_num=chapter_count,
+                                blocks=current_chapter,
+                                page_num=page_num + 1,
+                                output_dir=histoire_dir,
+                                pdf_folder_name=pdf_folder_name,
+                                is_chapter=True,
+                                title=current_title
+                            )
+                            sections.append(section)
+                            current_chapter = []
+                        current_title = title
 
                     current_chapter.append(block)
 
@@ -75,7 +81,7 @@ class MuPDFProcessor(PDFProcessor):
                     output_dir=histoire_dir,
                     pdf_folder_name=pdf_folder_name,
                     is_chapter=True,
-                    title=None
+                    title=current_title
                 )
                 sections.append(section)
                 logger.info(f"Saved final chapter {chapter_count}")
@@ -98,7 +104,11 @@ class MuPDFProcessor(PDFProcessor):
         try:
             for page_num in range(start_page, len(doc)):
                 page = doc[page_num]
-                text = page.get_text()
+                try:
+                    text = page.get_text("text")  # Specify text extraction mode
+                except AttributeError:
+                    logger.warning(f"Could not extract text from page {page_num + 1}")
+                    continue
 
                 if not text.strip():
                     logger.info(f"Skipping empty page {page_num + 1}")
@@ -214,6 +224,7 @@ class MuPDFProcessor(PDFProcessor):
         sections = []
         images = []
         progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
+        doc = None
 
         try:
             # Open PDF document
@@ -229,7 +240,10 @@ class MuPDFProcessor(PDFProcessor):
             for page_num in range(len(doc)):
                 progress.current_page = page_num + 1
                 page = doc[page_num]
-                text = page.get_text()
+                try:
+                    text = page.get_text("text")  # Specify text extraction mode
+                except AttributeError:
+                    continue
 
                 if not text.strip():
                     continue
@@ -275,7 +289,8 @@ class MuPDFProcessor(PDFProcessor):
             progress.processed_images = len(images)
 
             progress.status = ProcessingStatus.COMPLETED
-            doc.close()
+            if doc:
+                doc.close()
             return ProcessedPDF(
                 sections=sections,
                 images=images,
@@ -288,7 +303,7 @@ class MuPDFProcessor(PDFProcessor):
             logger.error(f"Error processing PDF: {e}")
             progress.status = ProcessingStatus.FAILED
             progress.error_message = str(e)
-            if 'doc' in locals():
+            if doc:
                 doc.close()
             return ProcessedPDF(
                 sections=sections,
