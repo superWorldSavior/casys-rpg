@@ -5,7 +5,9 @@ from enum import Enum
 class ProcessingStatus(Enum):
     NOT_STARTED = "not_started"
     INITIALIZING = "initializing"
-    EXTRACTING_SECTIONS = "extracting_sections"
+    ANALYZING_STRUCTURE = "analyzing_structure"
+    PROCESSING_PRE_SECTIONS = "processing_pre_sections"
+    PROCESSING_NUMBERED_SECTIONS = "processing_numbered_sections"
     EXTRACTING_IMAGES = "extracting_images"
     SAVING_METADATA = "saving_metadata"
     COMPLETED = "completed"

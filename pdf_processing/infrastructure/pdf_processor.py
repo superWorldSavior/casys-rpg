@@ -32,42 +32,45 @@ class MuPDFProcessor(PDFProcessor):
         self.ai_processor = AIProcessor()
         self.image_processor = ImageProcessor()
 
-    async def process_pre_section_pages(self, pages: List[Dict[str, any]]) -> List[List[FormattedText]]:
-        """Process multiple pre-section pages concurrently"""
+    async def process_pre_section_pages(self, pages: List[Dict[str, any]], progress: ProcessingProgress) -> List[List[FormattedText]]:
+        """Process multiple pre-section pages concurrently using GPT-4o-mini"""
+        progress.status = ProcessingStatus.PROCESSING_PRE_SECTIONS
+        logger.info("Starting pre-section processing with GPT-4o-mini")
+        
         try:
-            return await self.ai_processor.process_pages_concurrently(pages)
-        except Exception as e:
-            logger.error(f"Error in batch processing pre-section pages: {e}")
-            # Fallback to sequential processing
             results = []
             for page in pages:
                 try:
-                    result = await self.process_pre_section_page(page['text'], page['num'])
+                    # Process each page with GPT-4o-mini
+                    result = await self.ai_processor.analyze_page_content(page['text'], page['num'])
                     results.append(result)
+                    logger.info(f"Successfully processed pre-section page {page['num']}")
                 except Exception as page_error:
-                    logger.error(f"Error processing page {page['num']}: {page_error}")
+                    logger.error(f"Error processing pre-section page {page['num']}: {page_error}")
+                    # Fallback to basic text processing if AI fails
                     results.append(self.text_processor.process_text_block(page['text'], is_pre_section=True))
             return results
-
-    async def process_pre_section_page(self, text: str, page_num: int) -> List[FormattedText]:
-        """Process a single pre-section page using GPT-4o-mini"""
-        try:
-            return await self.ai_processor.analyze_page_content(text, page_num)
         except Exception as e:
-            logger.error(f"Error processing pre-section page {page_num}: {e}")
-            # Fallback to basic text processing if AI fails
-            return self.text_processor.process_text_block(text, is_pre_section=True)
+            logger.error(f"Error in batch processing pre-section pages: {e}")
+            raise
 
-    def process_numbered_section_page(self, text: str) -> List[FormattedText]:
-        """Process a single numbered section page using direct text processing"""
-        return self.text_processor.process_text_block(text, is_pre_section=False)
+    def process_numbered_section_page(self, text: str, page_num: int) -> List[FormattedText]:
+        """Process a single numbered section page using direct text formatting without AI"""
+        try:
+            # Use only text processor for numbered sections
+            formatted_blocks = self.text_processor.process_text_block(text, is_pre_section=False)
+            logger.info(f"Successfully processed numbered section page {page_num}")
+            return formatted_blocks
+        except Exception as e:
+            logger.error(f"Error processing numbered section page {page_num}: {e}")
+            raise
 
     async def extract_sections(self, pdf_path: str,
                              base_output_dir: str = "sections") -> ProcessedPDF:
-        """Extract sections from the PDF with enhanced formatting"""
+        """Extract sections from the PDF with distinct processing workflows"""
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
         paths = self.file_system_processor.create_book_structure(base_output_dir,
-                                                                pdf_folder_name)
+                                                               pdf_folder_name)
         sections_dir = paths["sections_dir"]
         histoire_dir = paths["histoire_dir"]
         images_dir = paths["images_dir"]
@@ -82,9 +85,10 @@ class MuPDFProcessor(PDFProcessor):
             doc = fitz.open(pdf_path)
             reader = PdfReader(pdf_path)
             progress.total_pages = len(reader.pages)
-            progress.status = ProcessingStatus.EXTRACTING_SECTIONS
+            logger.info(f"Processing PDF with {progress.total_pages} pages")
 
-            # First pass: Identify where numbered sections begin
+            # First workflow: Find first numbered section
+            progress.status = ProcessingStatus.ANALYZING_STRUCTURE
             first_section_page = None
             pre_section_pages = []
 
@@ -114,10 +118,10 @@ class MuPDFProcessor(PDFProcessor):
                     'num': page_num + 1
                 })
 
-            # Process pre-section pages concurrently
+            # Second workflow: Process pre-section content with GPT-4o-mini
             pre_section_content = []
             if pre_section_pages:
-                pre_section_content = await self.process_pre_section_pages(pre_section_pages)
+                pre_section_content = await self.process_pre_section_pages(pre_section_pages, progress)
 
             # Process pre-section content into chapters
             if pre_section_content:
@@ -146,6 +150,7 @@ class MuPDFProcessor(PDFProcessor):
                             )
                             sections.append(section)
                             self.file_system_processor.save_section_content(section)
+                            progress.processed_sections += 1
                             current_chapter = []
 
                         current_chapter.append(block)
@@ -168,9 +173,11 @@ class MuPDFProcessor(PDFProcessor):
                     )
                     sections.append(section)
                     self.file_system_processor.save_section_content(section)
+                    progress.processed_sections += 1
 
-            # Process numbered sections
+            # Third workflow: Process numbered sections without AI
             if first_section_page is not None:
+                progress.status = ProcessingStatus.PROCESSING_NUMBERED_SECTIONS
                 current_section = None
                 current_blocks: List[FormattedText] = []
 
@@ -183,7 +190,7 @@ class MuPDFProcessor(PDFProcessor):
                         if not text.strip():
                             continue
 
-                        formatted_blocks = self.process_numbered_section_page(text)
+                        formatted_blocks = self.process_numbered_section_page(text, page_num + 1)
                         
                         for block in formatted_blocks:
                             chapter_num, _ = self.chapter_processor.detect_chapter(block.text)
@@ -235,10 +242,11 @@ class MuPDFProcessor(PDFProcessor):
                     self.file_system_processor.save_section_content(section)
                     progress.processed_sections += 1
 
-            # Extract images
+            # Fourth workflow: Process images
             progress.status = ProcessingStatus.EXTRACTING_IMAGES
             images = self.image_processor.extract_images(
                 pdf_path, images_dir, metadata_dir, pdf_folder_name, sections)
+            progress.processed_images = len(images)
 
             progress.status = ProcessingStatus.COMPLETED
             doc.close()
