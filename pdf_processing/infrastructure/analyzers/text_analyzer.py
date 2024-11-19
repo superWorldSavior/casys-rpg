@@ -1,8 +1,11 @@
 """Text analysis functionality extracted from pdf_processor."""
 import re
+import json
+import asyncio
 from typing import List, Tuple, Optional
 from ...domain.entities import TextFormatting, FormattedText
 import openai
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 class TextAnalyzer:
     """Analyzes text content from PDFs."""
@@ -14,23 +17,49 @@ class TextAnalyzer:
             r'^[A-Z][a-zA-Z\s]{0,50}$',  # Title case, not too long
         ]
         self.openai_client = openai.AsyncOpenAI()
+        self.max_retries = 3
+        self.retry_delay = 1  # Initial delay in seconds
+
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
+    async def _make_openai_request(self, text: str) -> dict:
+        """Make OpenAI API request with retry mechanism"""
+        response = await self.openai_client.chat.completions.create(
+            model="gpt-4",
+            messages=[{
+                "role": "system",
+                "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
+            }, {
+                "role": "user",
+                "content": f"Analyze this text block for chapter characteristics:\n{text}"
+            }])
+        return response
 
     async def detect_chapter_with_ai(self, text: str) -> Tuple[bool, Optional[str]]:
-        """Use OpenAI to detect chapter breaks and determine titles"""
+        """Use OpenAI to detect chapter breaks and determine titles with improved error handling"""
         try:
-            response = await self.openai_client.chat.completions.create(
-                model="gpt-4",
-                messages=[{
-                    "role": "system",
-                    "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
-                }, {
-                    "role": "user",
-                    "content": f"Analyze this text block for chapter characteristics:\n{text}"
-                }])
-
+            response = await self._make_openai_request(text)
             result = response.choices[0].message.content
-            result_json = json.loads(result)
-            return result_json.get("is_chapter", False), result_json.get("title")
+
+            try:
+                result_json = json.loads(result)
+                if not isinstance(result_json, dict):
+                    raise ValueError("Invalid JSON structure")
+                
+                is_chapter = result_json.get("is_chapter", False)
+                if not isinstance(is_chapter, bool):
+                    is_chapter = False
+                
+                title = result_json.get("title")
+                if title and not isinstance(title, str):
+                    title = None
+                
+                return is_chapter, title
+            except json.JSONDecodeError as je:
+                print(f"JSON parsing error in chapter detection: {je}")
+                return False, None
+            except ValueError as ve:
+                print(f"Value error in chapter detection: {ve}")
+                return False, None
         except Exception as e:
             print(f"Error using OpenAI for chapter detection: {e}")
             return False, None

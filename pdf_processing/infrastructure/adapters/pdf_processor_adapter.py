@@ -1,8 +1,11 @@
 """PDF Processor adapter implementing the PDFProcessor port."""
 import os
+import re
 import fitz
+import tempfile
+import shutil
 from PyPDF2 import PdfReader
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Tuple, Set
 from ...domain.ports import PDFProcessor
 from ...domain.entities import (
     Section, PDFImage, ProcessedPDF,
@@ -18,6 +21,8 @@ class MuPDFProcessorAdapter(PDFProcessor):
     def __init__(self, text_analyzer: TextAnalyzer, image_analyzer: ImageAnalyzer):
         self.text_analyzer = text_analyzer
         self.image_analyzer = image_analyzer
+        self.processed_sections: Set[str] = set()
+        self.processed_images: Set[str] = set()
 
     def _get_pdf_folder_name(self, pdf_path: str) -> str:
         base_name = os.path.basename(pdf_path)
@@ -44,11 +49,23 @@ class MuPDFProcessorAdapter(PDFProcessor):
             "histoire_dir": histoire_dir
         }
 
-    def _save_section_content(self, section: Section):
-        """Save section content to file with proper formatting"""
-        os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
-        formatted_content = []
+    def _get_content_hash(self, content: str) -> str:
+        """Generate a unique hash for content to prevent duplicates"""
+        import hashlib
+        return hashlib.md5(content.encode()).hexdigest()
 
+    def _save_section_content(self, section: Section):
+        """Save section content to file with proper formatting and atomic write"""
+        # Generate content hash
+        content_hash = self._get_content_hash(section.content)
+        
+        # Check if this content has already been processed
+        if content_hash in self.processed_sections:
+            print(f"Skipping duplicate content for section {section.number}")
+            return
+        
+        # Prepare the content
+        formatted_content = []
         for fmt_text in section.formatted_content:
             if fmt_text.format_type == TextFormatting.HEADER:
                 if not re.match(r'^\s*\d+\s*$', fmt_text.text.strip()):
@@ -64,10 +81,31 @@ class MuPDFProcessorAdapter(PDFProcessor):
             else:
                 formatted_content.append(f"\n{fmt_text.text}\n")
 
-        with open(section.file_path, 'w', encoding='utf-8') as f:
-            if section.title:
-                f.write(f"# {section.title}\n\n")
-            f.write("".join(formatted_content).strip() + "\n")
+        # Create content with title
+        full_content = []
+        if section.title:
+            full_content.append(f"# {section.title}\n\n")
+        full_content.append("".join(formatted_content).strip() + "\n")
+        
+        # Create temporary file
+        os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
+        temp_path = f"{section.file_path}.tmp"
+        
+        try:
+            # Write to temporary file
+            with open(temp_path, 'w', encoding='utf-8') as f:
+                f.write("".join(full_content))
+            
+            # Atomic rename
+            shutil.move(temp_path, section.file_path)
+            
+            # Mark as processed
+            self.processed_sections.add(content_hash)
+        except Exception as e:
+            # Clean up temp file if it exists
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+            raise e
 
     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
         """Extract sections from PDF using MuPDF."""
@@ -276,6 +314,11 @@ class MuPDFProcessorAdapter(PDFProcessor):
                         base_image = doc.extract_image(xref)
                         image_bytes = base_image["image"]
                         
+                        # Generate image path and hash for deduplication
+                        image_hash = self._get_content_hash(str(image_bytes))
+                        if image_hash in self.processed_images:
+                            continue
+                        
                         # Generate image path
                         image_filename = f"page_{page_num + 1}_img_{img_idx + 1}.png"
                         image_path = os.path.join(images_dir, image_filename)
@@ -285,6 +328,7 @@ class MuPDFProcessorAdapter(PDFProcessor):
                             image_bytes, page_num + 1, pdf_folder_name, image_path
                         )
                         images.append(pdf_image)
+                        self.processed_images.add(image_hash)
                         
                     except Exception as e:
                         print(f"Error extracting image {img_idx + 1} from page {page_num + 1}: {e}")
