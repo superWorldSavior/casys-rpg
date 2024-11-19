@@ -10,34 +10,39 @@ class OpenAIAnalyzer(AIContentAnalyzer):
         self.logger = StructuredLogger("OpenAIAnalyzer")
     
     async def analyze_chapter_break(self, text: str) -> Tuple[bool, Optional[str]]:
-        """Use OpenAI to detect chapter breaks and determine titles"""
         try:
-            self.logger.info("Analyzing text for chapter break", {"text_length": len(text)})
-            
             response = await self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o",  # Updated model name
                 messages=[{
                     "role": "system",
-                    "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
+                    "content": "You are a text formatting analyzer. Given text, identify if it's a chapter break and extract title. Return JSON with {'is_chapter': boolean, 'title': string or null}."
                 }, {
                     "role": "user",
-                    "content": f"Analyze this text block for chapter characteristics:\n{text}"
-                }]
+                    "content": f"Analyze this text for chapter characteristics:\n{text}"
+                }],
+                temperature=0.3  # Added temperature parameter
             )
             
+            if not response.choices or not response.choices[0].message:
+                self.logger.error("Invalid response from OpenAI")
+                return False, None
+                
             result = response.choices[0].message.content
-            result_json = json.loads(result)
-            
-            is_chapter = result_json.get("is_chapter", False)
-            title = result_json.get("title")
-            
-            self.logger.info(
-                "Chapter analysis complete",
-                {"is_chapter": is_chapter, "has_title": bool(title)}
-            )
-            
-            return is_chapter, title
-            
+            if not result or not result.strip():
+                self.logger.error("Empty response from OpenAI")
+                return False, None
+                
+            try:
+                result_json = json.loads(result)
+                if not isinstance(result_json, dict):
+                    self.logger.error("Invalid JSON structure")
+                    return False, None
+                    
+                return result_json.get("is_chapter", False), result_json.get("title")
+            except json.JSONDecodeError as e:
+                self.logger.error(f"JSON parsing error: {e}")
+                return False, None
+                
         except Exception as e:
-            self.logger.error("Error in chapter analysis", e, {"text_length": len(text)})
+            self.logger.error(f"OpenAI API error: {e}")
             return False, None

@@ -6,3 +6,41 @@
 2024-11-19 01:49:30,852 - PDFService - INFO - {"timestamp": "2024-11-19T01:49:30.852630", "message": "Saving images", "count": 0}
 2024-11-19 01:49:30,853 - PDFService - INFO - {"timestamp": "2024-11-19T01:49:30.853488", "message": "PDF processing completed successfully", "pdf_name": "test_book", "total_sections": 4, "total_images": 0}
 2024-11-19 01:49:30,853 - MainProcessor - INFO - {"timestamp": "2024-11-19T01:49:30.853715", "message": "PDF processed successfully", "pdf_name": "test_book", "sections": 4, "images": 0}
+2024-11-19 01:54:58,210 - MainProcessor - INFO - {"timestamp": "2024-11-19T01:54:58.210417", "message": "Initializing PDF processing components"}
+2024-11-19 01:54:58,337 - MainProcessor - INFO - {"timestamp": "2024-11-19T01:54:58.337386", "message": "PDF found", "path": "/home/runner/TextFlowNavigator/test_book.pdf"}
+2024-11-19 01:54:58,337 - PDFService - INFO - {"timestamp": "2024-11-19T01:54:58.337752", "message": "Validating PDF processing request", "pdf_path": "/home/runner/TextFlowNavigator/test_book.pdf", "base_output_dir": "sections"}
+2024-11-19 01:54:58,338 - PDFService - INFO - {"timestamp": "2024-11-19T01:54:58.338028", "message": "Starting PDF processing", "pdf_path": "/home/runner/TextFlowNavigator/test_book.pdf"}
+2024-11-19 01:54:58,354 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T01:54:58.354166", "message": "Chapter number detected: 1"}
+2024-11-19 01:54:59,138 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:54:59.138837", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:54:59,689 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:54:59.689464", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:00,768 - TextFormatDetector - INFO - {"timestamp": "2024-11-19T01:55:00.768062", "message": "Chapter number detected: 1"}
+2024-11-19 01:55:01,542 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:01.542267", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:02,225 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:02.224969", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:02,241 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:02.241322", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:02,817 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:02.817622", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:02,856 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:02.856376", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:03,346 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:03.346955", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:03,448 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:03.448958", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:04,049 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:04.049789", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:04,370 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:04.370954", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:04,785 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:04.785290", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:05,438 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:05.438490", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:05,445 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:05.445268", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:06,016 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:06.016608", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:06,224 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:06.224732", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:06,587 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:06.587338", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:06,863 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:06.863420", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:07,342 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:07.342184", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:07,574 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:07.574744", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:08,169 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:08.169205", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:08,313 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:08.313895", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:08,849 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:08.849361", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:09,079 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:09.079090", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:09,523 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:09.523799", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:09,684 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:09.684076", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:10,266 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:10.266448", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:10,507 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:10.507010", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:11,092 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:11.092581", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:11,205 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:11.205005", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:11,748 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:11.748274", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
+2024-11-19 01:55:11,965 - OpenAIAnalyzer - ERROR - {"timestamp": "2024-11-19T01:55:11.965120", "message": "JSON parsing error: Expecting value: line 1 column 1 (char 0)"}
