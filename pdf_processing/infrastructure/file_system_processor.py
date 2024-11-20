@@ -4,6 +4,9 @@ from typing import Dict
 from ..domain.entities import Section, TextFormatting, FormattedText, ProcessingStatus
 
 class FileSystemProcessor:
+    def __init__(self):
+        self.text_formatting = TextFormatting  # Store reference to avoid import issues
+        
     def get_pdf_folder_name(self, pdf_path: str) -> str:
         base_name = os.path.basename(pdf_path)
         folder_name = os.path.splitext(base_name)[0]
@@ -44,20 +47,20 @@ class FileSystemProcessor:
                     if not text_content:
                         continue
 
-                    if fmt_text.format_type == TextFormatting.HEADER:
+                    if fmt_text.format_type == self.text_formatting.HEADER:
                         # Skip if it's just a number
                         if not re.match(r'^\s*\d+\s*$', text_content):
                             formatted_content.append(f"\n## {text_content}\n")
-                    elif fmt_text.format_type == TextFormatting.SUBHEADER:
+                    elif fmt_text.format_type == self.text_formatting.SUBHEADER:
                         formatted_content.append(f"\n### {text_content}\n")
-                    elif fmt_text.format_type == TextFormatting.LIST_ITEM:
+                    elif fmt_text.format_type == self.text_formatting.LIST_ITEM:
                         indentation = " " * fmt_text.metadata.get("indentation_level", 0)
                         formatted_content.append(f"{indentation}- {text_content}\n")
-                    elif fmt_text.format_type == TextFormatting.CODE:
+                    elif fmt_text.format_type == self.text_formatting.CODE:
                         formatted_content.append(f"\n```\n{text_content}\n```\n")
-                    elif fmt_text.format_type == TextFormatting.QUOTE:
+                    elif fmt_text.format_type == self.text_formatting.QUOTE:
                         formatted_content.append(f"\n> {text_content}\n")
-                    elif fmt_text.format_type == TextFormatting.PARAGRAPH:
+                    elif fmt_text.format_type == self.text_formatting.PARAGRAPH:
                         # Add blank line before paragraphs for better readability
                         formatted_content.append(f"\n{text_content}\n")
                 except (AttributeError, TypeError) as e:

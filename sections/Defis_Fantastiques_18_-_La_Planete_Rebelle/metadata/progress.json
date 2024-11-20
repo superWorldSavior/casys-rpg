@@ -1,0 +1,13 @@
+{
+  "status": "failed",
+  "current_page": 0,
+  "total_pages": 199,
+  "processed_sections": 0,
+  "processed_images": 0,
+  "error_message": "name 'TextFormatting' is not defined",
+  "section_counts": {
+    "total": 0,
+    "pre_sections": 0,
+    "numbered_sections": 0
+  }
+}
