@@ -1,5 +1,5 @@
 # Section 7
 
-## The loser loses 2 STAMINA points
+## header
 
-4. The loser loses 2 STAMINA points
+### Header

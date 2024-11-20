@@ -1,5 +1,5 @@
 # Section 6
 
-## The higher total wins that round
+## [not provided]
 
-3. The higher total wins that round
+1. Structural Elements

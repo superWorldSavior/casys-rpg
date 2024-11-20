@@ -1,7 +1,7 @@
 # Section 2
 
-## A Solo Adventure
+## a solo adventure
 
 A Solo Adventure
-By
-John Developer
+### By John Developer
+---
