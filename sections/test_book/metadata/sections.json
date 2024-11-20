@@ -1,16 +1,6 @@
 {
-  "sections": [
-    {
-      "section_number": 1,
-      "chapter_number": 1,
-      "file_path": "test_book/histoire/chapter_1.md",
-      "pdf_name": "test_book",
-      "page_number": 9,
-      "is_chapter": true,
-      "title": "Chapter 1"
-    }
-  ],
-  "total_sections": 1,
-  "pre_section_count": 1,
+  "sections": [],
+  "total_sections": 0,
+  "pre_section_count": 0,
   "numbered_section_count": 0
 }
