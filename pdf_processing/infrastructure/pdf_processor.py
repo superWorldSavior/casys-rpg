@@ -39,9 +39,9 @@ class MuPDFProcessor(PDFProcessor):
                 is_chapter_start, chapter_title = await self.ai_processor.detect_chapter_with_ai(text)
                 if is_chapter_start:
                     pre_sections += 1
-                    logger.info(f"Detected chapter at page {page_num + 1}: {chapter_title}")
+                    logger.info(f"Detected chapter boundary at page {page_num + 1}: {chapter_title}")
                 
-                # Look for numbered sections
+                # Look for numbered sections with enhanced detection
                 if re.search(r'^\s*\d+\s*[.:)]', text, re.MULTILINE):
                     numbered_sections += 1
                     logger.info(f"Detected numbered section at page {page_num + 1}")
@@ -61,7 +61,7 @@ class MuPDFProcessor(PDFProcessor):
         histoire_dir: str,
         pdf_folder_name: str
     ) -> List[Section]:
-        """Process first section with improved chapter boundary detection"""
+        """Process first section with improved chapter boundary detection and logging"""
         logger.info("Starting first section processing with enhanced boundary detection")
         sections = []
         current_chapter = None
@@ -71,13 +71,14 @@ class MuPDFProcessor(PDFProcessor):
         try:
             # Get images for multimodal analysis
             logger.info("Extracting images for multimodal analysis")
+            base_dir = os.path.dirname(os.path.dirname(histoire_dir))
             images = self.extract_images(
                 pdf_path=doc.name,
-                base_output_dir=os.path.dirname(histoire_dir)
+                base_output_dir=base_dir
             )
 
-            # Process pages until first numbered section
-            for page_num in range(min(10, len(doc))):
+            # Process pages until first numbered section is found
+            for page_num in range(len(doc)):
                 logger.info(f"Processing page {page_num + 1}")
                 page = doc[page_num]
                 try:
@@ -86,9 +87,9 @@ class MuPDFProcessor(PDFProcessor):
                         logger.debug(f"Skipping empty page {page_num + 1}")
                         continue
 
-                    # Check for numbered section
+                    # Check for numbered section with enhanced detection
                     if re.search(r'^\s*\d+\s*[.:)]', text, re.MULTILINE):
-                        logger.info(f"Found numbered section at page {page_num + 1}, stopping processing")
+                        logger.info(f"Found numbered section at page {page_num + 1}, stopping pre-section processing")
                         break
 
                     # Manage content length
@@ -98,7 +99,7 @@ class MuPDFProcessor(PDFProcessor):
                     
                     page_context += text
 
-                    # Enhanced multimodal analysis with logging
+                    # Enhanced multimodal analysis with detailed logging
                     logger.info(f"Performing multimodal analysis for page {page_num + 1}")
                     page_blocks, new_chapter_info, is_chapter_complete = await self.ai_processor.analyze_page_with_chapters(
                         text,
@@ -107,9 +108,9 @@ class MuPDFProcessor(PDFProcessor):
                         current_chapter
                     )
 
-                    # Handle chapter boundaries
+                    # Handle chapter boundaries with improved logging
                     if new_chapter_info and new_chapter_info != current_chapter:
-                        logger.info(f"Detected new chapter: {new_chapter_info.get('title')}")
+                        logger.info(f"Detected new chapter boundary: {new_chapter_info.get('title')}")
                         if current_chapter and current_blocks:
                             section = await self.save_section(
                                 section_num=len(sections) + 1,
@@ -126,13 +127,14 @@ class MuPDFProcessor(PDFProcessor):
                             page_context = text
                         
                         current_chapter = new_chapter_info
+                        logger.info(f"Started new chapter: {current_chapter.get('title')}")
 
                     # Accumulate content
                     current_blocks.extend(page_blocks)
 
                     # Handle chapter completion
                     if is_chapter_complete and current_chapter and current_blocks:
-                        logger.info("Chapter complete, saving final content")
+                        logger.info(f"Chapter complete: {current_chapter.get('title')}")
                         section = await self.save_section(
                             section_num=len(sections) + 1,
                             blocks=current_blocks,
@@ -143,19 +145,18 @@ class MuPDFProcessor(PDFProcessor):
                             title=current_chapter.get("title")
                         )
                         sections.append(section)
-                        break
 
                 except Exception as page_error:
                     logger.error(f"Error processing page {page_num + 1}: {page_error}")
                     continue
 
             # Handle remaining content
-            if not sections and current_blocks:
+            if current_blocks and not sections:
                 logger.info("Saving accumulated content as final section")
                 section = await self.save_section(
                     section_num=1,
                     blocks=current_blocks,
-                    page_num=min(10, len(doc)),
+                    page_num=len(doc),
                     output_dir=histoire_dir,
                     pdf_folder_name=pdf_folder_name,
                     is_chapter=True,

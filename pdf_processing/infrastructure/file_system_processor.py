@@ -18,25 +18,21 @@ class FileSystemProcessor:
         return folder_name
 
     def create_book_structure(self, base_output_dir: str, pdf_folder_name: str) -> Dict[str, str]:
-        """Create optimized book directory structure"""
+        """Create optimized book directory structure at correct level"""
         logger.info(f"Creating book structure for {pdf_folder_name}")
         
-        # Move all directories to the same level
+        # Create base book directory
         book_dir = os.path.join(base_output_dir, pdf_folder_name)
-        sections_dir = os.path.join(book_dir, "sections")
-        images_dir = os.path.join(book_dir, "images")
-        metadata_dir = os.path.join(book_dir, "metadata")
-        histoire_dir = os.path.join(book_dir, "histoire")
-
-        # Create directories with logging
+        
+        # Define all directories at the same level
         directories = {
             "book_dir": book_dir,
-            "sections_dir": sections_dir,
-            "images_dir": images_dir,
-            "metadata_dir": metadata_dir,
-            "histoire_dir": histoire_dir
+            "images_dir": os.path.join(book_dir, "images"),
+            "metadata_dir": os.path.join(book_dir, "metadata"),
+            "histoire_dir": os.path.join(book_dir, "histoire")
         }
 
+        # Create directories with logging
         for dir_name, dir_path in directories.items():
             try:
                 if not os.path.exists(dir_path):
