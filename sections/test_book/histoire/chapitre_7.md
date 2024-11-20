@@ -1,5 +1,5 @@
 # Section 7
 
-## header
+## combat rules
 
-### Header
+COMBAT RULES

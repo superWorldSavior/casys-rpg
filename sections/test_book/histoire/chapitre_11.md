@@ -1,5 +1,5 @@
 # Section 11
 
-## introduction
+## game rules
 
-INTRODUCTION
+Game Rules

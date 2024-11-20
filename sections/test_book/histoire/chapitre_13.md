@@ -1,5 +1,5 @@
 # Section 13
 
-## combat rules
+## equipment
 
-Combat Rules
+EQUIPMENT

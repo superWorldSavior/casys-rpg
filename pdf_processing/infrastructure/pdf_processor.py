@@ -25,14 +25,22 @@ class MuPDFProcessor(PDFProcessor):
 
     async def process_pre_sections(self, doc, start_page: int, end_page: int, 
                                  histoire_dir: str, pdf_folder_name: str) -> List[Section]:
-        """Process pre-sections using AI processor only"""
+        """Process pre-sections using unified AI analysis"""
         logger.info(f"Starting pre-section processing from page {start_page + 1} to {end_page + 1}")
         sections = []
-        current_chapter: List[FormattedText] = []
+        current_chapter = None
+        current_blocks = []
         chapter_count = 0
-        current_title = None
 
         try:
+            # Get all images for multimodal analysis
+            images = self.image_processor.extract_images(
+                doc_path=doc.name,
+                images_dir=os.path.join(os.path.dirname(histoire_dir), "images"),
+                metadata_dir=os.path.join(os.path.dirname(histoire_dir), "metadata"),
+                pdf_name=pdf_folder_name
+            )
+
             for page_num in range(start_page, end_page + 1):
                 page = doc[page_num]
                 try:
@@ -45,42 +53,65 @@ class MuPDFProcessor(PDFProcessor):
                     logger.info(f"Skipping empty page {page_num + 1}")
                     continue
 
-                blocks = await self.ai_processor.analyze_page_content(text, page_num + 1)
+                # Use new unified analysis
+                page_blocks, new_chapter_info, is_chapter_complete = await self.ai_processor.analyze_page_with_chapters(
+                    text,
+                    page_num + 1,
+                    images,
+                    current_chapter
+                )
 
-                for block in blocks:
-                    is_chapter, title = await self.ai_processor.detect_chapter_with_ai(block.text)
+                # Handle chapter transitions
+                if new_chapter_info and new_chapter_info != current_chapter:
+                    if current_chapter and current_blocks:
+                        # Save previous chapter
+                        chapter_count += 1
+                        section = await self.save_section(
+                            section_num=chapter_count,
+                            blocks=current_blocks,
+                            page_num=page_num + 1,
+                            output_dir=histoire_dir,
+                            pdf_folder_name=pdf_folder_name,
+                            is_chapter=True,
+                            title=current_chapter.get("title")
+                        )
+                        sections.append(section)
+                        current_blocks = []
+                    
+                    current_chapter = new_chapter_info
 
-                    if is_chapter:
-                        if current_chapter:
-                            chapter_count += 1
-                            section = await self.save_section(
-                                section_num=chapter_count,
-                                blocks=current_chapter,
-                                page_num=page_num + 1,
-                                output_dir=histoire_dir,
-                                pdf_folder_name=pdf_folder_name,
-                                is_chapter=True,
-                                title=current_title
-                            )
-                            sections.append(section)
-                            current_chapter = []
-                        current_title = title
+                # Accumulate content
+                current_blocks.extend(page_blocks)
 
-                    current_chapter.append(block)
+                # Save completed chapter
+                if is_chapter_complete and current_chapter and current_blocks:
+                    chapter_count += 1
+                    section = await self.save_section(
+                        section_num=chapter_count,
+                        blocks=current_blocks,
+                        page_num=page_num + 1,
+                        output_dir=histoire_dir,
+                        pdf_folder_name=pdf_folder_name,
+                        is_chapter=True,
+                        title=current_chapter.get("title")
+                    )
+                    sections.append(section)
+                    current_blocks = []
+                    current_chapter = None
 
-            if current_chapter:
+            # Handle any remaining content
+            if current_chapter and current_blocks:
                 chapter_count += 1
                 section = await self.save_section(
                     section_num=chapter_count,
-                    blocks=current_chapter,
+                    blocks=current_blocks,
                     page_num=end_page + 1,
                     output_dir=histoire_dir,
                     pdf_folder_name=pdf_folder_name,
                     is_chapter=True,
-                    title=current_title
+                    title=current_chapter.get("title")
                 )
                 sections.append(section)
-                logger.info(f"Saved final chapter {chapter_count}")
 
         except Exception as e:
             logger.error(f"Error in pre-section processing: {e}")

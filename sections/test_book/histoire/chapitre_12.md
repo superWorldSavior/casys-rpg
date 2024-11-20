@@ -1,7 +1,11 @@
 # Section 12
 
-## the dark fortress
+## character creation
 
-Welcome to **The Dark Fortress**, a solo adventure where **YOUR choices** determine the story's outcome. Before beginning your journey, read the following sections carefully to understand the rules and mechanics that will guide you through this perilous quest.
-```
-This structured markdown captures the essential elements of the content while maintaining clarity and hierarchy.
+Character Creation
+To create your character, you'll need to determine three key attributes:
+**SKILL**: Roll one die and add 6
+**STAMINA**: Roll two dice and add 12
+**LUCK**: Roll one die and add 6
+These scores represent your initial and maximum attribute scores.
+Page 5 Content Analysis

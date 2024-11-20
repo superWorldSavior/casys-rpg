@@ -4,7 +4,7 @@ import base64
 from typing import Tuple, Optional, List, Dict
 import openai
 import logging
-from ..domain.entities import FormattedText, TextFormatting, PDFImage
+from ..domain.entities import FormattedText, TextFormatting, PDFImage, Section
 
 logger = logging.getLogger(__name__)
 
@@ -24,32 +24,47 @@ class AIProcessor:
             logger.error(f"Error encoding image {image_path}: {e}")
             return None
 
-    async def analyze_page_content(self, page_text: str, page_num: int, images: Optional[List[PDFImage]] = None) -> List[FormattedText]:
-        """Analyze page content using multimodal analysis with gpt-4o-mini"""
+    async def analyze_page_with_chapters(
+        self, 
+        page_text: str, 
+        page_num: int, 
+        images: Optional[List[PDFImage]] = None,
+        current_chapter: Optional[Dict] = None
+    ) -> Tuple[List[FormattedText], Optional[Dict], bool]:
+        """
+        Combined method for page analysis and chapter detection using multimodal gpt-4o-mini
+        Returns: (formatted_blocks, current_chapter_info, is_chapter_complete)
+        """
         try:
-            logger.info(f"Processing page {page_num} with multimodal gpt-4o-mini analysis")
+            logger.info(f"Processing page {page_num} with unified multimodal analysis")
             
-            # Prepare system message with explicit multimodal focus
-            system_prompt = """You are an expert document analyzer specialized in multimodal book content processing.
-            Analyze both text and images together to understand the complete document structure.
-            Tasks:
-            1. Identify structural elements (headers, subheaders, paragraphs)
-            2. Recognize visual-textual relationships
-            3. Determine semantic importance of content
-            4. Apply appropriate formatting and hierarchy
+            system_prompt = """Analyze this book content with multimodal understanding:
+            1. Identify chapter boundaries and content structure
+            2. Process text and images together for complete context
+            3. Maintain natural content flow and hierarchy
+            4. Use standard markdown for formatting:
+               - # for main headers (chapters)
+               - ## for subheaders
+               - Regular paragraphs without special formatting
+               - Lists with - or 1. 
+               - > for quotes
             
-            Return structured markdown with clear semantic formatting."""
+            Respond with:
+            1. Chapter status (NEW/CONTINUE/END)
+            2. Chapter title if new
+            3. Formatted content in standard markdown"""
 
-            # Initialize messages array with system prompt
+            # Prepare multimodal content
             messages = [{"role": "system", "content": system_prompt}]
             
-            # Process text content
-            text_content = f"""Page {page_num} Content Analysis:
-            
-            Text Content:
-            {page_text}"""
-            
-            # Add image analysis if available
+            # Add context from current chapter if exists
+            if current_chapter:
+                messages.append({
+                    "role": "user",
+                    "content": f"Current chapter context: {current_chapter['title']}\nContinuing from previous page..."
+                })
+
+            # Process images if available
             if images:
                 page_images = [img for img in images if img.page_number == page_num]
                 for img in page_images:
@@ -69,8 +84,11 @@ class AIProcessor:
                             ]
                         })
 
-            # Add text analysis request
-            messages.append({"role": "user", "content": text_content})
+            # Add text content
+            messages.append({
+                "role": "user",
+                "content": f"Page {page_num} content:\n\n{page_text}"
+            })
 
             # Get AI analysis
             response = await self.openai_client.chat.completions.create(
@@ -84,142 +102,92 @@ class AIProcessor:
             if not content:
                 raise ValueError("Empty response from AI model")
 
-            # Parse the response into formatted blocks with enhanced structure detection
-            blocks = []
-            current_format = TextFormatting.PARAGRAPH
-            current_metadata = {"indentation_level": 0, "formatting": [], "context": ""}
+            # Parse the response
+            lines = content.split('\n')
+            chapter_status = None
+            chapter_title = None
+            formatted_blocks = []
+            content_lines = []
 
-            for line in content.split('\n'):
+            # Extract chapter information and content
+            for line in lines:
                 line = line.strip()
                 if not line:
                     continue
 
-                # Enhanced format detection with context preservation
-                if re.match(r'^#{1,2}\s+', line):
-                    level = len(re.match(r'^#+', line).group())
-                    current_format = TextFormatting.HEADER if level == 1 else TextFormatting.SUBHEADER
-                    line = re.sub(r'^#+\s+', '', line)
-                    current_metadata["context"] = "heading"
-                elif line.startswith(('- ', '* ', '• ')):
+                if line.upper().startswith("CHAPTER STATUS:"):
+                    chapter_status = line.split(":", 1)[1].strip().upper()
+                elif line.upper().startswith("CHAPTER TITLE:"):
+                    chapter_title = line.split(":", 1)[1].strip()
+                else:
+                    content_lines.append(line)
+
+            # Process content into formatted blocks
+            current_format = TextFormatting.PARAGRAPH
+            metadata = {"indentation_level": 0, "formatting": [], "context": ""}
+
+            for line in content_lines:
+                # Standard markdown parsing
+                if line.startswith('# '):
+                    current_format = TextFormatting.HEADER
+                    line = line[2:].strip()
+                    metadata = {"context": "chapter_title"}
+                elif line.startswith('## '):
+                    current_format = TextFormatting.SUBHEADER
+                    line = line[3:].strip()
+                    metadata = {"context": "section_title"}
+                elif line.startswith(('- ', '* ')):
                     current_format = TextFormatting.LIST_ITEM
-                    line = re.sub(r'^[- *•]\s+', '', line)
-                    current_metadata["indentation_level"] = 1
-                    current_metadata["context"] = "list"
+                    line = line[2:].strip()
+                    metadata = {"context": "list", "indentation_level": 1}
                 elif line.startswith('> '):
                     current_format = TextFormatting.QUOTE
-                    line = line[2:]
-                    current_metadata["context"] = "quote"
-                elif re.match(r'^\d+\.\s+', line):
+                    line = line[2:].strip()
+                    metadata = {"context": "quote"}
+                elif re.match(r'^\d+\. ', line):
                     current_format = TextFormatting.LIST_ITEM
-                    line = re.sub(r'^\d+\.\s+', '', line)
-                    current_metadata["indentation_level"] = 1
-                    current_metadata["context"] = "numbered_list"
+                    line = re.sub(r'^\d+\. ', '', line).strip()
+                    metadata = {"context": "numbered_list", "indentation_level": 1}
                 else:
                     current_format = TextFormatting.PARAGRAPH
-                    current_metadata["indentation_level"] = 0
-                    current_metadata["context"] = "body"
+                    metadata = {"context": "body", "indentation_level": 0}
 
-                blocks.append(FormattedText(
+                formatted_blocks.append(FormattedText(
                     text=line,
                     format_type=current_format,
-                    metadata=current_metadata.copy()
+                    metadata=metadata.copy()
                 ))
 
-            return blocks
+            # Determine chapter status
+            is_chapter_complete = chapter_status == "END"
+            new_chapter_info = None
+
+            if chapter_status == "NEW":
+                new_chapter_info = {
+                    "title": chapter_title,
+                    "start_page": page_num
+                }
+            elif chapter_status == "CONTINUE" and current_chapter:
+                new_chapter_info = current_chapter
+
+            return formatted_blocks, new_chapter_info, is_chapter_complete
 
         except Exception as e:
-            logger.error(f"Error in gpt-4o-mini multimodal analysis for page {page_num}: {e}")
-            # Fallback to basic formatting
+            logger.error(f"Error in unified analysis for page {page_num}: {e}")
             return [FormattedText(
                 text=page_text,
                 format_type=TextFormatting.PARAGRAPH,
-                metadata={"indentation_level": 0, "formatting": [], "context": "fallback"}
-            )]
+                metadata={"context": "error_fallback"}
+            )], current_chapter, False
+
+    # Keep existing methods for backward compatibility and gradual migration
+    async def analyze_page_content(self, page_text: str, page_num: int, images: Optional[List[PDFImage]] = None) -> List[FormattedText]:
+        """Legacy method - redirects to new unified analysis"""
+        blocks, _, _ = await self.analyze_page_with_chapters(page_text, page_num, images)
+        return blocks
 
     async def detect_chapter_with_ai(self, text: str, associated_image: Optional[PDFImage] = None) -> Tuple[bool, Optional[str]]:
-        """Detect chapter breaks using multimodal gpt-4o-mini analysis"""
-        try:
-            # Enhanced system prompt for chapter detection
-            system_prompt = """You are a specialized AI trained to identify chapter breaks in books using multimodal analysis.
-            Consider both textual and visual indicators:
-            1. Chapter numbers and titles (explicit markers)
-            2. Visual layout and formatting (implicit markers)
-            3. Content transitions and thematic shifts
-            4. Image placement and relevance to chapter boundaries
-            
-            Respond with:
-            - CHAPTER: YES/NO
-            - TITLE: [extracted title if found]
-            - CONFIDENCE: HIGH/MEDIUM/LOW"""
-
-            # Prepare messages array
-            messages = [{"role": "system", "content": system_prompt}]
-            
-            # Add image analysis if available
-            if associated_image:
-                image_data = self._encode_image(associated_image.image_path)
-                if image_data:
-                    messages.append({
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": "Visual content for chapter analysis:"
-                            },
-                            {
-                                "type": "image",
-                                "image_url": f"data:image/png;base64,{image_data}"
-                            }
-                        ]
-                    })
-
-            # Add text analysis request
-            content_prompt = f"""Analyze for chapter indicators:
-            {text}"""
-            messages.append({"role": "user", "content": content_prompt})
-
-            # Get AI analysis
-            response = await self.openai_client.chat.completions.create(
-                model=self.model_name,
-                messages=messages,
-                temperature=self.temperature,
-                max_tokens=200
-            )
-
-            content = response.choices[0].message.content
-            if not content:
-                return False, None
-
-            # Enhanced response parsing
-            is_chapter = False
-            title = None
-            confidence = "LOW"
-
-            # Parse structured response
-            for line in content.lower().split('\n'):
-                if 'chapter:' in line:
-                    is_chapter = 'yes' in line
-                elif 'title:' in line:
-                    title_match = re.search(r'title:\s*(.+)', line, re.IGNORECASE)
-                    if title_match:
-                        title = title_match.group(1).strip()
-                elif 'confidence:' in line:
-                    confidence = line.split(':')[1].strip().upper()
-
-            # Only accept chapter detection with medium or high confidence
-            if confidence == "LOW":
-                is_chapter = False
-
-            # Fallback title extraction if needed
-            if is_chapter and not title:
-                # Look for capitalized lines that might be titles
-                title_candidates = [line.strip() for line in text.split('\n')
-                                 if line.strip() and line.strip()[0].isupper()]
-                if title_candidates:
-                    title = title_candidates[0]
-
-            return is_chapter, title
-
-        except Exception as e:
-            logger.error(f"Error in gpt-4o-mini chapter detection: {e}")
-            return False, None
+        """Legacy method - redirects to new unified analysis"""
+        blocks, chapter_info, _ = await self.analyze_page_with_chapters(text, 1, 
+            [associated_image] if associated_image else None)
+        return bool(chapter_info), chapter_info.get("title") if chapter_info else None

@@ -1,4 +1,0 @@
-# [analysis]
-
-### Analysis:
-- **Structural Elements**:

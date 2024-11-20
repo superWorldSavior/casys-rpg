@@ -1,6 +1,0 @@
-# Section 8
-
-## Comment rétablir votre Habileté
-
-Comment rétablir votre Habileté
-Vos points d'HABlLETE varieront peu au cours de l'aventure. Vous trouverez indiquées aux paragraphes correspondant les circonstances où vous devrez les diminuer ou les augmenter.

@@ -1,13 +1,9 @@
 # Section 14
 
-## basic combat
+## starting items
 
-Basic Combat
-Combat in *The Dark Fortress* follows these simple steps:
-**Roll two dice and add your SKILL score.**
-**Roll two dice and add the enemy's SKILL score.**
-**The higher total wins that round.**
-**The loser loses 2 STAMINA points.**
----
-### Analysis
-**Structural Elements:**
+### Starting Items
+**Sword** (SKILL +2)
+**Leather Armor** (reduces damage by 1)
+**Backpack** (holds up to 8 items)
+**Lantern** (provides light in dark areas)

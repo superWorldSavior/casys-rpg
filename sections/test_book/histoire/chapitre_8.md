@@ -1,8 +1,13 @@
 # Section 8
 
-## introduction
+## basic combat
 
-**INTRODUCTION**
-### Paragraphs
-**Paragraph 1:** Welcome to The Dark Fortress, a solo adventure where YOUR choices determine the story's outcome. Before beginning your journey, read the following sections carefully to understand the rules and mechanics that will guide you through this perilous quest.
-2. Visual-Textual Relationships
+### Basic Combat
+Combat in **The Dark Fortress** follows these simple steps:
+**Roll two dice** and add your **SKILL** score.
+**Roll two dice** and add the enemy's **SKILL** score.
+The **higher total** wins that round.
+The **loser** loses **2 STAMINA** points.
+---
+### Analysis
+**Structural Elements**:

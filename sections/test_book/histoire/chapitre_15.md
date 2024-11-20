@@ -1,5 +1,5 @@
 # Section 15
 
-## combat rules
+## gold pieces
 
-**Header:** "Combat Rules"
+**10 Gold Pieces**
