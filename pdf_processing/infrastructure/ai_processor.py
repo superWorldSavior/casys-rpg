@@ -4,7 +4,7 @@ import base64
 from typing import Tuple, Optional, List, Dict
 import openai
 import logging
-from ..domain.entities import FormattedText, TextFormatting, PDFImage, Section
+from ..domain.entities import FormattedText, TextFormatting, PDFImage
 
 logger = logging.getLogger(__name__)
 
@@ -32,27 +32,36 @@ class AIProcessor:
         current_chapter: Optional[Dict] = None
     ) -> Tuple[List[FormattedText], Optional[Dict], bool]:
         """
-        Combined method for page analysis and chapter detection using multimodal gpt-4o-mini
+        Multimodal analysis using gpt-4o-mini for combined chapter detection and content analysis
         Returns: (formatted_blocks, current_chapter_info, is_chapter_complete)
         """
         try:
-            logger.info(f"Processing page {page_num} with unified multimodal analysis")
+            logger.info(f"Processing page {page_num} with gpt-4o-mini multimodal analysis")
             
-            system_prompt = """Analyze this book content with multimodal understanding:
-            1. Identify chapter boundaries and content structure
-            2. Process text and images together for complete context
-            3. Maintain natural content flow and hierarchy
-            4. Use standard markdown for formatting:
-               - # for main headers (chapters)
-               - ## for subheaders
-               - Regular paragraphs without special formatting
+            system_prompt = """You are a multimodal content analyzer specialized in book content analysis. 
+            Analyze the provided content following these guidelines:
+
+            1. Chapter Analysis:
+               - Identify chapter boundaries and structure
+               - Determine if this is the start, continuation, or end of a chapter
+               - Extract chapter titles when present
+
+            2. Content Processing:
+               - Analyze both text and images together for complete context
+               - Identify visual-textual relationships
+               - Maintain natural content flow and hierarchy
+
+            3. Use standard markdown formatting:
+               - # for chapter titles
+               - ## for section headers
+               - Regular paragraphs with no special markup
                - Lists with - or 1. 
-               - > for quotes
-            
-            Respond with:
-            1. Chapter status (NEW/CONTINUE/END)
-            2. Chapter title if new
-            3. Formatted content in standard markdown"""
+               - > for quotes or special text
+
+            Respond with structured output:
+            1. CHAPTER_STATUS: [NEW/CONTINUE/END]
+            2. CHAPTER_TITLE: [title if new chapter]
+            3. CONTENT: [formatted content in markdown]"""
 
             # Prepare multimodal content
             messages = [{"role": "system", "content": system_prompt}]
@@ -115,10 +124,12 @@ class AIProcessor:
                 if not line:
                     continue
 
-                if line.upper().startswith("CHAPTER STATUS:"):
+                if line.upper().startswith("CHAPTER_STATUS:"):
                     chapter_status = line.split(":", 1)[1].strip().upper()
-                elif line.upper().startswith("CHAPTER TITLE:"):
+                elif line.upper().startswith("CHAPTER_TITLE:"):
                     chapter_title = line.split(":", 1)[1].strip()
+                elif line.upper().startswith("CONTENT:"):
+                    continue  # Skip the content marker
                 else:
                     content_lines.append(line)
 
@@ -127,7 +138,7 @@ class AIProcessor:
             metadata = {"indentation_level": 0, "formatting": [], "context": ""}
 
             for line in content_lines:
-                # Standard markdown parsing
+                # Markdown parsing
                 if line.startswith('# '):
                     current_format = TextFormatting.HEADER
                     line = line[2:].strip()
@@ -173,21 +184,9 @@ class AIProcessor:
             return formatted_blocks, new_chapter_info, is_chapter_complete
 
         except Exception as e:
-            logger.error(f"Error in unified analysis for page {page_num}: {e}")
+            logger.error(f"Error in gpt-4o-mini analysis for page {page_num}: {e}")
             return [FormattedText(
                 text=page_text,
                 format_type=TextFormatting.PARAGRAPH,
                 metadata={"context": "error_fallback"}
             )], current_chapter, False
-
-    # Keep existing methods for backward compatibility and gradual migration
-    async def analyze_page_content(self, page_text: str, page_num: int, images: Optional[List[PDFImage]] = None) -> List[FormattedText]:
-        """Legacy method - redirects to new unified analysis"""
-        blocks, _, _ = await self.analyze_page_with_chapters(page_text, page_num, images)
-        return blocks
-
-    async def detect_chapter_with_ai(self, text: str, associated_image: Optional[PDFImage] = None) -> Tuple[bool, Optional[str]]:
-        """Legacy method - redirects to new unified analysis"""
-        blocks, chapter_info, _ = await self.analyze_page_with_chapters(text, 1, 
-            [associated_image] if associated_image else None)
-        return bool(chapter_info), chapter_info.get("title") if chapter_info else None
