@@ -1,54 +1,60 @@
+"""PDF Processor implementation with multimodal chapter analysis"""
 import os
-from typing import List, Optional, Dict, Tuple
+import re
+import json
 import logging
+from typing import List, Optional, Dict, Tuple
 import fitz  # PyMuPDF
-from PyPDF2 import PdfReader
-import asyncio
 from ..domain.ports import PDFProcessor
 from ..domain.entities import (Section, ProcessedPDF, PDFImage,
-                             ProcessingStatus, ProcessingProgress, 
-                             TextFormatting, FormattedText)
-from .text_format_processor import TextFormatProcessor
+                           ProcessingStatus, ProcessingProgress, 
+                           TextFormatting, FormattedText)
 from .file_system_processor import FileSystemProcessor
 from .ai_processor import AIProcessor
-import json
-import re
 
 logger = logging.getLogger(__name__)
 
 class MuPDFProcessor(PDFProcessor):
     def __init__(self):
-        self.text_processor = TextFormatProcessor()
         self.file_system_processor = FileSystemProcessor()
         self.ai_processor = AIProcessor()
         self.max_content_length = 4000
 
     async def get_section_count(self, doc: fitz.Document) -> Tuple[int, int, int]:
-        """Get accurate section counts using PyMuPDF"""
-        logger.info("Analyzing document structure for section counting")
+        """Get section counts using multimodal analysis"""
+        logger.info("Starting section count analysis using multimodal processing")
         total_sections = 0
         pre_sections = 0
         numbered_sections = 0
+        current_chapter = None
         
         try:
+            # Extract images for multimodal analysis
+            images = self.extract_images(doc.name)
+            
             for page_num in range(len(doc)):
                 page = doc[page_num]
                 text = page.get_text("text")
                 
-                # Use AI to detect chapter boundaries
-                is_chapter_start, chapter_title = await self.ai_processor.detect_chapter_with_ai(text)
-                if is_chapter_start:
-                    pre_sections += 1
-                    logger.info(f"Detected chapter boundary at page {page_num + 1}: {chapter_title}")
+                # Use multimodal analysis for chapter detection
+                blocks, new_chapter_info, is_chapter_complete = await self.ai_processor.analyze_page_with_chapters(
+                    text, page_num + 1, images, current_chapter
+                )
                 
-                # Look for numbered sections with enhanced detection
+                if new_chapter_info and new_chapter_info != current_chapter:
+                    pre_sections += 1
+                    current_chapter = new_chapter_info
+                    logger.info(f"Detected chapter at page {page_num + 1}: {new_chapter_info.get('title')}")
+                
+                # Check for numbered sections
                 if re.search(r'^\s*\d+\s*[.:)]', text, re.MULTILINE):
                     numbered_sections += 1
-                    logger.info(f"Detected numbered section at page {page_num + 1}")
-            
+                    logger.debug(f"Detected numbered section at page {page_num + 1}")
+
             total_sections = pre_sections + numbered_sections
-            logger.info(f"Section count analysis complete - Total: {total_sections}, "
+            logger.info(f"Section analysis complete - Total: {total_sections}, "
                        f"Pre-sections: {pre_sections}, Numbered: {numbered_sections}")
+            
             return total_sections, pre_sections, numbered_sections
             
         except Exception as e:
@@ -61,106 +67,81 @@ class MuPDFProcessor(PDFProcessor):
         histoire_dir: str,
         pdf_folder_name: str
     ) -> List[Section]:
-        """Process first section with improved chapter boundary detection and logging"""
-        logger.info("Starting first section processing with enhanced boundary detection")
+        """Process first section with multimodal analysis"""
+        logger.info("Starting first section processing with multimodal analysis")
         sections = []
         current_chapter = None
         current_blocks = []
-        page_context = ""
         
         try:
             # Get images for multimodal analysis
-            logger.info("Extracting images for multimodal analysis")
-            base_dir = os.path.dirname(os.path.dirname(histoire_dir))
-            images = self.extract_images(
-                pdf_path=doc.name,
-                base_output_dir=base_dir
-            )
-
-            # Process pages until first numbered section is found
+            images = self.extract_images(doc.name)
+            
+            # Process pages until first numbered section
             for page_num in range(len(doc)):
                 logger.info(f"Processing page {page_num + 1}")
                 page = doc[page_num]
-                try:
-                    text = page.get_text("text")
-                    if not text.strip():
-                        logger.debug(f"Skipping empty page {page_num + 1}")
-                        continue
+                text = page.get_text("text")
+                
+                if not text.strip():
+                    logger.debug(f"Skipping empty page {page_num + 1}")
+                    continue
 
-                    # Check for numbered section with enhanced detection
-                    if re.search(r'^\s*\d+\s*[.:)]', text, re.MULTILINE):
-                        logger.info(f"Found numbered section at page {page_num + 1}, stopping pre-section processing")
-                        break
+                # Check for numbered section
+                if re.search(r'^\s*\d+\s*[.:)]', text, re.MULTILINE):
+                    logger.info(f"Found numbered section at page {page_num + 1}, stopping pre-section processing")
+                    break
 
-                    # Manage content length
-                    if len(page_context + text) > self.max_content_length:
-                        text = text[:self.max_content_length - len(page_context)]
-                        logger.debug(f"Truncated page {page_num + 1} content to fit length limit")
-                    
-                    page_context += text
+                # Perform multimodal analysis
+                blocks, new_chapter_info, is_chapter_complete = await self.ai_processor.analyze_page_with_chapters(
+                    text,
+                    page_num + 1,
+                    images,
+                    current_chapter
+                )
 
-                    # Enhanced multimodal analysis with detailed logging
-                    logger.info(f"Performing multimodal analysis for page {page_num + 1}")
-                    page_blocks, new_chapter_info, is_chapter_complete = await self.ai_processor.analyze_page_with_chapters(
-                        text,
-                        page_num + 1,
-                        images,
-                        current_chapter
-                    )
-
-                    # Handle chapter boundaries with improved logging
-                    if new_chapter_info and new_chapter_info != current_chapter:
-                        logger.info(f"Detected new chapter boundary: {new_chapter_info.get('title')}")
-                        if current_chapter and current_blocks:
-                            section = await self.save_section(
-                                section_num=len(sections) + 1,
-                                blocks=current_blocks,
-                                page_num=page_num,
-                                output_dir=histoire_dir,
-                                pdf_folder_name=pdf_folder_name,
-                                is_chapter=True,
-                                title=current_chapter.get("title")
-                            )
-                            sections.append(section)
-                            logger.info(f"Saved chapter: {current_chapter.get('title')}")
-                            current_blocks = []
-                            page_context = text
-                        
-                        current_chapter = new_chapter_info
-                        logger.info(f"Started new chapter: {current_chapter.get('title')}")
-
-                    # Accumulate content
-                    current_blocks.extend(page_blocks)
-
-                    # Handle chapter completion
-                    if is_chapter_complete and current_chapter and current_blocks:
-                        logger.info(f"Chapter complete: {current_chapter.get('title')}")
+                # Handle chapter transitions
+                if new_chapter_info and new_chapter_info != current_chapter:
+                    logger.info(f"New chapter detected: {new_chapter_info.get('title')}")
+                    if current_chapter and current_blocks:
                         section = await self.save_section(
                             section_num=len(sections) + 1,
                             blocks=current_blocks,
-                            page_num=page_num + 1,
+                            page_num=page_num,
                             output_dir=histoire_dir,
                             pdf_folder_name=pdf_folder_name,
-                            is_chapter=True,
                             title=current_chapter.get("title")
                         )
                         sections.append(section)
+                        current_blocks = []
+                    
+                    current_chapter = new_chapter_info
 
-                except Exception as page_error:
-                    logger.error(f"Error processing page {page_num + 1}: {page_error}")
-                    continue
+                current_blocks.extend(blocks)
+
+                if is_chapter_complete and current_chapter and current_blocks:
+                    logger.info(f"Chapter complete: {current_chapter.get('title')}")
+                    section = await self.save_section(
+                        section_num=len(sections) + 1,
+                        blocks=current_blocks,
+                        page_num=page_num + 1,
+                        output_dir=histoire_dir,
+                        pdf_folder_name=pdf_folder_name,
+                        title=current_chapter.get("title")
+                    )
+                    sections.append(section)
+                    current_blocks = []
+                    current_chapter = None
 
             # Handle remaining content
-            if current_blocks and not sections:
-                logger.info("Saving accumulated content as final section")
+            if current_blocks:
                 section = await self.save_section(
-                    section_num=1,
+                    section_num=len(sections) + 1,
                     blocks=current_blocks,
                     page_num=len(doc),
                     output_dir=histoire_dir,
                     pdf_folder_name=pdf_folder_name,
-                    is_chapter=True,
-                    title=current_chapter.get("title") if current_chapter else "Chapter 1"
+                    title=current_chapter.get("title") if current_chapter else None
                 )
                 sections.append(section)
 
@@ -175,14 +156,18 @@ class MuPDFProcessor(PDFProcessor):
         images = []
         doc = None
         try:
+            logger.info(f"Extracting images from {pdf_path}")
             doc = fitz.open(pdf_path)
             pdf_name = os.path.splitext(os.path.basename(pdf_path))[0]
-            images_dir = os.path.join(base_output_dir, pdf_name, "images")
-            metadata_dir = os.path.join(base_output_dir, pdf_name, "metadata")
+            
+            # Setup directories
+            book_dir = os.path.join(base_output_dir, pdf_name)
+            images_dir = os.path.join(book_dir, "images")
+            metadata_dir = os.path.join(book_dir, "metadata")
             
             os.makedirs(images_dir, exist_ok=True)
             os.makedirs(metadata_dir, exist_ok=True)
-
+            
             images_metadata = []
             
             for page_num in range(len(doc)):
@@ -195,13 +180,12 @@ class MuPDFProcessor(PDFProcessor):
                         base_image = doc.extract_image(xref)
                         image_bytes = base_image["image"]
                         
-                        # Save as PNG
-                        image_filename = f"image_{page_num + 1}_{img_idx + 1}.png"
+                        image_filename = f"page_{page_num + 1}_img_{img_idx + 1}.png"
                         image_path = os.path.join(images_dir, image_filename)
                         
                         with open(image_path, "wb") as img_file:
                             img_file.write(image_bytes)
-                            
+                        
                         image_metadata = {
                             "page_number": page_num + 1,
                             "image_number": img_idx + 1,
@@ -222,15 +206,16 @@ class MuPDFProcessor(PDFProcessor):
                         logger.error(f"Error extracting image {img_idx} from page {page_num + 1}: {img_error}")
                         continue
             
-            # Save all metadata to a single file
+            # Save metadata
             metadata_path = os.path.join(metadata_dir, "images.json")
-            with open(metadata_path, "w") as meta_file:
+            with open(metadata_path, "w") as f:
                 json.dump({
                     "pdf_name": pdf_name,
                     "total_images": len(images_metadata),
                     "images": images_metadata
-                }, meta_file, indent=2)
-                
+                }, f, indent=2)
+            
+            logger.info(f"Extracted {len(images)} images from PDF")
             return images
             
         except Exception as e:
@@ -240,8 +225,47 @@ class MuPDFProcessor(PDFProcessor):
             if doc:
                 doc.close()
 
+    async def save_section(
+        self,
+        section_num: int,
+        blocks: List[FormattedText],
+        page_num: int,
+        output_dir: str,
+        pdf_folder_name: str,
+        title: Optional[str] = None
+    ) -> Section:
+        """Save section with simplified file naming"""
+        try:
+            # Use simple chapitre_X.md naming
+            filename = f"chapitre_{section_num}.md"
+            section_path = os.path.join(output_dir, filename)
+            
+            logger.info(f"Saving section {section_num} to {section_path}")
+            
+            # Create section object
+            section = Section(
+                number=section_num,
+                content="",  # Content will be generated from blocks
+                page_number=page_num,
+                file_path=section_path,
+                pdf_name=pdf_folder_name,
+                title=title,
+                formatted_content=blocks,
+                is_chapter=True,
+                chapter_number=section_num
+            )
+            
+            # Save content using file system processor
+            self.file_system_processor.save_section_content(section)
+            
+            return section
+            
+        except Exception as e:
+            logger.error(f"Error saving section {section_num}: {e}")
+            raise
+
     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
-        """Extract sections with enhanced counting and logging"""
+        """Extract sections with multimodal analysis"""
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
         paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
         sections = []
@@ -250,15 +274,16 @@ class MuPDFProcessor(PDFProcessor):
         doc = None
 
         try:
-            logger.info(f"Opening PDF: {pdf_path}")
+            logger.info(f"Processing PDF: {pdf_path}")
             doc = fitz.open(pdf_path)
             
-            # Get accurate section counts
+            # Get accurate section counts using multimodal analysis
             total_sections, pre_sections, numbered_sections = await self.get_section_count(doc)
             progress.total_pages = len(doc)
+            
             logger.info(f"Document analysis complete: {progress.total_pages} pages, "
                        f"{total_sections} total sections")
-
+            
             # Process first section
             progress.status = ProcessingStatus.PROCESSING_PRE_SECTIONS
             sections = await self.process_first_section(
@@ -266,13 +291,12 @@ class MuPDFProcessor(PDFProcessor):
                 paths["histoire_dir"],
                 pdf_folder_name
             )
-
+            
             # Extract images
             progress.status = ProcessingStatus.EXTRACTING_IMAGES
             images = self.extract_images(pdf_path, base_output_dir)
             progress.processed_images = len(images)
-            logger.info(f"Extracted {len(images)} images")
-
+            
             # Update progress
             progress.status = ProcessingStatus.COMPLETED
             progress.processed_sections = len(sections)
@@ -284,7 +308,7 @@ class MuPDFProcessor(PDFProcessor):
                 base_path=base_output_dir,
                 progress=progress
             )
-
+            
         except Exception as e:
             logger.error(f"Error processing PDF: {e}")
             progress.status = ProcessingStatus.FAILED
@@ -299,74 +323,3 @@ class MuPDFProcessor(PDFProcessor):
         finally:
             if doc:
                 doc.close()
-
-    async def save_section(self, section_num: int, blocks: List[FormattedText],
-                          page_num: int, output_dir: str, pdf_folder_name: str,
-                          is_chapter: bool = False, title: Optional[str] = None) -> Section:
-        """Save a section with proper formatting and metadata"""
-        try:
-            # Create chapter directory
-            chapter_dir = os.path.join(output_dir, f"chapter_{section_num}")
-            os.makedirs(chapter_dir, exist_ok=True)
-
-            # Prepare filenames
-            content_filename = "content.md"
-            section_path = os.path.join(chapter_dir, content_filename)
-
-            # Format content with proper markdown structure
-            formatted_content = []
-            if title:
-                formatted_content.append(f"# {title}\n")
-
-            current_context = None
-            for block in blocks:
-                # Add spacing between different contexts
-                if block.metadata.get("context") != current_context:
-                    formatted_content.append("")
-                    current_context = block.metadata.get("context")
-
-                # Format based on block type
-                if not isinstance(block, FormattedText):
-                    continue
-
-                text = block.text.strip()
-                if not text:
-                    continue
-
-                if block.format_type == TextFormatting.HEADER:
-                    formatted_content.append(f"# {text}\n")
-                elif block.format_type == TextFormatting.SUBHEADER:
-                    formatted_content.append(f"## {text}\n")
-                elif block.format_type == TextFormatting.LIST_ITEM:
-                    indent = "  " * block.metadata.get("indentation_level", 0)
-                    if block.metadata.get("context") == "numbered_list":
-                        formatted_content.append(f"{indent}1. {text}")
-                    else:
-                        formatted_content.append(f"{indent}- {text}")
-                elif block.format_type == TextFormatting.QUOTE:
-                    formatted_content.append(f"> {text}")
-                else:
-                    formatted_content.append(text)
-
-            # Write content to file
-            with open(section_path, "w", encoding="utf-8") as f:
-                f.write("\n".join(formatted_content))
-
-            # Create section object
-            section = Section(
-                number=section_num,
-                content="\n".join(formatted_content),
-                page_number=page_num,
-                file_path=section_path,
-                pdf_name=pdf_folder_name,
-                title=title or f"Chapter {section_num}",
-                formatted_content=blocks,
-                is_chapter=True,
-                chapter_number=section_num
-            )
-
-            return section
-
-        except Exception as e:
-            logger.error(f"Error saving section {section_num}: {e}")
-            raise

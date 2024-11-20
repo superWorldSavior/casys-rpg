@@ -33,58 +33,43 @@ class AIProcessor:
     ) -> Tuple[List[FormattedText], Optional[Dict], bool]:
         """
         Multimodal analysis using gpt-4o-mini for combined chapter detection and content analysis
-        Returns: (formatted_blocks, current_chapter_info, is_chapter_complete)
         """
         try:
             logger.info(f"Processing page {page_num} with gpt-4o-mini multimodal analysis")
             
-            system_prompt = """You are a multimodal content analyzer specialized in book content analysis. 
-            Analyze the provided content following these strict guidelines:
+            system_prompt = """You are a book content analyzer specialized in understanding document structure and narrative flow.
+            Please analyze the provided content and identify:
 
-            1. Layout Analysis:
-               - Identify page structure and content organization
-               - Detect headers, subheaders, paragraphs, and lists
-               - Analyze text alignment and indentation
-               - Identify visual elements and their relationship to text
-               - Preserve whitespace and formatting
+            1. Page Structure:
+               - Overall layout and organization
+               - Content hierarchy and relationships
+               - Visual element placement and context
 
             2. Chapter Analysis:
-               - Identify clear chapter boundaries
-               - Look for explicit chapter markers (numbers, titles)
-               - Analyze content transitions and thematic shifts
-               - Consider both textual and visual context for boundaries
-               - Track narrative progression and topic changes
+               - Natural chapter boundaries and transitions
+               - Content flow and thematic changes
+               - Section organization and progression
 
-            3. Content Processing:
-               - Maintain hierarchical structure
-               - Preserve original formatting style
-               - Keep paragraph breaks and indentation
-               - Handle lists and enumerations properly
-               - Respect content flow and organization
+            3. Content Understanding:
+               - Main themes and topics
+               - Content hierarchy
+               - Text-image relationships
+               - Writing style and formatting
 
-            4. Markdown Formatting Rules:
-               - # Chapter Title (only for main chapter titles)
-               - ## Section Headers (for major sections)
-               - ### Subsection Headers (for minor sections)
-               - Regular paragraphs with blank lines between
-               - Lists with proper indentation:
-                 - Unordered lists with -
-                 - Ordered lists with numbers
-               - > for quotes or special text
-               - Preserve line breaks for readability
-
-            Provide structured output in this exact format:
+            Provide output in this format:
             CHAPTER_STATUS: [NEW/CONTINUE/END]
             CHAPTER_TITLE: [title if new chapter]
-            LAYOUT_INFO: [description of page layout and structure]
+            LAYOUT_INFO: [description of structure]
             CONTENT:
-            [formatted content in markdown]"""
+            [formatted content preserving original structure]"""
 
-            # Prepare multimodal content
+            # Prepare multimodal content with logging
+            logger.debug(f"Building message structure for page {page_num}")
             messages = [{"role": "system", "content": system_prompt}]
             
             # Add context from current chapter if exists
             if current_chapter:
+                logger.debug(f"Adding context from current chapter: {current_chapter.get('title')}")
                 messages.append({
                     "role": "user",
                     "content": [
@@ -98,6 +83,7 @@ class AIProcessor:
             # Process images if available
             if images:
                 page_images = [img for img in images if img.page_number == page_num]
+                logger.debug(f"Processing {len(page_images)} images for page {page_num}")
                 for img in page_images:
                     image_data = self._encode_image(img.image_path)
                     if image_data:
@@ -115,7 +101,7 @@ class AIProcessor:
                             ]
                         })
 
-            # Add text content with layout context
+            # Add text content
             messages.append({
                 "role": "user",
                 "content": [
@@ -127,6 +113,7 @@ class AIProcessor:
             })
 
             # Get AI analysis
+            logger.info(f"Sending request to GPT-4o-mini for page {page_num}")
             response = await self.openai_client.chat.completions.create(
                 model=self.model_name,
                 messages=messages,
@@ -138,6 +125,8 @@ class AIProcessor:
             if not content:
                 raise ValueError("Empty response from AI model")
 
+            logger.debug(f"Received response for page {page_num}, parsing content")
+
             # Parse the response
             lines = content.split('\n')
             chapter_status = None
@@ -145,7 +134,6 @@ class AIProcessor:
             layout_info = None
             formatted_blocks = []
             content_lines = []
-            current_section = None
 
             # Extract metadata and content
             for line in lines:
@@ -155,16 +143,20 @@ class AIProcessor:
 
                 if line.upper().startswith("CHAPTER_STATUS:"):
                     chapter_status = line.split(":", 1)[1].strip().upper()
+                    logger.debug(f"Chapter status: {chapter_status}")
                 elif line.upper().startswith("CHAPTER_TITLE:"):
                     chapter_title = line.split(":", 1)[1].strip()
+                    logger.debug(f"Chapter title: {chapter_title}")
                 elif line.upper().startswith("LAYOUT_INFO:"):
                     layout_info = line.split(":", 1)[1].strip()
+                    logger.debug(f"Layout info: {layout_info}")
                 elif line.upper().startswith("CONTENT:"):
                     continue
                 else:
                     content_lines.append(line)
 
-            # Process content into formatted blocks
+            # Process content preserving AI's formatting
+            logger.debug("Processing content blocks")
             current_format = TextFormatting.PARAGRAPH
             metadata = {
                 "indentation_level": 0,
@@ -174,46 +166,30 @@ class AIProcessor:
             }
 
             for line in content_lines:
-                # Markdown parsing with enhanced formatting
-                if line.startswith('# '):
-                    current_format = TextFormatting.HEADER
-                    line = line[2:].strip()
-                    metadata = {"context": "chapter_title", "layout_info": layout_info}
-                elif line.startswith('## '):
-                    current_format = TextFormatting.SUBHEADER
-                    line = line[3:].strip()
-                    metadata = {"context": "section_title", "layout_info": layout_info}
-                elif line.startswith('### '):
-                    current_format = TextFormatting.SUBHEADER
-                    line = line[4:].strip()
-                    metadata = {"context": "subsection_title", "layout_info": layout_info}
+                # Preserve AI's formatting choices
+                if line.startswith('#'):
+                    level = len(re.match(r'^#+', line).group())
+                    if level == 1:
+                        current_format = TextFormatting.HEADER
+                    else:
+                        current_format = TextFormatting.SUBHEADER
+                    line = line.lstrip('#').strip()
+                    metadata = {"context": "title", "layout_info": layout_info}
                 elif line.startswith(('- ', '* ')):
                     current_format = TextFormatting.LIST_ITEM
                     line = line[2:].strip()
-                    metadata = {
-                        "context": "list",
-                        "indentation_level": len(re.match(r'^\s*', line).group()),
-                        "layout_info": layout_info
-                    }
+                    metadata = {"context": "list", "layout_info": layout_info}
                 elif line.startswith('> '):
                     current_format = TextFormatting.QUOTE
                     line = line[2:].strip()
                     metadata = {"context": "quote", "layout_info": layout_info}
-                elif re.match(r'^\d+\. ', line):
+                elif re.match(r'^\d+[.)] ', line):
                     current_format = TextFormatting.LIST_ITEM
-                    line = re.sub(r'^\d+\. ', '', line).strip()
-                    metadata = {
-                        "context": "numbered_list",
-                        "indentation_level": len(re.match(r'^\s*', line).group()),
-                        "layout_info": layout_info
-                    }
+                    line = re.sub(r'^\d+[.)] ', '', line).strip()
+                    metadata = {"context": "numbered_list", "layout_info": layout_info}
                 else:
                     current_format = TextFormatting.PARAGRAPH
-                    metadata = {
-                        "context": "body",
-                        "indentation_level": len(re.match(r'^\s*', line).group()),
-                        "layout_info": layout_info
-                    }
+                    metadata = {"context": "body", "layout_info": layout_info}
 
                 formatted_blocks.append(FormattedText(
                     text=line,
@@ -231,8 +207,10 @@ class AIProcessor:
                     "start_page": page_num,
                     "layout_info": layout_info
                 }
+                logger.info(f"New chapter detected: {chapter_title}")
             elif chapter_status == "CONTINUE" and current_chapter:
                 new_chapter_info = current_chapter
+                logger.debug(f"Continuing chapter: {current_chapter.get('title')}")
 
             return formatted_blocks, new_chapter_info, is_chapter_complete
 
