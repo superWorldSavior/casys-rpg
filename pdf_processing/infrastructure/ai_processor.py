@@ -12,7 +12,7 @@ class AIProcessor:
     def __init__(self):
         self.openai_client = openai.AsyncOpenAI()
         self.model_name = "gpt-4o-mini"
-        self.max_tokens = 1000
+        self.max_tokens = 1500
         self.temperature = 0.3
 
     def _encode_image(self, image_path: str) -> str:
@@ -39,29 +39,46 @@ class AIProcessor:
             logger.info(f"Processing page {page_num} with gpt-4o-mini multimodal analysis")
             
             system_prompt = """You are a multimodal content analyzer specialized in book content analysis. 
-            Analyze the provided content following these guidelines:
+            Analyze the provided content following these strict guidelines:
 
-            1. Chapter Analysis:
-               - Identify chapter boundaries and structure
-               - Determine if this is the start, continuation, or end of a chapter
-               - Extract chapter titles when present
+            1. Layout Analysis:
+               - Identify page structure and content organization
+               - Detect headers, subheaders, paragraphs, and lists
+               - Analyze text alignment and indentation
+               - Identify visual elements and their relationship to text
+               - Preserve whitespace and formatting
 
-            2. Content Processing:
-               - Analyze both text and images together for complete context
-               - Identify visual-textual relationships
-               - Maintain natural content flow and hierarchy
+            2. Chapter Analysis:
+               - Identify clear chapter boundaries
+               - Look for explicit chapter markers (numbers, titles)
+               - Analyze content transitions and thematic shifts
+               - Consider both textual and visual context for boundaries
+               - Track narrative progression and topic changes
 
-            3. Use standard markdown formatting:
-               - # for chapter titles
-               - ## for section headers
-               - Regular paragraphs with no special markup
-               - Lists with - or 1. 
+            3. Content Processing:
+               - Maintain hierarchical structure
+               - Preserve original formatting style
+               - Keep paragraph breaks and indentation
+               - Handle lists and enumerations properly
+               - Respect content flow and organization
+
+            4. Markdown Formatting Rules:
+               - # Chapter Title (only for main chapter titles)
+               - ## Section Headers (for major sections)
+               - ### Subsection Headers (for minor sections)
+               - Regular paragraphs with blank lines between
+               - Lists with proper indentation:
+                 - Unordered lists with -
+                 - Ordered lists with numbers
                - > for quotes or special text
+               - Preserve line breaks for readability
 
-            Respond with structured output:
-            1. CHAPTER_STATUS: [NEW/CONTINUE/END]
-            2. CHAPTER_TITLE: [title if new chapter]
-            3. CONTENT: [formatted content in markdown]"""
+            Provide structured output in this exact format:
+            CHAPTER_STATUS: [NEW/CONTINUE/END]
+            CHAPTER_TITLE: [title if new chapter]
+            LAYOUT_INFO: [description of page layout and structure]
+            CONTENT:
+            [formatted content in markdown]"""
 
             # Prepare multimodal content
             messages = [{"role": "system", "content": system_prompt}]
@@ -70,7 +87,12 @@ class AIProcessor:
             if current_chapter:
                 messages.append({
                     "role": "user",
-                    "content": f"Current chapter context: {current_chapter['title']}\nContinuing from previous page..."
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": f"Current chapter context:\nTitle: {current_chapter['title']}\nStarting from page: {current_chapter['start_page']}\nContinuing analysis from previous page..."
+                        }
+                    ]
                 })
 
             # Process images if available
@@ -93,10 +115,15 @@ class AIProcessor:
                             ]
                         })
 
-            # Add text content
+            # Add text content with layout context
             messages.append({
                 "role": "user",
-                "content": f"Page {page_num} content:\n\n{page_text}"
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"Page {page_num} content for analysis:\n\n{page_text}"
+                    }
+                ]
             })
 
             # Get AI analysis
@@ -115,10 +142,12 @@ class AIProcessor:
             lines = content.split('\n')
             chapter_status = None
             chapter_title = None
+            layout_info = None
             formatted_blocks = []
             content_lines = []
+            current_section = None
 
-            # Extract chapter information and content
+            # Extract metadata and content
             for line in lines:
                 line = line.strip()
                 if not line:
@@ -128,40 +157,63 @@ class AIProcessor:
                     chapter_status = line.split(":", 1)[1].strip().upper()
                 elif line.upper().startswith("CHAPTER_TITLE:"):
                     chapter_title = line.split(":", 1)[1].strip()
+                elif line.upper().startswith("LAYOUT_INFO:"):
+                    layout_info = line.split(":", 1)[1].strip()
                 elif line.upper().startswith("CONTENT:"):
-                    continue  # Skip the content marker
+                    continue
                 else:
                     content_lines.append(line)
 
             # Process content into formatted blocks
             current_format = TextFormatting.PARAGRAPH
-            metadata = {"indentation_level": 0, "formatting": [], "context": ""}
+            metadata = {
+                "indentation_level": 0,
+                "formatting": [],
+                "context": "",
+                "layout_info": layout_info
+            }
 
             for line in content_lines:
-                # Markdown parsing
+                # Markdown parsing with enhanced formatting
                 if line.startswith('# '):
                     current_format = TextFormatting.HEADER
                     line = line[2:].strip()
-                    metadata = {"context": "chapter_title"}
+                    metadata = {"context": "chapter_title", "layout_info": layout_info}
                 elif line.startswith('## '):
                     current_format = TextFormatting.SUBHEADER
                     line = line[3:].strip()
-                    metadata = {"context": "section_title"}
+                    metadata = {"context": "section_title", "layout_info": layout_info}
+                elif line.startswith('### '):
+                    current_format = TextFormatting.SUBHEADER
+                    line = line[4:].strip()
+                    metadata = {"context": "subsection_title", "layout_info": layout_info}
                 elif line.startswith(('- ', '* ')):
                     current_format = TextFormatting.LIST_ITEM
                     line = line[2:].strip()
-                    metadata = {"context": "list", "indentation_level": 1}
+                    metadata = {
+                        "context": "list",
+                        "indentation_level": len(re.match(r'^\s*', line).group()),
+                        "layout_info": layout_info
+                    }
                 elif line.startswith('> '):
                     current_format = TextFormatting.QUOTE
                     line = line[2:].strip()
-                    metadata = {"context": "quote"}
+                    metadata = {"context": "quote", "layout_info": layout_info}
                 elif re.match(r'^\d+\. ', line):
                     current_format = TextFormatting.LIST_ITEM
                     line = re.sub(r'^\d+\. ', '', line).strip()
-                    metadata = {"context": "numbered_list", "indentation_level": 1}
+                    metadata = {
+                        "context": "numbered_list",
+                        "indentation_level": len(re.match(r'^\s*', line).group()),
+                        "layout_info": layout_info
+                    }
                 else:
                     current_format = TextFormatting.PARAGRAPH
-                    metadata = {"context": "body", "indentation_level": 0}
+                    metadata = {
+                        "context": "body",
+                        "indentation_level": len(re.match(r'^\s*', line).group()),
+                        "layout_info": layout_info
+                    }
 
                 formatted_blocks.append(FormattedText(
                     text=line,
@@ -176,7 +228,8 @@ class AIProcessor:
             if chapter_status == "NEW":
                 new_chapter_info = {
                     "title": chapter_title,
-                    "start_page": page_num
+                    "start_page": page_num,
+                    "layout_info": layout_info
                 }
             elif chapter_status == "CONTINUE" and current_chapter:
                 new_chapter_info = current_chapter
