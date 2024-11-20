@@ -1,325 +1,218 @@
-"""PDF Processor implementation with multimodal chapter analysis"""
-import os
-import re
-import json
-import logging
-from typing import List, Optional, Dict, Tuple
+from typing import List, Dict
 import fitz  # PyMuPDF
-from ..domain.ports import PDFProcessor
-from ..domain.entities import (Section, ProcessedPDF, PDFImage,
-                           ProcessingStatus, ProcessingProgress, 
-                           TextFormatting, FormattedText)
-from .file_system_processor import FileSystemProcessor
+import logging
+import os
+import json
+import asyncio
+from ..domain.entities import Section, ProcessedPDF, ProcessingProgress, FormattedText, TextFormatting, ProcessingStatus
 from .ai_processor import AIProcessor
+from .file_system_processor import FileSystemProcessor
+from .section_processor import SectionProcessor
+from .image_processor import ImageProcessor
 
 logger = logging.getLogger(__name__)
 
-class MuPDFProcessor(PDFProcessor):
+class MuPDFProcessor:
     def __init__(self):
-        self.file_system_processor = FileSystemProcessor()
         self.ai_processor = AIProcessor()
-        self.max_content_length = 4000
-
-    async def get_section_count(self, doc: fitz.Document) -> Tuple[int, int, int]:
-        """Get section counts using multimodal analysis"""
-        logger.info("Starting section count analysis using multimodal processing")
-        total_sections = 0
-        pre_sections = 0
-        numbered_sections = 0
-        current_chapter = None
-        
-        try:
-            # Extract images for multimodal analysis
-            images = self.extract_images(doc.name)
-            
-            for page_num in range(len(doc)):
-                page = doc[page_num]
-                text = page.get_text("text")
-                
-                # Use multimodal analysis for chapter detection
-                blocks, new_chapter_info, is_chapter_complete = await self.ai_processor.analyze_page_with_chapters(
-                    text, page_num + 1, images, current_chapter
-                )
-                
-                if new_chapter_info and new_chapter_info != current_chapter:
-                    pre_sections += 1
-                    current_chapter = new_chapter_info
-                    logger.info(f"Detected chapter at page {page_num + 1}: {new_chapter_info.get('title')}")
-                
-                # Check for numbered sections
-                if re.search(r'^\s*\d+\s*[.:)]', text, re.MULTILINE):
-                    numbered_sections += 1
-                    logger.debug(f"Detected numbered section at page {page_num + 1}")
-
-            total_sections = pre_sections + numbered_sections
-            logger.info(f"Section analysis complete - Total: {total_sections}, "
-                       f"Pre-sections: {pre_sections}, Numbered: {numbered_sections}")
-            
-            return total_sections, pre_sections, numbered_sections
-            
-        except Exception as e:
-            logger.error(f"Error in section counting: {e}")
-            return 0, 0, 0
-
-    async def process_first_section(
-        self, 
-        doc: fitz.Document,
-        histoire_dir: str,
-        pdf_folder_name: str
-    ) -> List[Section]:
-        """Process first section with multimodal analysis"""
-        logger.info("Starting first section processing with multimodal analysis")
-        sections = []
-        current_chapter = None
-        current_blocks = []
-        
-        try:
-            # Get images for multimodal analysis
-            images = self.extract_images(doc.name)
-            
-            # Process pages until first numbered section
-            for page_num in range(len(doc)):
-                logger.info(f"Processing page {page_num + 1}")
-                page = doc[page_num]
-                text = page.get_text("text")
-                
-                if not text.strip():
-                    logger.debug(f"Skipping empty page {page_num + 1}")
-                    continue
-
-                # Check for numbered section
-                if re.search(r'^\s*\d+\s*[.:)]', text, re.MULTILINE):
-                    logger.info(f"Found numbered section at page {page_num + 1}, stopping pre-section processing")
-                    break
-
-                # Perform multimodal analysis
-                blocks, new_chapter_info, is_chapter_complete = await self.ai_processor.analyze_page_with_chapters(
-                    text,
-                    page_num + 1,
-                    images,
-                    current_chapter
-                )
-
-                # Handle chapter transitions
-                if new_chapter_info and new_chapter_info != current_chapter:
-                    logger.info(f"New chapter detected: {new_chapter_info.get('title')}")
-                    if current_chapter and current_blocks:
-                        section = await self.save_section(
-                            section_num=len(sections) + 1,
-                            blocks=current_blocks,
-                            page_num=page_num,
-                            output_dir=histoire_dir,
-                            pdf_folder_name=pdf_folder_name,
-                            title=current_chapter.get("title")
-                        )
-                        sections.append(section)
-                        current_blocks = []
-                    
-                    current_chapter = new_chapter_info
-
-                current_blocks.extend(blocks)
-
-                if is_chapter_complete and current_chapter and current_blocks:
-                    logger.info(f"Chapter complete: {current_chapter.get('title')}")
-                    section = await self.save_section(
-                        section_num=len(sections) + 1,
-                        blocks=current_blocks,
-                        page_num=page_num + 1,
-                        output_dir=histoire_dir,
-                        pdf_folder_name=pdf_folder_name,
-                        title=current_chapter.get("title")
-                    )
-                    sections.append(section)
-                    current_blocks = []
-                    current_chapter = None
-
-            # Handle remaining content
-            if current_blocks:
-                section = await self.save_section(
-                    section_num=len(sections) + 1,
-                    blocks=current_blocks,
-                    page_num=len(doc),
-                    output_dir=histoire_dir,
-                    pdf_folder_name=pdf_folder_name,
-                    title=current_chapter.get("title") if current_chapter else None
-                )
-                sections.append(section)
-
-        except Exception as e:
-            logger.error(f"Error in first section processing: {e}")
-            raise
-
-        return sections
-
-    def extract_images(self, pdf_path: str, base_output_dir: str = "sections") -> List[PDFImage]:
-        """Extract images from PDF using MuPDF"""
-        images = []
-        doc = None
-        try:
-            logger.info(f"Extracting images from {pdf_path}")
-            doc = fitz.open(pdf_path)
-            pdf_name = os.path.splitext(os.path.basename(pdf_path))[0]
-            
-            # Setup directories
-            book_dir = os.path.join(base_output_dir, pdf_name)
-            images_dir = os.path.join(book_dir, "images")
-            metadata_dir = os.path.join(book_dir, "metadata")
-            
-            os.makedirs(images_dir, exist_ok=True)
-            os.makedirs(metadata_dir, exist_ok=True)
-            
-            images_metadata = []
-            
-            for page_num in range(len(doc)):
-                page = doc[page_num]
-                image_list = page.get_images(full=True)
-                
-                for img_idx, img in enumerate(image_list):
-                    try:
-                        xref = img[0]
-                        base_image = doc.extract_image(xref)
-                        image_bytes = base_image["image"]
-                        
-                        image_filename = f"page_{page_num + 1}_img_{img_idx + 1}.png"
-                        image_path = os.path.join(images_dir, image_filename)
-                        
-                        with open(image_path, "wb") as img_file:
-                            img_file.write(image_bytes)
-                        
-                        image_metadata = {
-                            "page_number": page_num + 1,
-                            "image_number": img_idx + 1,
-                            "file_path": image_path,
-                            "pdf_name": pdf_name
-                        }
-                        
-                        images_metadata.append(image_metadata)
-                        images.append(PDFImage(
-                            page_number=page_num + 1,
-                            image_path=image_path,
-                            pdf_name=pdf_name,
-                            width=img[2],
-                            height=img[3]
-                        ))
-                        
-                    except Exception as img_error:
-                        logger.error(f"Error extracting image {img_idx} from page {page_num + 1}: {img_error}")
-                        continue
-            
-            # Save metadata
-            metadata_path = os.path.join(metadata_dir, "images.json")
-            with open(metadata_path, "w") as f:
-                json.dump({
-                    "pdf_name": pdf_name,
-                    "total_images": len(images_metadata),
-                    "images": images_metadata
-                }, f, indent=2)
-            
-            logger.info(f"Extracted {len(images)} images from PDF")
-            return images
-            
-        except Exception as e:
-            logger.error(f"Error in image extraction: {e}")
-            return []
-        finally:
-            if doc:
-                doc.close()
-
-    async def save_section(
-        self,
-        section_num: int,
-        blocks: List[FormattedText],
-        page_num: int,
-        output_dir: str,
-        pdf_folder_name: str,
-        title: Optional[str] = None
-    ) -> Section:
-        """Save section with simplified file naming"""
-        try:
-            # Use simple chapitre_X.md naming
-            filename = f"chapitre_{section_num}.md"
-            section_path = os.path.join(output_dir, filename)
-            
-            logger.info(f"Saving section {section_num} to {section_path}")
-            
-            # Create section object
-            section = Section(
-                number=section_num,
-                content="",  # Content will be generated from blocks
-                page_number=page_num,
-                file_path=section_path,
-                pdf_name=pdf_folder_name,
-                title=title,
-                formatted_content=blocks,
-                is_chapter=True,
-                chapter_number=section_num
-            )
-            
-            # Save content using file system processor
-            self.file_system_processor.save_section_content(section)
-            
-            return section
-            
-        except Exception as e:
-            logger.error(f"Error saving section {section_num}: {e}")
-            raise
+        self.file_system_processor = FileSystemProcessor()
+        self.section_processor = SectionProcessor()
+        self.image_processor = ImageProcessor()
 
     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
-        """Extract sections with multimodal analysis"""
+        """Extract sections and images from a PDF."""
+        logger.info(f"Starting PDF processing for: {pdf_path}")
+
+        # Create folder structure for the processed PDF
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
         paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
-        sections = []
-        images = []
-        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
-        doc = None
-
+        histoire_dir = paths["histoire_dir"]
+        sections_dir = os.path.join(base_output_dir, pdf_folder_name, "sections")
+        os.makedirs(sections_dir, exist_ok=True)
+        
         try:
-            logger.info(f"Processing PDF: {pdf_path}")
+            # Open the PDF
             doc = fitz.open(pdf_path)
+            progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING, total_pages=len(doc))
+            sections = []
+            pre_sections = []
+            numbered_sections = []
+
+            # Process all pages
+            all_pages = [
+                {"text": doc[page_num].get_text(sort=True), "num": page_num + 1}
+                for page_num in range(len(doc))
+            ]
             
-            # Get accurate section counts using multimodal analysis
-            total_sections, pre_sections, numbered_sections = await self.get_section_count(doc)
-            progress.total_pages = len(doc)
+            # Process pages with AI
+            processed_pages = await self.ai_processor.process_pages_concurrently(all_pages)
             
-            logger.info(f"Document analysis complete: {progress.total_pages} pages, "
-                       f"{total_sections} total sections")
+            current_section = []
+            current_section_num = 0
+            current_chapter_num = 1
+            in_numbered_section = False
             
-            # Process first section
-            progress.status = ProcessingStatus.PROCESSING_PRE_SECTIONS
-            sections = await self.process_first_section(
-                doc,
-                paths["histoire_dir"],
-                pdf_folder_name
-            )
+            for page_blocks in processed_pages:
+                for block in page_blocks:
+                    # Check for numbered sections first (e.g., "1.", "2.", etc.)
+                    is_numbered = block.metadata.get("is_numbered_section", False)
+                    section_number = block.metadata.get("section_number")
+                    
+                    if is_numbered and section_number is not None:
+                        if current_section:
+                            # Save previous section
+                            section = self.section_processor.save_section(
+                                current_section_num if in_numbered_section else current_chapter_num,
+                                current_section,
+                                sections_dir if in_numbered_section else histoire_dir,
+                                pdf_folder_name,
+                                is_chapter=not in_numbered_section
+                            )
+                            if in_numbered_section:
+                                numbered_sections.append(section)
+                            else:
+                                pre_sections.append(section)
+                                current_chapter_num += 1
+                            current_section = []
+                        
+                        current_section_num = section_number
+                        current_section = [block]
+                        in_numbered_section = True
+                        continue
+
+                    # Check for chapter headers and rules sections
+                    if block.metadata.get("is_chapter") or block.metadata.get("is_rules_section"):
+                        if current_section:
+                            # Save previous section
+                            section = self.section_processor.save_section(
+                                current_section_num if in_numbered_section else current_chapter_num,
+                                current_section,
+                                sections_dir if in_numbered_section else histoire_dir,
+                                pdf_folder_name,
+                                is_chapter=not in_numbered_section
+                            )
+                            if in_numbered_section:
+                                numbered_sections.append(section)
+                            else:
+                                pre_sections.append(section)
+                            current_section = []
+                            if not in_numbered_section:
+                                current_chapter_num += 1
+                        
+                        # Start new chapter/rules section
+                        current_section = [block]
+                        in_numbered_section = False
+                    else:
+                        current_section.append(block)
             
-            # Extract images
-            progress.status = ProcessingStatus.EXTRACTING_IMAGES
-            images = self.extract_images(pdf_path, base_output_dir)
-            progress.processed_images = len(images)
+            # Save any remaining content
+            if current_section:
+                section = self.section_processor.save_section(
+                    current_section_num if in_numbered_section else current_chapter_num,
+                    current_section,
+                    sections_dir if in_numbered_section else histoire_dir,
+                    pdf_folder_name,
+                    is_chapter=not in_numbered_section
+                )
+                if in_numbered_section:
+                    numbered_sections.append(section)
+                else:
+                    pre_sections.append(section)
             
-            # Update progress
-            progress.status = ProcessingStatus.COMPLETED
+            # Combine all sections
+            sections = pre_sections + numbered_sections
             progress.processed_sections = len(sections)
             
+            # Process images
+            logger.info("Extracting images...")
+            images = self.image_processor.extract_images(
+                pdf_path, paths["images_dir"], paths["metadata_dir"], pdf_folder_name, sections
+            )
+            progress.processed_images = len(images)
+
+            # Generate metadata files
+            self._save_metadata_files(
+                sections=sections,
+                images=images,
+                pdf_folder_name=pdf_folder_name,
+                base_output_dir=base_output_dir,
+                metadata_dir=paths["metadata_dir"],
+                pre_sections=pre_sections,
+                numbered_sections=numbered_sections,
+                progress=progress
+            )
+
+            # Update progress and return the processed data
+            progress.status = ProcessingStatus.COMPLETED
+            logger.info(f"Processing completed: {len(sections)} sections, {len(images)} images.")
             return ProcessedPDF(
                 sections=sections,
                 images=images,
+                progress=progress,
                 pdf_name=pdf_folder_name,
-                base_path=base_output_dir,
-                progress=progress
+                base_path=base_output_dir
             )
-            
+
         except Exception as e:
             logger.error(f"Error processing PDF: {e}")
-            progress.status = ProcessingStatus.FAILED
-            progress.error_message = str(e)
-            return ProcessedPDF(
-                sections=sections,
-                images=images,
-                pdf_name=pdf_folder_name,
-                base_path=base_output_dir,
-                progress=progress
-            )
-        finally:
-            if doc:
-                doc.close()
+            raise
+
+    def _save_metadata_files(self, sections, images, pdf_folder_name, base_output_dir, metadata_dir,
+                           pre_sections, numbered_sections, progress):
+        """Save all metadata files."""
+        try:
+            # Save book metadata
+            book_metadata = {
+                "title": pdf_folder_name,
+                "total_sections": len(sections),
+                "total_images": len(images),
+                "sections": [{
+                    "number": section.number,
+                    "page_number": section.page_number,
+                    "title": section.title,
+                    "file_path": os.path.relpath(section.file_path, base_output_dir),
+                    "is_chapter": section.is_chapter,
+                    "chapter_number": section.chapter_number
+                } for section in sections],
+                "base_path": base_output_dir,
+                "processing_status": ProcessingStatus.COMPLETED.value
+            }
+            
+            with open(os.path.join(metadata_dir, "book.json"), 'w', encoding='utf-8') as f:
+                json.dump(book_metadata, f, indent=2, ensure_ascii=False)
+
+            # Save sections metadata as a list
+            sections_metadata = [{
+                "section_number": section.number,
+                "chapter_number": section.chapter_number,
+                "file_path": os.path.relpath(section.file_path, base_output_dir),
+                "pdf_name": section.pdf_name,
+                "page_number": section.page_number,
+                "is_chapter": section.is_chapter,
+                "title": section.title
+            } for section in sections]
+            
+            with open(os.path.join(metadata_dir, "sections.json"), 'w', encoding='utf-8') as f:
+                json.dump(sections_metadata, f, indent=2, ensure_ascii=False)
+
+            # Save progress metadata
+            progress_metadata = {
+                "status": progress.status.value,
+                "current_page": progress.current_page,
+                "total_pages": progress.total_pages,
+                "processed_sections": progress.processed_sections,
+                "processed_images": progress.processed_images,
+                "error_message": progress.error_message,
+                "section_counts": {
+                    "total": len(sections),
+                    "pre_sections": len(pre_sections),
+                    "numbered_sections": len(numbered_sections)
+                }
+            }
+            
+            with open(os.path.join(metadata_dir, "progress.json"), 'w', encoding='utf-8') as f:
+                json.dump(progress_metadata, f, indent=2, ensure_ascii=False)
+
+        except Exception as e:
+            logger.error(f"Error saving metadata files: {e}")
+            raise

@@ -5,12 +5,21 @@
       "chapter_number": 1,
       "file_path": "test_book/histoire/chapitre_1.md",
       "pdf_name": "test_book",
-      "page_number": 9,
+      "page_number": 1,
       "is_chapter": true,
       "title": "THE DARK FORTRESS"
+    },
+    {
+      "section_number": 2,
+      "chapter_number": 2,
+      "file_path": "test_book/histoire/chapitre_2.md",
+      "pdf_name": "test_book",
+      "page_number": 9,
+      "is_chapter": true,
+      "title": "INTRODUCTION"
     }
   ],
-  "total_sections": 1,
-  "pre_section_count": 1,
+  "total_sections": 2,
+  "pre_section_count": 2,
   "numbered_section_count": 0
 }
