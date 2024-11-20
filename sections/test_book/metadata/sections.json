@@ -5,21 +5,120 @@
       "chapter_number": 1,
       "file_path": "test_book/histoire/chapitre_1.md",
       "pdf_name": "test_book",
-      "page_number": 2,
+      "page_number": 1,
       "is_chapter": true,
-      "title": "INTRODUCTION"
+      "title": "THE DARK FORTRESS"
     },
     {
       "section_number": 2,
       "chapter_number": 2,
       "file_path": "test_book/histoire/chapitre_2.md",
       "pdf_name": "test_book",
+      "page_number": 2,
+      "is_chapter": true,
+      "title": "A Solo Adventure"
+    },
+    {
+      "section_number": 3,
+      "chapter_number": 3,
+      "file_path": "test_book/histoire/chapitre_3.md",
+      "pdf_name": "test_book",
+      "page_number": 3,
+      "is_chapter": true,
+      "title": "INTRODUCTION"
+    },
+    {
+      "section_number": 4,
+      "chapter_number": 4,
+      "file_path": "test_book/histoire/chapitre_4.md",
+      "pdf_name": "test_book",
+      "page_number": 3,
+      "is_chapter": true,
+      "title": "COMBAT RULES"
+    },
+    {
+      "section_number": 5,
+      "chapter_number": 5,
+      "file_path": "test_book/histoire/chapitre_5.md",
+      "pdf_name": "test_book",
+      "page_number": 3,
+      "is_chapter": true,
+      "title": "Basic Combat"
+    },
+    {
+      "section_number": 6,
+      "chapter_number": 6,
+      "file_path": "test_book/histoire/chapitre_6.md",
+      "pdf_name": "test_book",
+      "page_number": 3,
+      "is_chapter": true,
+      "title": "The higher total wins that round"
+    },
+    {
+      "section_number": 7,
+      "chapter_number": 7,
+      "file_path": "test_book/histoire/chapitre_7.md",
+      "pdf_name": "test_book",
+      "page_number": 4,
+      "is_chapter": true,
+      "title": "The loser loses 2 STAMINA points"
+    },
+    {
+      "section_number": 8,
+      "chapter_number": 8,
+      "file_path": "test_book/histoire/chapitre_8.md",
+      "pdf_name": "test_book",
+      "page_number": 4,
+      "is_chapter": true,
+      "title": "GAME RULES"
+    },
+    {
+      "section_number": 9,
+      "chapter_number": 9,
+      "file_path": "test_book/histoire/chapitre_9.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": "Character Creation"
+    },
+    {
+      "section_number": 10,
+      "chapter_number": 10,
+      "file_path": "test_book/histoire/chapitre_10.md",
+      "pdf_name": "test_book",
       "page_number": 6,
       "is_chapter": true,
-      "title": "Chapitre 2"
+      "title": "EQUIPMENT"
+    },
+    {
+      "section_number": 1,
+      "chapter_number": 1,
+      "file_path": "test_book/sections/1.md",
+      "pdf_name": "test_book",
+      "page_number": 8,
+      "is_chapter": false,
+      "title": "Section 1"
+    },
+    {
+      "section_number": 2,
+      "chapter_number": 2,
+      "file_path": "test_book/sections/2.md",
+      "pdf_name": "test_book",
+      "page_number": 9,
+      "is_chapter": false,
+      "title": "Section 2"
+    },
+    {
+      "section_number": 3,
+      "chapter_number": 3,
+      "file_path": "test_book/sections/3.md",
+      "pdf_name": "test_book",
+      "page_number": 9,
+      "is_chapter": false,
+      "title": "Section 3"
     }
   ],
-  "total_sections": 2,
-  "pre_section_count": 2,
-  "numbered_section_count": 0
+  "total_sections": 13,
+  "pre_section_count": 10,
+  "numbered_section_count": 3
 }

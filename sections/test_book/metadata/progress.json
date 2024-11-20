@@ -1,13 +1,13 @@
 {
-  "status": "failed",
+  "status": "completed",
   "current_page": 7,
   "total_pages": 9,
   "processed_sections": 0,
   "processed_images": 0,
-  "error_message": "asyncio.run() cannot be called from a running event loop",
+  "error_message": null,
   "section_counts": {
-    "total": 2,
-    "pre_sections": 2,
-    "numbered_sections": 0
+    "total": 13,
+    "pre_sections": 10,
+    "numbered_sections": 3
   }
 }

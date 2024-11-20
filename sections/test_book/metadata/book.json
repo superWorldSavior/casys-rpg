@@ -1,17 +1,72 @@
 {
   "title": "test_book",
-  "total_sections": 2,
+  "total_sections": 13,
   "total_images": 0,
   "sections": [
     {
       "number": 1,
-      "page_number": 2,
+      "page_number": 1,
       "file_path": "sections/test_book/histoire/chapitre_1.md"
     },
     {
       "number": 2,
-      "page_number": 6,
+      "page_number": 2,
       "file_path": "sections/test_book/histoire/chapitre_2.md"
+    },
+    {
+      "number": 3,
+      "page_number": 3,
+      "file_path": "sections/test_book/histoire/chapitre_3.md"
+    },
+    {
+      "number": 4,
+      "page_number": 3,
+      "file_path": "sections/test_book/histoire/chapitre_4.md"
+    },
+    {
+      "number": 5,
+      "page_number": 3,
+      "file_path": "sections/test_book/histoire/chapitre_5.md"
+    },
+    {
+      "number": 6,
+      "page_number": 3,
+      "file_path": "sections/test_book/histoire/chapitre_6.md"
+    },
+    {
+      "number": 7,
+      "page_number": 4,
+      "file_path": "sections/test_book/histoire/chapitre_7.md"
+    },
+    {
+      "number": 8,
+      "page_number": 4,
+      "file_path": "sections/test_book/histoire/chapitre_8.md"
+    },
+    {
+      "number": 9,
+      "page_number": 5,
+      "file_path": "sections/test_book/histoire/chapitre_9.md"
+    },
+    {
+      "number": 10,
+      "page_number": 6,
+      "file_path": "sections/test_book/histoire/chapitre_10.md"
+    },
+    {
+      "number": 1,
+      "page_number": 8,
+      "file_path": "sections/test_book/sections/1.md"
+    },
+    {
+      "number": 2,
+      "page_number": 9,
+      "file_path": "sections/test_book/sections/2.md"
+    },
+    {
+      "number": 3,
+      "page_number": 9,
+      "file_path": "sections/test_book/sections/3.md"
     }
   ],
   "base_path": "sections",

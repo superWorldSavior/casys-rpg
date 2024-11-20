@@ -1,0 +1,5 @@
+# Section 8
+
+## GAME RULES
+
+GAME RULES

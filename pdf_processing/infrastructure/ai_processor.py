@@ -67,30 +67,30 @@ class AIProcessor:
                 metadata={"indentation_level": 0, "formatting": []}
             )]
 
-    async def detect_chapter_with_ai(self, text: str) -> Tuple[bool, Optional[str]]:
-        """Use OpenAI to detect chapter breaks and determine titles"""
-        try:
-            response = await self.openai_client.chat.completions.create(
-                model=self.model_name,
-                messages=[{
-                    "role": "system",
-                    "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
-                }, {
-                    "role": "user",
-                    "content": f"Analyze this text block for chapter characteristics:\n{text}"
-                }],
-                temperature=self.temperature,
-                max_tokens=100
-            )
+    # async def detect_chapter_with_ai(self, text: str) -> Tuple[bool, Optional[str]]:
+    #     """Use OpenAI to detect chapter breaks and determine titles"""
+    #     try:
+    #         response = await self.openai_client.chat.completions.create(
+    #             model=self.model_name,
+    #             messages=[{
+    #                 "role": "system",
+    #                 "content": "You are a text formatting analyzer. Given a text block, determine if it represents a chapter break and extract the chapter title if present. Respond in JSON format with 'is_chapter' (boolean) and 'title' (string or null)."
+    #             }, {
+    #                 "role": "user",
+    #                 "content": f"Analyze this text block for chapter characteristics:\n{text}"
+    #             }],
+    #             temperature=self.temperature,
+    #             max_tokens=100
+    #         )
 
-            content = response.choices[0].message.content
-            if content:
-                result = re.sub(r'^```json|```$', '', content.strip())
-                result_json = json.loads(result)
-                return result_json.get("is_chapter", False), result_json.get("title")
-            else:
-                logger.warning("Empty response from AI for chapter detection")
-                return False, None
-        except Exception as e:
-            logger.error(f"Error using OpenAI for chapter detection: {e}")
-            return False, None
+    #         content = response.choices[0].message.content
+    #         if content:
+    #             result = re.sub(r'^```json|```$', '', content.strip())
+    #             result_json = json.loads(result)
+    #             return result_json.get("is_chapter", False), result_json.get("title")
+    #         else:
+    #             logger.warning("Empty response from AI for chapter detection")
+    #             return False, None
+    #     except Exception as e:
+    #         logger.error(f"Error using OpenAI for chapter detection: {e}")
+    #         return False, None

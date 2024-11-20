@@ -1,0 +1,7 @@
+# Section 9
+
+## Comment rétablir votre Endurance
+
+Comment rétablir votre Endurance
+Le total de vos points d'ENDURANCE va, en revanche, changer considérablement tout au long des épisodes de votre aventure. Vous aurez à assumer de lourdes responsabilités et à combattre de dangereuses créatures. Lorsque vous approcherez du but, vous toucherez probablement vos limites d'épuisement physique et moral. Un combat à ce moment-là peut vous être fatal ! Alors, soyez prudent. La meilleure manière de reprendre des forces c'est de manger et de se reposer. Vous aurez en cours de route des occasions favorables pour prendre du repos et satisfaire votre appétit.
+parfois, mais plus rarement, des personnes secourables pour soigner vos blessures. Elles aussi vous permettront de restaurer votre ENDURANCE.
