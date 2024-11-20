@@ -1,30 +1,35 @@
 import os
 import re
+import logging
 from typing import Dict
 from ..domain.entities import Section, TextFormatting, FormattedText, ProcessingStatus
 
+logger = logging.getLogger(__name__)
+
 class FileSystemProcessor:
     def __init__(self):
-        self.text_formatting = TextFormatting  # Store reference to avoid import issues
-        
+        self.text_formatting = TextFormatting
+
     def get_pdf_folder_name(self, pdf_path: str) -> str:
+        """Get sanitized PDF folder name"""
         base_name = os.path.basename(pdf_path)
         folder_name = os.path.splitext(base_name)[0]
         folder_name = re.sub(r'[^\w\s-]', '_', folder_name)
         return folder_name
 
     def create_book_structure(self, base_output_dir: str, pdf_folder_name: str) -> Dict[str, str]:
-        """Create the book directory structure and return paths"""
+        """Create optimized book directory structure"""
+        logger.info(f"Creating book structure for {pdf_folder_name}")
+        
+        # Move all directories to the same level
         book_dir = os.path.join(base_output_dir, pdf_folder_name)
         sections_dir = os.path.join(book_dir, "sections")
         images_dir = os.path.join(book_dir, "images")
         metadata_dir = os.path.join(book_dir, "metadata")
         histoire_dir = os.path.join(book_dir, "histoire")
 
-        for directory in [book_dir, sections_dir, images_dir, metadata_dir, histoire_dir]:
-            os.makedirs(directory, exist_ok=True)
-
-        return {
+        # Create directories with logging
+        directories = {
             "book_dir": book_dir,
             "sections_dir": sections_dir,
             "images_dir": images_dir,
@@ -32,45 +37,71 @@ class FileSystemProcessor:
             "histoire_dir": histoire_dir
         }
 
-    def save_section_content(self, section: Section):
-        """Save section content to file with proper formatting"""
-        try:
-            os.makedirs(os.path.dirname(section.file_path), exist_ok=True)
-            formatted_content = []
+        for dir_name, dir_path in directories.items():
+            try:
+                if not os.path.exists(dir_path):
+                    os.makedirs(dir_path)
+                    logger.info(f"Created directory: {dir_name} at {dir_path}")
+            except Exception as e:
+                logger.error(f"Error creating directory {dir_name}: {e}")
+                raise
 
+        return directories
+
+    def save_section_content(self, section: Section):
+        """Save section content with enhanced formatting and logging"""
+        try:
+            dir_path = os.path.dirname(section.file_path)
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+                logger.info(f"Created section directory: {dir_path}")
+
+            formatted_content = []
+            
+            # Add title if present
+            if section.title:
+                formatted_content.append(f"# {section.title}\n")
+                logger.debug(f"Added title: {section.title}")
+
+            current_context = None
             for fmt_text in section.formatted_content:
                 if not isinstance(fmt_text, FormattedText):
                     continue
 
-                try:
-                    text_content = fmt_text.text.strip()
-                    if not text_content:
-                        continue
+                text_content = fmt_text.text.strip()
+                if not text_content:
+                    continue
 
-                    if fmt_text.format_type == self.text_formatting.HEADER:
-                        # Skip if it's just a number
-                        if not re.match(r'^\s*\d+\s*$', text_content):
-                            formatted_content.append(f"\n## {text_content}\n")
-                    elif fmt_text.format_type == self.text_formatting.SUBHEADER:
-                        formatted_content.append(f"\n### {text_content}\n")
-                    elif fmt_text.format_type == self.text_formatting.LIST_ITEM:
-                        indentation = " " * fmt_text.metadata.get("indentation_level", 0)
-                        formatted_content.append(f"{indentation}- {text_content}\n")
-                    elif fmt_text.format_type == self.text_formatting.CODE:
-                        formatted_content.append(f"\n```\n{text_content}\n```\n")
-                    elif fmt_text.format_type == self.text_formatting.QUOTE:
-                        formatted_content.append(f"\n> {text_content}\n")
-                    elif fmt_text.format_type == self.text_formatting.PARAGRAPH:
-                        # Add blank line before paragraphs for better readability
-                        formatted_content.append(f"\n{text_content}\n")
-                except (AttributeError, TypeError) as e:
-                    # Fallback to paragraph if format_type is invalid
-                    formatted_content.append(f"\n{text_content}\n")
+                # Add spacing between different contexts
+                if fmt_text.metadata.get("context") != current_context:
+                    formatted_content.append("")
+                    current_context = fmt_text.metadata.get("context")
 
+                # Format based on block type with proper indentation
+                if fmt_text.format_type == self.text_formatting.HEADER:
+                    if not re.match(r'^\s*\d+\s*$', text_content):
+                        formatted_content.append(f"## {text_content}\n")
+                elif fmt_text.format_type == self.text_formatting.SUBHEADER:
+                    formatted_content.append(f"### {text_content}\n")
+                elif fmt_text.format_type == self.text_formatting.LIST_ITEM:
+                    indentation = "  " * fmt_text.metadata.get("indentation_level", 0)
+                    if fmt_text.metadata.get("context") == "numbered_list":
+                        formatted_content.append(f"{indentation}1. {text_content}")
+                    else:
+                        formatted_content.append(f"{indentation}- {text_content}")
+                elif fmt_text.format_type == self.text_formatting.QUOTE:
+                    formatted_content.append(f"> {text_content}")
+                elif fmt_text.format_type == self.text_formatting.CODE:
+                    formatted_content.append(f"\n```\n{text_content}\n```\n")
+                else:  # PARAGRAPH
+                    formatted_content.append(text_content)
+
+            content = "\n".join(formatted_content).strip() + "\n"
+            
             with open(section.file_path, 'w', encoding='utf-8') as f:
-                # Add title if present
-                if section.title:
-                    f.write(f"# {section.title}\n\n")
-                f.write("".join(formatted_content).strip() + "\n")
+                f.write(content)
+                logger.info(f"Successfully saved section {section.number} to {section.file_path}")
+
         except Exception as e:
-            raise Exception(f"Error saving section {section.number}: {str(e)}")
+            logger.error(f"Error saving section {section.number}: {e}")
+            raise
