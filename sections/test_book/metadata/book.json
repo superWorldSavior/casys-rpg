@@ -1,17 +1,12 @@
 {
   "title": "test_book",
-  "total_sections": 2,
+  "total_sections": 1,
   "total_images": 0,
   "sections": [
     {
       "number": 1,
-      "page_number": 1,
-      "file_path": "sections/test_book/histoire/chapitre_1.md"
-    },
-    {
-      "number": 2,
       "page_number": 9,
-      "file_path": "sections/test_book/histoire/chapitre_2.md"
+      "file_path": "sections/test_book/histoire/chapitre_1.md"
     }
   ],
   "base_path": "sections",

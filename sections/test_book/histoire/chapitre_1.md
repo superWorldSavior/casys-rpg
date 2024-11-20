@@ -1,4 +1,4 @@
 # Section 1
 
-## The Dark Fortress
+## THE DARK FORTRESS
 
