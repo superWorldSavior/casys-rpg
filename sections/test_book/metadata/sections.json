@@ -1,0 +1,16 @@
+{
+  "sections": [
+    {
+      "section_number": 1,
+      "chapter_number": 1,
+      "file_path": "test_book/histoire/chapitre_1.md",
+      "pdf_name": "test_book",
+      "page_number": 9,
+      "is_chapter": true,
+      "title": "THE DARK FORTRESS"
+    }
+  ],
+  "total_sections": 1,
+  "pre_section_count": 1,
+  "numbered_section_count": 0
+}

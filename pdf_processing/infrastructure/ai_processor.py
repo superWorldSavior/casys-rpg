@@ -15,8 +15,8 @@ class AIProcessor:
         self.max_tokens = 1500
         self.temperature = 0.3
 
-    def _encode_image(self, image_path: str) -> str:
-        """Convert image to base64 string"""
+    def _encode_image(self, image_path: str) -> Optional[str]:
+        """Convert image to base64 string with error handling"""
         try:
             with open(image_path, "rb") as image_file:
                 return base64.b64encode(image_file.read()).decode('utf-8')
@@ -25,81 +25,73 @@ class AIProcessor:
             return None
 
     async def analyze_page_with_chapters(
-        self, 
-        page_text: str, 
-        page_num: int, 
+        self,
+        page_text: str,
+        page_num: int,
         images: Optional[List[PDFImage]] = None,
         current_chapter: Optional[Dict] = None
     ) -> Tuple[List[FormattedText], Optional[Dict], bool]:
-        """
-        Multimodal analysis using gpt-4o-mini for combined chapter detection and content analysis
-        """
+        """Multimodal analysis using gpt-4o-mini for combined chapter detection and content analysis"""
         try:
-            logger.info(f"Processing page {page_num} with gpt-4o-mini multimodal analysis")
+            logger.info(f"Starting multimodal analysis for page {page_num}")
             
-            system_prompt = """You are a book content analyzer specialized in understanding document structure and narrative flow.
-            Please analyze the provided content and identify:
+            system_prompt = """Analyze the provided document content to:
+1. Identify natural chapter boundaries and transitions
+2. Understand page layout and content organization
+3. Process visual elements and their context
+4. Determine content hierarchy and relationships
 
-            1. Page Structure:
-               - Overall layout and organization
-               - Content hierarchy and relationships
-               - Visual element placement and context
+Provide structured output as:
+CHAPTER_STATUS: [NEW/CONTINUE/END]
+CHAPTER_TITLE: [if new chapter detected]
+LAYOUT_INFO: [structural description]
+CONTENT:
+[processed content with preserved formatting]"""
 
-            2. Chapter Analysis:
-               - Natural chapter boundaries and transitions
-               - Content flow and thematic changes
-               - Section organization and progression
-
-            3. Content Understanding:
-               - Main themes and topics
-               - Content hierarchy
-               - Text-image relationships
-               - Writing style and formatting
-
-            Provide output in this format:
-            CHAPTER_STATUS: [NEW/CONTINUE/END]
-            CHAPTER_TITLE: [title if new chapter]
-            LAYOUT_INFO: [description of structure]
-            CONTENT:
-            [formatted content preserving original structure]"""
-
-            # Prepare multimodal content with logging
-            logger.debug(f"Building message structure for page {page_num}")
             messages = [{"role": "system", "content": system_prompt}]
-            
+
             # Add context from current chapter if exists
             if current_chapter:
-                logger.debug(f"Adding context from current chapter: {current_chapter.get('title')}")
+                logger.debug(f"Adding context from chapter: {current_chapter.get('title')}")
                 messages.append({
                     "role": "user",
                     "content": [
                         {
                             "type": "text",
-                            "text": f"Current chapter context:\nTitle: {current_chapter['title']}\nStarting from page: {current_chapter['start_page']}\nContinuing analysis from previous page..."
+                            "text": f"Current chapter context:\nTitle: {current_chapter['title']}\nStarting from page: {current_chapter['start_page']}"
                         }
                     ]
                 })
 
-            # Process images if available
+            # Process images with error handling
             if images:
                 page_images = [img for img in images if img.page_number == page_num]
-                logger.debug(f"Processing {len(page_images)} images for page {page_num}")
+                logger.info(f"Processing {len(page_images)} images for page {page_num}")
+                
                 for img in page_images:
-                    image_data = self._encode_image(img.image_path)
-                    if image_data:
-                        messages.append({
-                            "role": "user",
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": f"Visual content from page {page_num}:"
-                                },
-                                {
-                                    "type": "image",
-                                    "image_url": f"data:image/png;base64,{image_data}"
-                                }
-                            ]
-                        })
+                    try:
+                        image_data = self._encode_image(img.image_path)
+                        if image_data:
+                            messages.append({
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": f"Visual content from page {page_num}:"
+                                    },
+                                    {
+                                        "type": "image_url",
+                                        "image_url": {
+                                            "url": f"data:image/png;base64,{image_data}",
+                                            "detail": "auto"
+                                        }
+                                    }
+                                ]
+                            })
+                            logger.debug(f"Successfully added image from page {page_num}")
+                    except Exception as img_error:
+                        logger.error(f"Error processing image on page {page_num}: {img_error}")
+                        continue
 
             # Add text content
             messages.append({
@@ -107,7 +99,7 @@ class AIProcessor:
                 "content": [
                     {
                         "type": "text",
-                        "text": f"Page {page_num} content for analysis:\n\n{page_text}"
+                        "text": f"Analyze page {page_num} content:\n\n{page_text}"
                     }
                 ]
             })
@@ -125,8 +117,6 @@ class AIProcessor:
             if not content:
                 raise ValueError("Empty response from AI model")
 
-            logger.debug(f"Received response for page {page_num}, parsing content")
-
             # Parse the response
             lines = content.split('\n')
             chapter_status = None
@@ -143,36 +133,29 @@ class AIProcessor:
 
                 if line.upper().startswith("CHAPTER_STATUS:"):
                     chapter_status = line.split(":", 1)[1].strip().upper()
-                    logger.debug(f"Chapter status: {chapter_status}")
+                    logger.debug(f"Detected chapter status: {chapter_status}")
                 elif line.upper().startswith("CHAPTER_TITLE:"):
                     chapter_title = line.split(":", 1)[1].strip()
-                    logger.debug(f"Chapter title: {chapter_title}")
+                    logger.debug(f"Detected chapter title: {chapter_title}")
                 elif line.upper().startswith("LAYOUT_INFO:"):
                     layout_info = line.split(":", 1)[1].strip()
-                    logger.debug(f"Layout info: {layout_info}")
+                    logger.debug(f"Detected layout info: {layout_info}")
                 elif line.upper().startswith("CONTENT:"):
                     continue
                 else:
                     content_lines.append(line)
 
             # Process content preserving AI's formatting
-            logger.debug("Processing content blocks")
             current_format = TextFormatting.PARAGRAPH
             metadata = {
-                "indentation_level": 0,
-                "formatting": [],
-                "context": "",
-                "layout_info": layout_info
+                "layout_info": layout_info,
+                "context": "body"
             }
 
             for line in content_lines:
-                # Preserve AI's formatting choices
                 if line.startswith('#'):
                     level = len(re.match(r'^#+', line).group())
-                    if level == 1:
-                        current_format = TextFormatting.HEADER
-                    else:
-                        current_format = TextFormatting.SUBHEADER
+                    current_format = TextFormatting.HEADER if level == 1 else TextFormatting.SUBHEADER
                     line = line.lstrip('#').strip()
                     metadata = {"context": "title", "layout_info": layout_info}
                 elif line.startswith(('- ', '* ')):
@@ -191,11 +174,13 @@ class AIProcessor:
                     current_format = TextFormatting.PARAGRAPH
                     metadata = {"context": "body", "layout_info": layout_info}
 
-                formatted_blocks.append(FormattedText(
-                    text=line,
-                    format_type=current_format,
-                    metadata=metadata.copy()
-                ))
+                formatted_blocks.append(
+                    FormattedText(
+                        text=line,
+                        format_type=current_format,
+                        metadata=metadata.copy()
+                    )
+                )
 
             # Determine chapter status
             is_chapter_complete = chapter_status == "END"
@@ -216,8 +201,12 @@ class AIProcessor:
 
         except Exception as e:
             logger.error(f"Error in gpt-4o-mini analysis for page {page_num}: {e}")
-            return [FormattedText(
-                text=page_text,
-                format_type=TextFormatting.PARAGRAPH,
-                metadata={"context": "error_fallback"}
-            )], current_chapter, False
+            # Fallback to text-only analysis
+            logger.info(f"Falling back to text-only analysis for page {page_num}")
+            return [
+                FormattedText(
+                    text=page_text,
+                    format_type=TextFormatting.PARAGRAPH,
+                    metadata={"context": "error_fallback", "error": str(e)}
+                )
+            ], current_chapter, False
