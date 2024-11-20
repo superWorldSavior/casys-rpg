@@ -6,7 +6,8 @@ from PyPDF2 import PdfReader
 import asyncio
 from ..domain.ports import PDFProcessor
 from ..domain.entities import (Section, ProcessedPDF, PDFImage,
-                             ProcessingStatus, ProcessingProgress, FormattedText)
+                             ProcessingStatus, ProcessingProgress, 
+                             TextFormatting, FormattedText)
 from .text_format_processor import TextFormatProcessor
 from .file_system_processor import FileSystemProcessor
 from .ai_processor import AIProcessor
@@ -21,19 +22,22 @@ class MuPDFProcessor(PDFProcessor):
         self.ai_processor = AIProcessor()
         self.max_content_length = 4000  # Limit content length for analysis
 
-    def extract_images(self, doc_path: str, images_dir: str, metadata_dir: str,
-                      pdf_name: str, sections: Optional[List[Section]] = None,
-                      page_limit: Optional[int] = None) -> List[PDFImage]:
+    def extract_images(self, pdf_path: str, base_output_dir: str = "sections") -> List[PDFImage]:
         """Extract images from PDF using MuPDF"""
         images = []
+        doc = None
         try:
-            doc = fitz.open(doc_path)
+            doc = fitz.open(pdf_path)
+            pdf_name = os.path.splitext(os.path.basename(pdf_path))[0]
+            images_dir = os.path.join(base_output_dir, pdf_name, "images")
+            metadata_dir = os.path.join(base_output_dir, pdf_name, "metadata")
+            
             os.makedirs(images_dir, exist_ok=True)
             os.makedirs(metadata_dir, exist_ok=True)
 
-            max_page = page_limit if page_limit is not None else len(doc)
+            images_metadata = []
             
-            for page_num in range(max_page):
+            for page_num in range(len(doc)):
                 page = doc[page_num]
                 image_list = page.get_images(full=True)
                 
@@ -42,9 +46,9 @@ class MuPDFProcessor(PDFProcessor):
                         xref = img[0]
                         base_image = doc.extract_image(xref)
                         image_bytes = base_image["image"]
-                        image_ext = base_image["ext"]
                         
-                        image_filename = f"image_{page_num + 1}_{img_idx + 1}.{image_ext}"
+                        # Save as PNG
+                        image_filename = f"image_{page_num + 1}_{img_idx + 1}.png"
                         image_path = os.path.join(images_dir, image_filename)
                         
                         with open(image_path, "wb") as img_file:
@@ -54,30 +58,39 @@ class MuPDFProcessor(PDFProcessor):
                             "page_number": page_num + 1,
                             "image_number": img_idx + 1,
                             "file_path": image_path,
-                            "extension": image_ext,
                             "pdf_name": pdf_name
                         }
                         
-                        metadata_filename = f"image_{page_num + 1}_{img_idx + 1}_metadata.json"
-                        metadata_path = os.path.join(metadata_dir, metadata_filename)
-                        
-                        with open(metadata_path, "w") as meta_file:
-                            json.dump(image_metadata, meta_file, indent=2)
-                            
-                        images.append(PDFImage(**image_metadata))
+                        images_metadata.append(image_metadata)
+                        images.append(PDFImage(
+                            page_number=page_num + 1,
+                            image_path=image_path,
+                            pdf_name=pdf_name,
+                            width=img[2],
+                            height=img[3]
+                        ))
                         
                     except Exception as img_error:
                         logger.error(f"Error extracting image {img_idx} from page {page_num + 1}: {img_error}")
                         continue
-                        
-            doc.close()
+            
+            # Save all metadata to a single file
+            metadata_path = os.path.join(metadata_dir, "images.json")
+            with open(metadata_path, "w") as meta_file:
+                json.dump({
+                    "pdf_name": pdf_name,
+                    "total_images": len(images_metadata),
+                    "images": images_metadata
+                }, meta_file, indent=2)
+                
             return images
             
         except Exception as e:
             logger.error(f"Error in image extraction: {e}")
-            if 'doc' in locals():
+            return []
+        finally:
+            if doc:
                 doc.close()
-            return images
 
     async def process_first_section(self, doc, histoire_dir: str, pdf_folder_name: str) -> List[Section]:
         """Process only the first section using gpt-4o-mini multimodal analysis"""
@@ -90,11 +103,8 @@ class MuPDFProcessor(PDFProcessor):
         try:
             # Get images for multimodal analysis
             images = self.extract_images(
-                doc_path=doc.name,
-                images_dir=os.path.join(os.path.dirname(histoire_dir), "images"),
-                metadata_dir=os.path.join(os.path.dirname(histoire_dir), "metadata"),
-                pdf_name=pdf_folder_name,
-                page_limit=10  # Limit to first 10 pages for first section
+                pdf_path=doc.name,
+                base_output_dir=os.path.dirname(histoire_dir)
             )
 
             # Process first few pages until we get a complete chapter
@@ -191,8 +201,6 @@ class MuPDFProcessor(PDFProcessor):
             # Prepare filenames
             content_filename = "content.md"
             section_path = os.path.join(chapter_dir, content_filename)
-            metadata_dir = os.path.join(os.path.dirname(output_dir), "metadata")
-            os.makedirs(metadata_dir, exist_ok=True)
 
             # Format content with proper markdown structure
             formatted_content = []
@@ -207,7 +215,13 @@ class MuPDFProcessor(PDFProcessor):
                     current_context = block.metadata.get("context")
 
                 # Format based on block type
-                text = block.text
+                if not isinstance(block, FormattedText):
+                    continue
+
+                text = block.text.strip()
+                if not text:
+                    continue
+
                 if block.format_type == TextFormatting.HEADER:
                     formatted_content.append(f"# {text}\n")
                 elif block.format_type == TextFormatting.SUBHEADER:
@@ -223,6 +237,10 @@ class MuPDFProcessor(PDFProcessor):
                 else:
                     formatted_content.append(text)
 
+            # Write content to file
+            with open(section_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(formatted_content))
+
             # Create section object
             section = Section(
                 number=section_num,
@@ -236,38 +254,6 @@ class MuPDFProcessor(PDFProcessor):
                 chapter_number=section_num
             )
 
-            # Save content
-            with open(section_path, "w", encoding="utf-8") as f:
-                f.write("\n".join(formatted_content))
-
-            # Save metadata
-            metadata = {
-                "section_number": section_num,
-                "title": section.title,
-                "page_number": page_num,
-                "is_chapter": True,
-                "chapter_number": section_num,
-                "content_file": os.path.join(f"chapter_{section_num}", content_filename)
-            }
-            
-            metadata_path = os.path.join(metadata_dir, "book.json")
-            if os.path.exists(metadata_path):
-                with open(metadata_path, 'r') as f:
-                    book_metadata = json.load(f)
-                if "sections" not in book_metadata:
-                    book_metadata["sections"] = []
-                book_metadata["sections"].append(metadata)
-            else:
-                book_metadata = {
-                    "title": pdf_folder_name,
-                    "sections": [metadata],
-                    "processing_status": "completed"
-                }
-            
-            with open(metadata_path, 'w') as f:
-                json.dump(book_metadata, f, indent=2)
-
-            logger.info(f"Successfully saved chapter {section_num} with metadata")
             return section
 
         except Exception as e:
@@ -299,21 +285,10 @@ class MuPDFProcessor(PDFProcessor):
 
             # Extract images for the processed section
             progress.status = ProcessingStatus.EXTRACTING_IMAGES
-            if sections:
-                max_page = sections[0].page_number
-                images = self.extract_images(
-                    pdf_path,
-                    paths["images_dir"],
-                    paths["metadata_dir"],
-                    pdf_folder_name,
-                    sections,
-                    page_limit=max_page
-                )
+            images = self.extract_images(pdf_path, base_output_dir)
             progress.processed_images = len(images)
 
             progress.status = ProcessingStatus.COMPLETED
-            if doc:
-                doc.close()
             return ProcessedPDF(
                 sections=sections,
                 images=images,
@@ -326,8 +301,6 @@ class MuPDFProcessor(PDFProcessor):
             logger.error(f"Error processing PDF: {e}")
             progress.status = ProcessingStatus.FAILED
             progress.error_message = str(e)
-            if doc:
-                doc.close()
             return ProcessedPDF(
                 sections=sections,
                 images=images,
@@ -335,3 +308,6 @@ class MuPDFProcessor(PDFProcessor):
                 base_path=base_output_dir,
                 progress=progress
             )
+        finally:
+            if doc:
+                doc.close()
