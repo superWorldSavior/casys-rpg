@@ -9,27 +9,44 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Handle initial auth check
   useEffect(() => {
-    checkAuthStatus();
+    const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+    if (token && savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+    setLoading(false);
   }, []);
 
-  const checkAuthStatus = async () => {
-    try {
-      setError(null);
-      const response = await fetch('/api/auth/status', {
-        credentials: 'include'
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        setError(null);
+        const response = await fetch('/api/auth/status', {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+          localStorage.setItem('user', JSON.stringify(data.user));
+        } else {
+          // Clear local storage if auth check fails
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+        }
+      } catch (error) {
+        console.error('Auth status check failed:', error);
+        setError('Failed to check authentication status');
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Auth status check failed:', error);
-      setError('Failed to check authentication status');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    checkAuthStatus();
+  }, []);
 
   const loginWithGoogle = () => {
     window.location.href = '/api/auth/google';

@@ -161,7 +161,8 @@ const MainLayout = () => {
               ) : (
                 <Button 
                   color="primary" 
-                  onClick={login}
+                  component={Link}
+                  to="/login"
                   startIcon={<LoginIcon />}
                 >
                   Login
@@ -194,7 +195,10 @@ const MainLayout = () => {
           minHeight: 'calc(100vh - 56px)',
           backgroundColor: 'background.default',
           overflow: 'hidden',
-          position: 'relative'
+          position: 'relative',
+          padding: { xs: 1, sm: 2, md: 3 },
+          display: 'flex',
+          flexDirection: 'column'
         }}
       >
         <Container 

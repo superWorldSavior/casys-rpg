@@ -13,7 +13,8 @@ export default defineConfig({
     hmr: {
       overlay: true,
       clientPort: 443,
-      host: process.env.REPL_SLUG + '.' + process.env.REPL_OWNER + '.repl.co'
+      host: process.env.REPL_SLUG + '.' + process.env.REPL_OWNER + '.repl.co',
+      protocol: 'wss'
     },
     proxy: {
       '/api': {
