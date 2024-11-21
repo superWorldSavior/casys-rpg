@@ -4,39 +4,33 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react({
-    // Enable Fast Refresh
     fastRefresh: true,
+    jsxRuntime: 'automatic'
   })],
   server: {
     port: 5173,
-    host: true, // Listen on all addresses
+    host: '0.0.0.0',
     hmr: {
       overlay: true,
-      clientPort: 443 // Required for HTTPS environments like Replit
+      clientPort: 443,
+      host: process.env.REPL_SLUG + '.' + process.env.REPL_OWNER + '.repl.co'
     },
     proxy: {
       '/api': {
-        target: 'http://0.0.0.0:5000',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
-        ws: true, // Enable WebSocket proxy
+        ws: true,
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
-            console.log('proxy error', err);
-          });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            console.log('Sending Request:', req.method, req.url);
+            console.error('Proxy error:', err);
           });
         }
       }
-    },
-    watch: {
-      usePolling: true, // Enable polling for file changes
-      interval: 1000 // Check for changes every second
     }
   },
   build: {
-    outDir: path.resolve(__dirname, 'dist'),
+    outDir: 'dist',
     assetsDir: 'assets',
     emptyOutDir: true,
     sourcemap: true,
@@ -44,14 +38,19 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'react-vendor': ['react', 'react-dom'],
+          'router-vendor': ['react-router-dom'],
           'mui-vendor': ['@mui/material', '@emotion/react', '@emotion/styled']
         }
       }
     }
   },
-  base: '/',
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@mui/material', '@emotion/react', '@emotion/styled']
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
   }
 })

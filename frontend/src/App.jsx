@@ -112,13 +112,18 @@ const router = createBrowserRouter(
   }
 );
 
+// Import AuthProvider
+import { AuthProvider } from './context/AuthContext';
+
 function App() {
   return (
     <ThemeProvider theme={casysTheme}>
-      <RouterProvider 
-        router={router}
-        fallbackElement={<LoadingFallback />}
-      />
+      <AuthProvider>
+        <RouterProvider 
+          router={router}
+          fallbackElement={<LoadingFallback />}
+        />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
