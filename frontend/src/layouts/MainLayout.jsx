@@ -17,7 +17,9 @@ import {
   useMediaQuery,
   Avatar,
   Menu,
-  MenuItem
+  MenuItem,
+  CircularProgress,
+  Fade
 } from '@mui/material';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -30,7 +32,23 @@ const MainLayout = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user, login, logout } = useAuth();
+  const { user, loading, loginWithGoogle, logout } = useAuth();
+  
+  if (loading) {
+    return (
+      <Box 
+        sx={{ 
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'background.default'
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -175,13 +193,22 @@ const MainLayout = () => {
           mt: { xs: '56px', sm: '64px' },
           minHeight: 'calc(100vh - 56px)',
           backgroundColor: 'background.default',
+          overflow: 'hidden',
+          position: 'relative'
         }}
       >
         <Container 
           maxWidth="xl" 
-          sx={{ py: 3 }}
+          sx={{ 
+            py: { xs: 2, sm: 3 },
+            px: { xs: 1, sm: 2, md: 3 }
+          }}
         >
-          <Outlet />
+          <Fade in={true} timeout={300}>
+            <Box>
+              <Outlet />
+            </Box>
+          </Fade>
         </Container>
       </Box>
     </>

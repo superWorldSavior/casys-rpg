@@ -13,6 +13,8 @@ import { casysTheme } from './theme/casysTheme';
 
 // Lazy load pages
 const LandingPage = React.lazy(() => import('./components/pages/LandingPage'));
+const LoginPage = React.lazy(() => import('./components/pages/LoginPage'));
+const RegisterPage = React.lazy(() => import('./components/pages/RegisterPage'));
 const LibraryPage = React.lazy(() => import('./pages/Home'));
 const ReaderPage = React.lazy(() => import('./pages/Reader'));
 
@@ -35,7 +37,9 @@ const router = createBrowserRouter(
       path="/"
       element={
         <ErrorBoundary fallbackMessage="An error occurred in the application layout">
-          <MainLayout />
+          <AuthProvider>
+            <MainLayout />
+          </AuthProvider>
         </ErrorBoundary>
       }
     >
@@ -45,6 +49,26 @@ const router = createBrowserRouter(
           <ErrorBoundary fallbackMessage="An error occurred while loading the landing page">
             <Suspense fallback={<LoadingFallback />}>
               <LandingPage />
+            </Suspense>
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="login"
+        element={
+          <ErrorBoundary fallbackMessage="An error occurred while loading the login page">
+            <Suspense fallback={<LoadingFallback />}>
+              <LoginPage />
+            </Suspense>
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="register"
+        element={
+          <ErrorBoundary fallbackMessage="An error occurred while loading the register page">
+            <Suspense fallback={<LoadingFallback />}>
+              <RegisterPage />
             </Suspense>
           </ErrorBoundary>
         }
@@ -91,7 +115,10 @@ const router = createBrowserRouter(
 function App() {
   return (
     <ThemeProvider theme={casysTheme}>
-      <RouterProvider router={router} />
+      <RouterProvider 
+        router={router}
+        fallbackElement={<LoadingFallback />}
+      />
     </ThemeProvider>
   );
 }
