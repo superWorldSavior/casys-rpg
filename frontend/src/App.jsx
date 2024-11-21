@@ -112,8 +112,7 @@ const router = createBrowserRouter(
   }
 );
 
-// Import AuthProvider
-import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (

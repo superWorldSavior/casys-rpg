@@ -78,7 +78,7 @@ const MainLayout = () => {
         </ListItem>
       ) : null}
       {!user && (
-        <ListItem button onClick={login}>
+        <ListItem button component={Link} to="/login">
           <ListItemIcon>
             <LoginIcon />
           </ListItemIcon>
