@@ -40,16 +40,26 @@ const HomePage = () => {
   const fetchBooks = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/books');
-      if (response.ok) {
-        const data = await response.json();
-        setBooks(data);
+      setError(null);
+      const response = await fetch('/api/books', {
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      if (result.status === "success" && Array.isArray(result.books)) {
+        setBooks(result.books);
       } else {
-        setError('Erreur lors du chargement des livres');
+        throw new Error('Invalid response format');
       }
     } catch (error) {
       console.error('Error fetching books:', error);
-      setError('Erreur de connexion au serveur');
+      setError(error.message || 'Failed to load books. Please try again.');
+      setBooks([]);
     } finally {
       setIsLoading(false);
     }
@@ -153,23 +163,41 @@ const HomePage = () => {
       />
 
       {isLoading ? (
-        <Box sx={{ width: '100%', mt: 4 }}>
-          <LinearProgress />
+        <Box sx={{ width: '100%', mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <LinearProgress sx={{ width: '100%', mb: 2 }} />
+          <Typography variant="body2" color="text.secondary">
+            Loading your library...
+          </Typography>
+        </Box>
+      ) : error ? (
+        <Box sx={{ width: '100%', mt: 4, textAlign: 'center' }}>
+          <Alert 
+            severity="error" 
+            action={
+              <Button color="inherit" size="small" onClick={fetchBooks}>
+                Retry
+              </Button>
+            }
+          >
+            {error}
+          </Alert>
         </Box>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mt: { xs: 1, sm: 2 } }}>
           {books.map((book, index) => (
-            <Grid item xs={12} sm={6} md={4} key={book.id || index}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={book.id || index}>
               <Card 
                 sx={{ 
                   height: '100%', 
                   display: 'flex', 
                   flexDirection: 'column',
-                  transition: 'transform 0.2s',
+                  transition: 'transform 0.2s ease-in-out',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: 4,
-                  }
+                    boxShadow: (theme) => theme.shadows[8],
+                  },
+                  borderRadius: 2,
+                  overflow: 'hidden'
                 }}
               >
                 <CardContent sx={{ flexGrow: 1 }}>
