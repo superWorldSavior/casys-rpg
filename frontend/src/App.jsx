@@ -12,7 +12,8 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import { casysTheme } from './theme/casysTheme';
 
 // Lazy load pages
-const HomePage = React.lazy(() => import('./pages/Home'));
+const LandingPage = React.lazy(() => import('./components/pages/LandingPage'));
+const LibraryPage = React.lazy(() => import('./pages/Home'));
 const ReaderPage = React.lazy(() => import('./pages/Reader'));
 
 // Loading Component
@@ -41,9 +42,21 @@ const router = createBrowserRouter(
       <Route
         index
         element={
+          <ErrorBoundary fallbackMessage="An error occurred while loading the landing page">
+            <Suspense fallback={<LoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="library"
+        element={
           <ErrorBoundary fallbackMessage="An error occurred while loading the library">
             <Suspense fallback={<LoadingFallback />}>
-              <HomePage />
+              <ProtectedRoute>
+                <LibraryPage />
+              </ProtectedRoute>
             </Suspense>
           </ErrorBoundary>
         }
@@ -53,7 +66,9 @@ const router = createBrowserRouter(
         element={
           <ErrorBoundary fallbackMessage="An error occurred while loading the reader">
             <Suspense fallback={<LoadingFallback />}>
-              <ReaderPage />
+              <ProtectedRoute>
+                <ReaderPage />
+              </ProtectedRoute>
             </Suspense>
           </ErrorBoundary>
         }

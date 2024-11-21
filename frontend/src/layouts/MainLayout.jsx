@@ -51,12 +51,14 @@ const MainLayout = () => {
 
   const drawer = (
     <List>
-      <ListItem button component={Link} to="/" onClick={handleDrawerToggle}>
-        <ListItemIcon>
-          <LibraryBooksIcon />
-        </ListItemIcon>
-        <ListItemText primary="Library" />
-      </ListItem>
+      {user ? (
+        <ListItem button component={Link} to="/library" onClick={handleDrawerToggle}>
+          <ListItemIcon>
+            <LibraryBooksIcon />
+          </ListItemIcon>
+          <ListItemText primary="Library" />
+        </ListItem>
+      ) : null}
       {!user && (
         <ListItem button onClick={login}>
           <ListItemIcon>
@@ -106,7 +108,7 @@ const MainLayout = () => {
               <Button 
                 color="primary" 
                 component={Link} 
-                to="/"
+                to="/library"
                 sx={{
                   fontWeight: 500,
                   '&:hover': {
