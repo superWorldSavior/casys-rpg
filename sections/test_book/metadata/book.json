@@ -1,19 +1,40 @@
 {
   "title": "test_book",
-  "total_sections": 2,
+  "total_sections": 5,
   "total_images": 0,
   "sections": [
     {
       "number": 1,
       "page_number": 1,
-      "file_path": "sections/test_book/histoire/chapitre_1.md"
+      "file_path": "sections/test_book/histoire/chapter_1.md",
+      "title": null
     },
     {
       "number": 2,
-      "page_number": 9,
-      "file_path": "sections/test_book/histoire/chapitre_2.md"
+      "page_number": 2,
+      "file_path": "sections/test_book/histoire/chapter_2.md",
+      "title": null
+    },
+    {
+      "number": 3,
+      "page_number": 3,
+      "file_path": "sections/test_book/histoire/chapter_3.md",
+      "title": null
+    },
+    {
+      "number": 4,
+      "page_number": 4,
+      "file_path": "sections/test_book/histoire/chapter_4.md",
+      "title": null
+    },
+    {
+      "number": 5,
+      "page_number": 5,
+      "file_path": "sections/test_book/histoire/chapter_5.md",
+      "title": null
     }
   ],
   "base_path": "sections",
-  "processing_status": "completed"
+  "processing_status": "completed",
+  "error_message": null
 }

@@ -1,13 +1,8 @@
 {
-  "status": "completed",
+  "status": "initializing",
   "current_page": 0,
   "total_pages": 9,
-  "processed_sections": 2,
+  "processed_sections": 5,
   "processed_images": 0,
-  "error_message": null,
-  "section_counts": {
-    "total": 2,
-    "pre_sections": 2,
-    "numbered_sections": 0
-  }
+  "error_message": null
 }

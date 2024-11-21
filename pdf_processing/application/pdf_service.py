@@ -1,4 +1,4 @@
-            import asyncio
+import asyncio
 import os
 import json
 import logging
@@ -38,7 +38,7 @@ class PDFService:
             logger.error(f"Error in PDF processing service: {e}")
             return self._handle_error(e, pdf_path)
 
-                async def _save_sections(self, sections: List[Section]):
+    async def _save_sections(self, sections: List[Section]):
         """Save each section's content."""
         for section in sections:
             try:

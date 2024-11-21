@@ -2,24 +2,48 @@
   "sections": [
     {
       "section_number": 1,
-      "chapter_number": 1,
-      "file_path": "test_book/histoire/chapitre_1.md",
+      "chapter_number": null,
+      "file_path": "test_book/histoire/chapter_1.md",
       "pdf_name": "test_book",
       "page_number": 1,
       "is_chapter": true,
-      "title": "THE DARK FORTRESS"
+      "title": null
     },
     {
       "section_number": 2,
-      "chapter_number": 2,
-      "file_path": "test_book/histoire/chapitre_2.md",
+      "chapter_number": null,
+      "file_path": "test_book/histoire/chapter_2.md",
       "pdf_name": "test_book",
-      "page_number": 9,
+      "page_number": 2,
       "is_chapter": true,
-      "title": "INTRODUCTION"
+      "title": null
+    },
+    {
+      "section_number": 3,
+      "chapter_number": null,
+      "file_path": "test_book/histoire/chapter_3.md",
+      "pdf_name": "test_book",
+      "page_number": 3,
+      "is_chapter": true,
+      "title": null
+    },
+    {
+      "section_number": 4,
+      "chapter_number": null,
+      "file_path": "test_book/histoire/chapter_4.md",
+      "pdf_name": "test_book",
+      "page_number": 4,
+      "is_chapter": true,
+      "title": null
+    },
+    {
+      "section_number": 5,
+      "chapter_number": null,
+      "file_path": "test_book/histoire/chapter_5.md",
+      "pdf_name": "test_book",
+      "page_number": 5,
+      "is_chapter": true,
+      "title": null
     }
-  ],
-  "total_sections": 2,
-  "pre_section_count": 2,
-  "numbered_section_count": 0
+  ]
 }
