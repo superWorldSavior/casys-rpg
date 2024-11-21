@@ -917,6 +917,15 @@ wheels = [
 ]
 
 [[package]]
+name = "oauthlib"
+version = "3.2.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6d/fa/fbf4001037904031639e6bfbfc02badfc7e12f137a8afa254df6c4c8a670/oauthlib-3.2.2.tar.gz", hash = "sha256:9859c40929662bec5d64f34d01c99e093149682a3f38915dc0655d5a633dd918", size = 177352 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7e/80/cab10959dc1faead58dc8384a781dfbf93cb4d33d50988f7a69f1b7c9bbe/oauthlib-3.2.2-py3-none-any.whl", hash = "sha256:8139f29aac13e25d502680e9e19963e83f16838d48a0d71c287fe40e7067fbca", size = 151688 },
+]
+
+[[package]]
 name = "openai"
 version = "1.54.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1263,6 +1272,18 @@ wheels = [
 ]
 
 [[package]]
+name = "pyopenssl"
+version = "24.2.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cryptography" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5d/70/ff56a63248562e77c0c8ee4aefc3224258f1856977e0c1472672b62dadb8/pyopenssl-24.2.1.tar.gz", hash = "sha256:4247f0dbe3748d560dcbb2ff3ea01af0f9a1a001ef5f7c4c647956ed8cbf0e95", size = 184323 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/dd/e0aa7ebef5168c75b772eda64978c597a9129b46be17779054652a7999e4/pyOpenSSL-24.2.1-py3-none-any.whl", hash = "sha256:967d5719b12b243588573f39b0c677637145c7a1ffedcd495a487e58177fbb8d", size = 58390 },
+]
+
+[[package]]
 name = "pypdf2"
 version = "3.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1334,10 +1355,12 @@ dependencies = [
     { name = "flask-sqlalchemy" },
     { name = "hypercorn" },
     { name = "markdown" },
+    { name = "oauthlib" },
     { name = "openai" },
     { name = "pillow" },
     { name = "psycopg2-binary" },
     { name = "pymupdf" },
+    { name = "pyopenssl" },
     { name = "pypdf2" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -1345,6 +1368,7 @@ dependencies = [
     { name = "replit" },
     { name = "replit-object-storage" },
     { name = "reportlab" },
+    { name = "requests" },
     { name = "tenacity" },
     { name = "werkzeug" },
 ]
@@ -1358,10 +1382,12 @@ requires-dist = [
     { name = "flask-sqlalchemy", specifier = ">=3.1.1" },
     { name = "hypercorn", specifier = ">=0.17.3" },
     { name = "markdown", specifier = ">=3.7" },
+    { name = "oauthlib", specifier = ">=3.2.2" },
     { name = "openai", specifier = ">=1.54.4" },
     { name = "pillow", specifier = ">=11.0.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "pymupdf", specifier = ">=1.24.13" },
+    { name = "pyopenssl", specifier = ">=24.2.1" },
     { name = "pypdf2", specifier = ">=3.0.1" },
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "pytest-asyncio", specifier = ">=0.24.0" },
@@ -1369,6 +1395,7 @@ requires-dist = [
     { name = "replit", specifier = ">=4.1.0" },
     { name = "replit-object-storage", specifier = "==1.0.2" },
     { name = "reportlab", specifier = ">=4.2.5" },
+    { name = "requests", specifier = ">=2.32.3" },
     { name = "tenacity", specifier = ">=9.0.0" },
     { name = "werkzeug" },
 ]

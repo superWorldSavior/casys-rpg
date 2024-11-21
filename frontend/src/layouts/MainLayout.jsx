@@ -1,13 +1,87 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Container, Button, Box } from '@mui/material';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Container, 
+  Button, 
+  Box,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useTheme,
+  useMediaQuery,
+  Avatar,
+  Menu,
+  MenuItem
+} from '@mui/material';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import MenuIcon from '@mui/icons-material/Menu';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import LoginIcon from '@mui/icons-material/Login';
+import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { user, login, logout } = useAuth();
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    handleMenuClose();
+    logout();
+  };
+
+  const drawer = (
+    <List>
+      <ListItem button component={Link} to="/" onClick={handleDrawerToggle}>
+        <ListItemIcon>
+          <LibraryBooksIcon />
+        </ListItemIcon>
+        <ListItemText primary="Library" />
+      </ListItem>
+      {!user && (
+        <ListItem button onClick={login}>
+          <ListItemIcon>
+            <LoginIcon />
+          </ListItemIcon>
+          <ListItemText primary="Login" />
+        </ListItem>
+      )}
+    </List>
+  );
+
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
+          {isMobile && (
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
             <MenuBookIcon sx={{ mr: 1, color: 'primary.main' }} />
             <Typography 
@@ -20,38 +94,94 @@ const MainLayout = () => {
                 fontWeight: 600,
                 '&:hover': {
                   color: 'primary.main',
-                }
+                },
+                fontSize: isMobile ? '1.1rem' : '1.25rem'
               }}
             >
               Casys.AI
             </Typography>
           </Box>
-          <Button 
-            color="primary" 
-            component={Link} 
-            to="/"
-            sx={{
-              fontWeight: 500,
-              '&:hover': {
-                backgroundColor: 'primary.light',
-              }
-            }}
-          >
-            Library
-          </Button>
+          {!isMobile && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Button 
+                color="primary" 
+                component={Link} 
+                to="/"
+                sx={{
+                  fontWeight: 500,
+                  '&:hover': {
+                    backgroundColor: 'primary.light',
+                  }
+                }}
+              >
+                Library
+              </Button>
+              {user ? (
+                <>
+                  <IconButton onClick={handleMenuOpen}>
+                    <Avatar 
+                      src={user.picture} 
+                      alt={user.name}
+                      sx={{ width: 32, height: 32 }}
+                    />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                  >
+                    <MenuItem disabled>
+                      {user.email}
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      Logout
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <Button 
+                  color="primary" 
+                  onClick={login}
+                  startIcon={<LoginIcon />}
+                >
+                  Login
+                </Button>
+              )}
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
-      <Container 
-        maxWidth="xl" 
-        sx={{ 
-          mt: 4,
-          minHeight: 'calc(100vh - 64px)',
-          backgroundColor: 'background.default',
-          py: 3
+      <Drawer
+        variant="temporary"
+        anchor="left"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: 'block', sm: 'none' },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
         }}
       >
-        <Outlet />
-      </Container>
+        {drawer}
+      </Drawer>
+      <Box 
+        component="main" 
+        sx={{ 
+          flexGrow: 1,
+          mt: { xs: '56px', sm: '64px' },
+          minHeight: 'calc(100vh - 56px)',
+          backgroundColor: 'background.default',
+        }}
+      >
+        <Container 
+          maxWidth="xl" 
+          sx={{ py: 3 }}
+        >
+          <Outlet />
+        </Container>
+      </Box>
     </>
   );
 };

@@ -1,5 +1,5 @@
 from typing import Optional
-from flask import Flask, jsonify, send_from_directory, request
+from flask import Flask, jsonify, send_from_directory, request, session
 from flask_cors import CORS
 import os
 import mimetypes
@@ -8,6 +8,7 @@ from pathlib import Path
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from auth_routes import auth_bp
 from pdf_processing.infrastructure.pdf_processor import MuPDFProcessor
 from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 from pdf_processing.application.pdf_service import PDFService
@@ -36,16 +37,21 @@ pdf_service = PDFService(processor=pdf_processor,
                          repository=pdf_repository)  # Tout connecter
 
 app = Flask(__name__, static_folder='frontend/dist')
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 
-# Enable CORS
+# Enable CORS with credentials support
 CORS(app,
      resources={
          r"/api/*": {
-             "origins": "*",
+             "origins": ["http://localhost:5000", "https://*.repl.co"],
              "methods": ["GET", "POST", "OPTIONS"],
-             "allow_headers": ["Content-Type"]
+             "allow_headers": ["Content-Type"],
+             "supports_credentials": True
          }
      })
+
+# Register the auth blueprint
+app.register_blueprint(auth_bp)
 
 
 def allowed_file(filename: str) -> bool:

@@ -31,9 +31,9 @@ async def main():
     args = parser.parse_args()
 
     # Initialize components
-    processor = MuPDFProcessor()
-    repository = FileSystemPDFRepository()
-    service = PDFService(processor, repository)
+    pdf_repository = FileSystemPDFRepository()  # Initialisation du dépôt
+    pdf_processor = MuPDFProcessor(repository=pdf_repository)  # Passer le dépôt à MuPDFProcessor
+    pdf_service = PDFService(processor=pdf_processor, repository=pdf_repository)  # Tout connecter
 
     if args.pdf:
         # Process a specific PDF provided via CLI

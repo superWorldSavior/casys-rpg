@@ -5,10 +5,10 @@ import shutil
 import asyncio
 from pdf_processing.infrastructure.pdf_processor import MuPDFProcessor
 from pdf_processing.domain.entities import Section, ProcessingStatus, FormattedText, TextFormatting
-
+from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 class TestPDFProcessor(unittest.TestCase):
     def setUp(self):
-        self.processor = MuPDFProcessor()
+        self.processor = MuPDFProcessor(repository=FileSystemPDFRepository)
         self.test_pdf_path = "test_book.pdf"
         self.output_dir = "test_sections"
         # Clean up test directory if it exists
