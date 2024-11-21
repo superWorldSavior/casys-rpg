@@ -1,314 +1,449 @@
-import os
-from typing import List, Optional, Dict, Tuple
-import logging
 import fitz  # PyMuPDF
-from PyPDF2 import PdfReader
-import asyncio
-from ..domain.ports import PDFProcessor
-from ..domain.entities import (Section, ProcessedPDF, PDFImage,
-                             ProcessingStatus, ProcessingProgress, FormattedText, TextFormatting)
-from .text_format_processor import TextFormatProcessor
-from .chapter_processor import ChapterProcessor
-from .file_system_processor import FileSystemProcessor
+import logging
+import os
+from typing import List, Dict
+
+from ..domain.entities import Section, ProcessedPDF, ProcessingProgress, ProcessingStatus
 from .ai_processor import AIProcessor
+from .section_processor import SectionProcessor
+from .file_system_processor import FileSystemProcessor
 from .image_processor import ImageProcessor
+from ..domain.ports import PDFProcessor, PDFRepository
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("app.log"),
-        logging.StreamHandler()
-    ]
-)
-
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class MuPDFProcessor(PDFProcessor):
-    def __init__(self):
-        self.text_processor = TextFormatProcessor()
-        self.chapter_processor = ChapterProcessor()
-        self.file_system_processor = FileSystemProcessor()
+    def __init__(self, repository: PDFRepository):
+        self.repository = repository
         self.ai_processor = AIProcessor()
+        self.file_system_processor = FileSystemProcessor()
         self.image_processor = ImageProcessor()
 
-    async def process_pre_section_pages(self, pages: List[Dict[str, any]], progress: ProcessingProgress) -> List[List[FormattedText]]:
-        """Process pre-section pages sequentially using AI model"""
-        progress.status = ProcessingStatus.PROCESSING_PRE_SECTIONS
-        logger.info("Starting sequential pre-section processing with AI model")
-        
-        results = []
-        try:
-            for page in pages:
-                # Process each page sequentially with AI
-                response = await self.ai_processor.analyze_page_content(page['text'], page['num'])
-                results.append(response)
-                logger.info(f"Successfully processed pre-section page {page['num']}")
-            
-            return results
-        except Exception as e:
-            logger.error(f"Error in pre-section pages processing: {e}")
-            raise
-
-    def process_numbered_section_page(self, text: str, page_num: int) -> List[FormattedText]:
-        """Process a single numbered section page using text processor without AI"""
-        try:
-            # Use text_processor directly without any AI processing or batching
-            formatted_blocks = self.text_processor.process_text_block(text, is_pre_section=False)
-            logger.info(f"Successfully processed numbered section page {page_num} with {len(formatted_blocks)} blocks")
-            return formatted_blocks
-        except Exception as e:
-            logger.error(f"Error processing numbered section page {page_num}: {e}")
-            raise
-
-    async def save_current_section(self, current_section: int, current_blocks: List[FormattedText],
-                                 page_num: int, sections_dir: str, pdf_folder_name: str,
-                                 sections: List[Section], progress: ProcessingProgress) -> bool:
-        """Save current section with proper validation and error handling"""
-        try:
-            if current_section is not None and current_blocks:
-                section_path = os.path.join(sections_dir, f"{current_section}.md")
-                
-                # Create sections directory if it doesn't exist
-                os.makedirs(os.path.dirname(section_path), exist_ok=True)
-                logger.info(f"Section directory ensured: {os.path.dirname(section_path)}")
-                
-                section = Section(
-                    number=current_section,
-                    content="\n".join(block.text for block in current_blocks),
-                    page_number=page_num,
-                    file_path=section_path,
-                    pdf_name=pdf_folder_name,
-                    title=None,
-                    formatted_content=current_blocks,
-                    is_chapter=False,
-                    chapter_number=current_section
-                )
-                sections.append(section)
-                self.file_system_processor.save_section_content(section)
-                progress.processed_sections += 1
-                logger.info(f"Successfully saved numbered section {current_section} at page {page_num}")
-                return True
-        except Exception as e:
-            logger.error(f"Error saving section {current_section}: {e}")
-            raise
-        return False
-
     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
-        """Extract sections from the PDF with distinct processing workflows"""
+        logger.info(f"Starting PDF processing for: {pdf_path}")
+
         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
         paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
-        sections_dir = paths["sections_dir"]
         histoire_dir = paths["histoire_dir"]
         images_dir = paths["images_dir"]
         metadata_dir = paths["metadata_dir"]
 
-        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING)
-        sections = []
-        images = []
-
         try:
-            # Open PDF with both PyMuPDF and PyPDF2 for different processing needs
             doc = fitz.open(pdf_path)
-            reader = PdfReader(pdf_path)
-            progress.total_pages = len(reader.pages)
-            logger.info(f"Processing PDF with {progress.total_pages} pages")
+            progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING, total_pages=len(doc))
+            sections = []
+            content_buffer = ""
+            current_chapter_number = 0
 
-            # First workflow: Find first numbered section
-            progress.status = ProcessingStatus.ANALYZING_STRUCTURE
-            first_section_page = None
-            pre_section_pages = []
+            # Extract pages with text
+            pages = SectionProcessor.extract_text_from_pdf(pdf_path)
 
-            # Collect pre-section pages
-            for page_num in range(len(doc)):
-                progress.current_page = page_num + 1
-                page = doc[page_num]
-                text = page.get_text()
+            # Find the page where section 1 starts
+            section_one_page = SectionProcessor.find_section(pages, section_number=1)
+            if section_one_page:
+                logger.info(f"Section 1 found on page {section_one_page}. Stopping extraction before this page.")
 
-                if not text.strip():
+            for page in pages:
+                page_num = page["num"]
+                page_text = page["text"]
+
+                if not page_text:
+                    logger.warning(f"Page {page_num} is empty. Skipping...")
                     continue
 
-                # Check for numbered section start
-                lines = text.splitlines()
-                for line in lines:
-                    chapter_num, _ = self.chapter_processor.detect_chapter(line.strip())
-                    if chapter_num is not None:
-                        first_section_page = page_num
-                        logger.info(f"Found first numbered section at page {page_num + 1}, section {chapter_num}")
-                        break
+                logger.debug(f"Processing page {page_num}")
 
-                if first_section_page is not None:
+                # Stop extraction before the section 1 page
+                if section_one_page and page_num >= section_one_page:
+                    logger.info(f"Stopping extraction before page {page_num} (section 1 detected).")
                     break
 
-                # Add page to pre-section batch
-                pre_section_pages.append({
-                    'text': text,
-                    'num': page_num + 1
-                })
+                # Detect new chapter titles
+                is_new_chapter, chapter_title = await self.ai_processor.detect_chapter_with_ai(page_text)
 
-            # Second workflow: Process pre-section content with AI
-            pre_section_content = []
-            if pre_section_pages:
-                pre_section_content = await self.process_pre_section_pages(
-                    pre_section_pages,
-                    progress
+                if is_new_chapter:
+                    # Save current chapter content
+                    if content_buffer.strip():
+                        current_chapter_number += 1
+                        self._save_chapter(
+                            current_chapter_number, content_buffer.strip(), page_num, histoire_dir, pdf_folder_name, sections, progress
+                        )
+                    content_buffer = ""  # Reset buffer for new chapter
+
+                # Add page content to buffer
+                markdown_content = await self.ai_processor.analyze_multimodal_page({
+                    "text": page_text,
+                    "num": page_num,
+                    "image_path": None
+                })
+                if markdown_content:
+                    content_buffer += markdown_content + "\n"
+
+            # Save the final chapter content if not empty
+            if content_buffer.strip():
+                current_chapter_number += 1
+                self._save_chapter(
+                    current_chapter_number, content_buffer.strip(), page_num, histoire_dir, pdf_folder_name, sections, progress
                 )
 
-            # Process pre-section content into chapters
-            if pre_section_content:
-                current_chapter: List[FormattedText] = []
-                chapter_count = 0
-
-                for page_blocks in pre_section_content:
-                    for block in page_blocks:
-                        is_chapter, title = await self.ai_processor.detect_chapter_with_ai(block.text)
-
-                        if is_chapter and current_chapter:
-                            # Save current chapter
-                            chapter_count += 1
-                            file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
-                            
-                            section = Section(
-                                number=chapter_count,
-                                content="\n".join(block.text for block in current_chapter),
-                                page_number=progress.current_page,
-                                file_path=file_path,
-                                pdf_name=pdf_folder_name,
-                                title=title,
-                                formatted_content=current_chapter,
-                                is_chapter=True,
-                                chapter_number=chapter_count
-                            )
-                            sections.append(section)
-                            self.file_system_processor.save_section_content(section)
-                            progress.processed_sections += 1
-                            current_chapter = []
-
-                        current_chapter.append(block)
-
-                # Save last chapter if exists
-                if current_chapter:
-                    chapter_count += 1
-                    file_path = os.path.join(histoire_dir, f"{chapter_count}.md")
-                    
-                    section = Section(
-                        number=chapter_count,
-                        content="\n".join(block.text for block in current_chapter),
-                        page_number=progress.current_page,
-                        file_path=file_path,
-                        pdf_name=pdf_folder_name,
-                        title=None,
-                        formatted_content=current_chapter,
-                        is_chapter=True,
-                        chapter_number=chapter_count
-                    )
-                    sections.append(section)
-                    self.file_system_processor.save_section_content(section)
-                    progress.processed_sections += 1
-
-            # Reset AI processor after pre-sections are done
-            self.ai_processor = AIProcessor()
-            logger.info("Reset AI processor after pre-section processing")
-
-            # Third workflow: Process numbered sections without AI
-            if first_section_page is not None:
-                progress.status = ProcessingStatus.PROCESSING_NUMBERED_SECTIONS
-                current_section = None
-                current_blocks: List[FormattedText] = []
-                last_section_number = 0
-
-                # Process one page at a time without concurrency
-                for page_num in range(first_section_page, len(doc)):
-                    progress.current_page = page_num + 1
-                    try:
-                        page = doc[page_num]
-                        text = page.get_text()
-                        
-                        if not text.strip():
-                            logger.info(f"Skipping empty page {page_num + 1}")
-                            continue
-
-                        # Process the entire page without AI
-                        formatted_blocks = self.process_numbered_section_page(text, page_num + 1)
-                        
-                        # Analyze each block for section numbers using chapter_processor only
-                        for block in formatted_blocks:
-                            chapter_num, _ = self.chapter_processor.detect_chapter(block.text)
-                            
-                            if chapter_num is not None:
-                                # Validate section number sequence
-                                if chapter_num <= last_section_number:
-                                    logger.warning(f"Non-sequential section number detected: {chapter_num} after {last_section_number}")
-                                else:
-                                    last_section_number = chapter_num
-
-                                # Save previous section if exists
-                                if current_section is not None and current_blocks:
-                                    await self.save_current_section(
-                                        current_section, current_blocks, page_num,
-                                        sections_dir, pdf_folder_name, sections, progress
-                                    )
-                                
-                                # Start new section
-                                current_section = chapter_num
-                                current_blocks = []
-                                logger.info(f"Starting new numbered section {chapter_num} on page {page_num + 1}")
-                            else:
-                                current_blocks.append(block)
-
-                    except Exception as e:
-                        logger.error(f"Error processing page {page_num + 1}: {e}")
-                        raise
-
-                # Save the last section if exists
-                if current_section is not None and current_blocks:
-                    await self.save_current_section(
-                        current_section, current_blocks, progress.current_page,
-                        sections_dir, pdf_folder_name, sections, progress
-                    )
-
-            # Fourth workflow: Process images
-            progress.status = ProcessingStatus.EXTRACTING_IMAGES
-            images = self.image_processor.extract_images(
-                pdf_path, images_dir, metadata_dir, pdf_folder_name, sections)
+            # Extract images
+            logger.info("Extracting images...")
+            images = self.image_processor.extract_images(pdf_path, images_dir, metadata_dir, pdf_folder_name, sections)
+            for image in images:
+                await self.repository.save_image(image)
             progress.processed_images = len(images)
 
-            progress.status = ProcessingStatus.COMPLETED
-            doc.close()
-            return ProcessedPDF(
+            # Finalize processing
+            processed_pdf = ProcessedPDF(
                 sections=sections,
                 images=images,
                 pdf_name=pdf_folder_name,
                 base_path=base_output_dir,
-                progress=progress
+                progress=progress,
             )
+            await self.repository.save_metadata(processed_pdf)
+
+            progress.status = ProcessingStatus.COMPLETED
+            logger.info(f"PDF processing completed: {len(sections)} sections, {len(images)} images.")
+            return processed_pdf
 
         except Exception as e:
             logger.error(f"Error processing PDF: {e}")
             progress.status = ProcessingStatus.FAILED
             progress.error_message = str(e)
-            if 'doc' in locals():
-                doc.close()
-            return ProcessedPDF(
-                sections=sections,
-                images=images,
-                pdf_name=pdf_folder_name,
-                base_path=base_output_dir,
-                progress=progress
-            )
+            raise
 
-    async def extract_images(
-            self,
-            pdf_path: str,
-            base_output_dir: str = "sections",
-            sections: Optional[List[Section]] = None) -> List[PDFImage]:
-        """Extract images from the PDF with section information"""
-        pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
-        paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
-        return self.image_processor.extract_images(
-            pdf_path,
-            paths["images_dir"],
-            paths["metadata_dir"],
-            pdf_folder_name,
-            sections
+    def _save_chapter(
+        self, chapter_number: int, content: str, page_num: int, histoire_dir: str, pdf_name: str, sections: List[Section], progress: ProcessingProgress
+    ):
+        """
+        Save chapter content to file and update metadata.
+
+        Args:
+            chapter_number (int): Chapter number.
+            content (str): Chapter content.
+            page_num (int): Page number.
+            histoire_dir (str): Directory for saving chapters.
+            pdf_name (str): PDF file name.
+            sections (List[Section]): List of sections.
+            progress (ProcessingProgress): Progress tracker.
+        """
+        section_file_path = os.path.join(histoire_dir, f"chapter_{chapter_number}.md")
+        section = Section(
+            number=chapter_number,
+            content=content,
+            page_number=page_num,
+            file_path=section_file_path,
+            pdf_name=pdf_name,
+            is_chapter=True
         )
+        self.repository.save_section(section)
+        sections.append(section)
+        progress.processed_sections += 1
+        logger.info(f"Chapter {chapter_number} saved.")
+
+
+
+#v2 fonctionne mais traite les pages individuellement
+
+# import fitz  # PyMuPDF
+# import logging
+# import os
+# from typing import List, Dict
+#
+# from ..domain.entities import Section, ProcessedPDF, ProcessingProgress, ProcessingStatus
+# from .ai_processor import AIProcessor
+# from .file_system_processor import FileSystemProcessor
+# from .image_processor import ImageProcessor
+# from ..domain.ports import PDFProcessor, PDFRepository
+#
+# logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# logger = logging.getLogger(__name__)
+#
+# class MuPDFProcessor(PDFProcessor):
+#     def __init__(self, repository: PDFRepository):
+#         self.repository = repository
+#         self.ai_processor = AIProcessor()
+#         self.file_system_processor = FileSystemProcessor()
+#         self.image_processor = ImageProcessor()
+#
+#     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
+#         logger.info(f"Starting PDF processing for: {pdf_path}")
+#
+#         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
+#         paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
+#         histoire_dir = paths["histoire_dir"]
+#         images_dir = paths["images_dir"]
+#         metadata_dir = paths["metadata_dir"]
+#
+#         try:
+#             doc = fitz.open(pdf_path)
+#             progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING, total_pages=len(doc))
+#             sections = []
+#             logger.info(f"PDF opened. Total pages: {len(doc)}")
+#
+#             # Préparer les pages pour analyse
+#             pages = [{"num": i + 1, "text": doc[i].get_text("text").strip()} for i in range(len(doc))]
+#
+#             # Trouver la page où commence la section 1
+#             section_one_page = await self.ai_processor.find_section(pages, section_number=1)
+#             if section_one_page:
+#                 logger.info(f"Section 1 found on page {section_one_page}. Stopping extraction before this page.")
+#
+#             for page_num, page in enumerate(pages, start=1):
+#                 page_text = page["text"]
+#
+#                 if not page_text:
+#                     logger.warning(f"Page {page_num} is empty. Skipping...")
+#                     continue
+#
+#                 logger.debug(f"Processing page {page_num}")
+#
+#                 # Arrêter l'extraction avant la page de la section 1
+#                 if section_one_page and page_num >= section_one_page:
+#                     logger.info(f"Stopping extraction before page {page_num} (section 1 detected).")
+#                     break
+#
+#                 # Analyze page content
+#                 markdown_content = await self.ai_processor.analyze_multimodal_page({
+#                     "text": page_text,
+#                     "num": page_num,
+#                     "image_path": None
+#                 })
+#
+#                 if not markdown_content:
+#                     logger.warning(f"Skipping page {page_num} due to empty Markdown content.")
+#                     continue
+#
+#                 # Save the chapter
+#                 section_file_path = os.path.join(histoire_dir, f"chapter_{len(sections) + 1}.md")
+#                 section = Section(
+#                     number=len(sections) + 1,
+#                     content=markdown_content,
+#                     page_number=page_num,
+#                     file_path=section_file_path,
+#                     pdf_name=pdf_folder_name,
+#                     is_chapter=True
+#                 )
+#                 await self.repository.save_section(section)
+#                 sections.append(section)
+#                 progress.processed_sections += 1
+#
+#             logger.info("Extracting images...")
+#             images = self.image_processor.extract_images(pdf_path, images_dir, metadata_dir, pdf_folder_name, sections)
+#             for image in images:
+#                 await self.repository.save_image(image)
+#             progress.processed_images = len(images)
+#
+#             processed_pdf = ProcessedPDF(
+#                 sections=sections,
+#                 images=images,
+#                 pdf_name=pdf_folder_name,
+#                 base_path=base_output_dir,
+#                 progress=progress,
+#             )
+#             await self.repository.save_metadata(processed_pdf)
+#
+#             progress.status = ProcessingStatus.COMPLETED
+#             logger.info(f"PDF processing completed: {len(sections)} sections, {len(images)} images.")
+#             return processed_pdf
+#
+#         except Exception as e:
+#             logger.error(f"Error processing PDF: {e}")
+#             progress.status = ProcessingStatus.FAILED
+#             progress.error_message = str(e)
+#             raise
+
+
+# #V1 FONCTIONNE ANALYSE MULTI MODALE
+#     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
+#         logger.info(f"Starting PDF processing for: {pdf_path}")
+#
+#         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
+#         paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
+#         histoire_dir = paths["histoire_dir"]
+#         images_dir = paths["images_dir"]
+#         metadata_dir = paths["metadata_dir"]
+#
+#         try:
+#             doc = fitz.open(pdf_path)
+#             progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING, total_pages=len(doc))
+#             sections = []
+#             logger.info(f"PDF opened. Total pages: {len(doc)}")
+#
+#             # Préparer les pages pour analyse
+#             pages = [{"num": i + 1, "text": doc[i].get_text("text").strip()} for i in range(len(doc))]
+#
+#             # Trouver la page où commence la section 1
+#             section_one_page = await self.ai_processor.find_section(pages, section_number=1)
+#             if section_one_page:
+#                 logger.info(f"Section 1 found on page {section_one_page}. Stopping extraction before this page.")
+#
+#             for page_num, page in enumerate(pages, start=1):
+#                 page_text = page["text"]
+#
+#                 if not page_text:
+#                     logger.warning(f"Page {page_num} is empty. Skipping...")
+#                     continue
+#
+#                 logger.debug(f"Processing page {page_num}")
+#
+#                 # Arrêter l'extraction avant la page de la section 1
+#                 if section_one_page and page_num >= section_one_page:
+#                     logger.info(f"Stopping extraction before page {page_num} (section 1 detected).")
+#                     break
+#
+#                 # Analyze page content
+#                 markdown_content = await self.ai_processor.analyze_multimodal_page({
+#                     "text": page_text,
+#                     "num": page_num,
+#                     "image_path": None
+#                 })
+#
+#                 if not markdown_content:
+#                     logger.warning(f"Skipping page {page_num} due to empty Markdown content.")
+#                     continue
+#
+#                 # Save the chapter
+#                 section_file_path = os.path.join(histoire_dir, f"chapter_{len(sections) + 1}.md")
+#                 section = Section(
+#                     number=len(sections) + 1,
+#                     content=markdown_content,
+#                     page_number=page_num,
+#                     file_path=section_file_path,
+#                     pdf_name=pdf_folder_name,
+#                     is_chapter=True
+#                 )
+#                 await self.repository.save_section(section)
+#                 sections.append(section)
+#                 progress.processed_sections += 1
+#
+#             logger.info("Extracting images...")
+#             images = self.image_processor.extract_images(pdf_path, images_dir, metadata_dir, pdf_folder_name, sections)
+#             for image in images:
+#                 await self.repository.save_image(image)
+#             progress.processed_images = len(images)
+#
+#             processed_pdf = ProcessedPDF(
+#                 sections=sections,
+#                 images=images,
+#                 pdf_name=pdf_folder_name,
+#                 base_path=base_output_dir,
+#                 progress=progress,
+#             )
+#             await self.repository.save_metadata(processed_pdf)
+#
+#             progress.status = ProcessingStatus.COMPLETED
+#             logger.info(f"PDF processing completed: {len(sections)} sections, {len(images)} images.")
+#             return processed_pdf
+#
+#         except Exception as e:
+#             logger.error(f"Error processing PDF: {e}")
+#             progress.status = ProcessingStatus.FAILED
+#             progress.error_message = str(e)
+#             raise
+
+
+# import fitz  # PyMuPDF
+# import logging
+# import os
+# from typing import List
+#
+# from ..domain.entities import Section, ProcessedPDF, ProcessingProgress, FormattedText, TextFormatting, ProcessingStatus
+# from .ai_processor import AIProcessor
+# from .file_system_processor import FileSystemProcessor
+# from .image_processor import ImageProcessor
+# from ..domain.ports import PDFProcessor, PDFRepository
+#
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# logger = logging.getLogger(__name__)
+#
+# class MuPDFProcessor(PDFProcessor):
+#     def __init__(self, repository: PDFRepository):
+#         self.repository = repository
+#         self.ai_processor = AIProcessor()
+#         self.file_system_processor = FileSystemProcessor()
+#         self.image_processor = ImageProcessor()
+#
+#     async def extract_sections(self, pdf_path: str, base_output_dir: str = "sections") -> ProcessedPDF:
+#         """Extract chapters, sections, and images from the PDF."""
+#         logger.info(f"Starting PDF processing for: {pdf_path}")
+#
+#         # Set up directories for output
+#         pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
+#         paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
+#         histoire_dir = paths["histoire_dir"]
+#         images_dir = paths["images_dir"]
+#         metadata_dir = paths["metadata_dir"]
+#         try:
+#             # Open the PDF
+#             doc = fitz.open(pdf_path)
+#             progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING, total_pages=len(doc))
+#             sections = []
+#             stop_extraction = False
+#
+#             # Extract pages
+#             logger.info("Processing pages for chapters and sections...")
+#             for page_num in range(len(doc)):
+#                 page = doc[page_num]
+#                 page_text = page.get_text("text")
+#
+#                 # Use AIProcessor to detect sections
+#                 section_number, attributes = await self.ai_processor.detect_section_with_ai(page_text)
+#                 if section_number is not None:
+#                     logger.info(f"First numbered section detected: {section_number}. Stopping chapter extraction.")
+#                     stop_extraction = True
+#                     break
+#
+#                 # Use AIProcessor to detect chapter titles
+#                 is_chapter, chapter_title = await self.ai_processor.detect_chapter_with_ai(page_text)
+#
+#                 # If detected as a chapter, save it
+#                 if is_chapter:
+#                     formatted_content = await self.ai_processor.analyze_page_content(page_text, page_num + 1)
+#                     markdown_content = self.repository.format_to_markdown(formatted_content)
+#                     section = Section(
+#                         number=len(sections) + 1,
+#                         content=markdown_content,
+#                         page_number=page_num + 1,
+#                         file_path=os.path.join(histoire_dir, f"{len(sections) + 1}.md"),
+#                         pdf_name=pdf_folder_name,
+#                         formatted_content=formatted_content,
+#                         title=chapter_title,
+#                         is_chapter=True
+#                     )
+#                     await self.repository.save_section(section)
+#                     sections.append(section)
+#                     progress.processed_sections += 1
+#
+#             logger.info(f"Total sections extracted: {len(sections)}")
+#
+#             # Extract images from the PDF
+#             logger.info("Extracting illustrations from the PDF...")
+#             images = self.image_processor.extract_images(pdf_path, images_dir, metadata_dir, pdf_folder_name, sections)
+#             for image in images:
+#                 await self.repository.save_image(image)
+#             progress.processed_images = len(images)
+#
+#             # Save metadata
+#             processed_pdf = ProcessedPDF(
+#                 sections=sections,
+#                 images=images,
+#                 pdf_name=pdf_folder_name,
+#                 base_path=base_output_dir,
+#                 progress=progress,
+#             )
+#             await self.repository.save_metadata(processed_pdf)
+#
+#             # Update progress and return results
+#             progress.status = ProcessingStatus.COMPLETED
+#             logger.info(f"PDF processing completed: {len(sections)} sections, {len(images)} images.")
+#             return processed_pdf
+#
+#         except Exception as e:
+#             logger.error(f"Error processing PDF: {e}")
+#             progress.status = ProcessingStatus.FAILED
+#             progress.error_message = str(e)
+#             raise
+#
