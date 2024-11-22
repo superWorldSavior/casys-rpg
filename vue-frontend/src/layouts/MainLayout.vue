@@ -2,14 +2,26 @@
   <div class="app-layout">
     <template v-if="!isLoginPage">
       <!-- Desktop Header -->
-      <header class="app-header desktop-only">
-        <nav class="navigation">
-          <router-link to="/library" class="nav-link">Bibliothèque</router-link>
-          <router-link to="/reader" class="nav-link">Lecteur</router-link>
-          <button class="theme-toggle" @click="toggleTheme">
+      <header class="app-header">
+        <div class="header-left">
+          <router-link to="/" class="logo">casys rpg</router-link>
+        </div>
+        <div class="header-center">
+          <button class="credits-button">
+            Acheter des crédits
+          </button>
+        </div>
+        <div class="header-right">
+          <button class="search-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+          <button class="theme-toggle desktop-only" @click="toggleTheme">
             {{ theme === 'light' ? '🌙' : '☀️' }}
           </button>
-        </nav>
+        </div>
       </header>
     </template>
     
@@ -46,23 +58,7 @@
           </svg>
           <span>Profil</span>
         </router-link>
-        <button class="nav-item theme-toggle" @click="toggleTheme">
-          <svg v-if="theme === 'light'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-          </svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2"/>
-            <path d="M12 20v2"/>
-            <path d="m4.93 4.93 1.41 1.41"/>
-            <path d="m17.66 17.66 1.41 1.41"/>
-            <path d="M2 12h2"/>
-            <path d="M20 12h2"/>
-            <path d="m6.34 17.66-1.41 1.41"/>
-            <path d="m19.07 4.93-1.41 1.41"/>
-          </svg>
-          <span>{{ theme === 'light' ? 'Sombre' : 'Clair' }}</span>
-        </button>
+        
       </nav>
     </template>
   </div>
@@ -89,18 +85,57 @@ const toggleTheme = () => themeStore.toggleTheme()
 }
 
 .app-header {
-  padding: 0.5rem;
+  padding: 0.75rem 1rem;
   background-color: var(--header-background);
   border-bottom: 1px solid var(--border-color);
-  height: 48px;
+  height: 56px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
-.navigation {
+.header-left, .header-center, .header-right {
   display: flex;
+  align-items: center;
   gap: 1rem;
-  justify-content: center;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.credits-button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.credits-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.search-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  background-color: var(--hover-background);
 }
 
 .nav-link {
@@ -143,7 +178,7 @@ const toggleTheme = () => themeStore.toggleTheme()
   flex-direction: column;
   align-items: center;
   padding: 0.5rem;
-  color: var(--text-color);
+  color: var(--text-color-secondary);
   text-decoration: none;
   flex: 1;
   transition: all 0.2s ease;
@@ -151,14 +186,22 @@ const toggleTheme = () => themeStore.toggleTheme()
 
 .nav-item svg {
   margin-bottom: 0.25rem;
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
 }
 
 .nav-item span {
   font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .nav-item.active {
   color: var(--accent-color);
+}
+
+.nav-item.active svg {
+  stroke-width: 2;
 }
 
 .theme-toggle {
