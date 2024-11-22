@@ -36,6 +36,15 @@
         <div class="book-info">
           <h3>{{ book.title }}</h3>
           <p>{{ book.author }}</p>
+          <div class="progress-indicator" v-if="getBookProgress(book.id)">
+            <div class="progress-bar">
+              <div 
+                class="progress-fill"
+                :style="{ width: `${getBookProgress(book.id)}%` }"
+              ></div>
+            </div>
+            <span class="progress-text">{{ getBookProgress(book.id) }}%</span>
+          </div>
         </div>
       </div>
     </div>
@@ -46,10 +55,13 @@
 import { onMounted, ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBooksStore } from '../stores/books';
+import { useProgressStore } from '../stores/progress';
 
 const booksStore = useBooksStore();
+const progressStore = useProgressStore();
 const { books, isLoading, error } = storeToRefs(booksStore);
 const { toggleFavorite, isFavorite } = booksStore;
+const getBookProgress = (bookId: string) => progressStore.getPercentage(bookId);
 
 const showOnlyFavorites = ref(false);
 
@@ -114,6 +126,29 @@ onMounted(async () => {
 
 .book-info {
   margin-top: 1rem;
+}
+
+.progress-indicator {
+  margin-top: 0.5rem;
+}
+
+.progress-bar {
+  height: 4px;
+  background-color: #e9ecef;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  color: var(--text-color);
 }
 
 .filters {
