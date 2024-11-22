@@ -116,41 +116,75 @@ onMounted(async () => {
 }
 
 @media (max-width: 480px) {
+  .library {
+    padding: 0.5rem;
+  }
+
   .book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem;
-    padding: 0.75rem;
-    margin: 0;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 0;
+  }
+
+  .book-card {
+    margin-bottom: 0.5rem;
   }
 
   .book-cover-container {
     aspect-ratio: 2/3;
     height: auto;
+    border-radius: 8px;
   }
 
   .book-info-overlay {
-    padding: 0.85rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.3), transparent);
+    padding: 0.75rem;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      transparent 100%
+    );
+    border-radius: 0 0 8px 8px;
   }
 
   .book-info-overlay h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin-bottom: 0.25rem;
     line-height: 1.2;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .book-info-overlay p {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     opacity: 0.9;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .progress-indicator {
+    padding: 0.35rem;
+  }
+
+  .progress-text {
+    font-size: 0.7rem;
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     text-align: left;
     margin: 0.5rem 0;
-    padding-left: 0.5rem;
+    padding-left: 0.25rem;
+  }
+
+  .library-header {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
   }
 }
 

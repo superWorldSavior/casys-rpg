@@ -192,12 +192,39 @@ watch(() => route.path, (newPath) => {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--header-background);
-  border-top: 1px solid var(--border-color);
-  padding: 0.35rem;
+  background-color: rgb(var(--v-theme-surface));
+  border-top: 1px solid rgba(var(--v-border-color), 0.12);
+  padding: 0.5rem;
   z-index: 1000;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.1);
+}
+
+:deep(.v-btn) {
+  min-width: unset !important;
+  border-radius: 12px !important;
+  height: 56px !important;
+  font-size: 0.75rem !important;
+}
+
+:deep(.v-btn--active) {
+  background-color: rgb(var(--v-theme-surface-variant)) !important;
+}
+
+:deep(.v-btn .v-icon) {
+  font-size: 24px !important;
+  margin-bottom: 4px !important;
+}
+
+:deep(.v-btn .v-btn__content) {
+  flex-direction: column !important;
+  line-height: 1 !important;
+}
+
+:deep(.v-bottom-navigation) {
+  height: calc(72px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
 }
 
 .nav-item {
