@@ -1,13 +1,18 @@
 <template>
   <div class="library">
     <div class="library-header">
-      <h1>Bibliothèque</h1>
-      <router-link to="/library" class="favorites-link">
-        Mes favoris
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 18l6-6-6-6"/>
-        </svg>
-      </router-link>
+      <template v-if="$route.path === '/'">
+        <h1>Mes favoris</h1>
+        <router-link to="/library" class="see-all-link">
+          Voir toute la bibliothèque
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </router-link>
+      </template>
+      <template v-else>
+        <h1>Bibliothèque</h1>
+      </template>
     </div>
     <div v-if="isLoading" class="loading">
       Chargement...
@@ -47,21 +52,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useBooksStore } from '../stores/books';
 import { useProgressStore } from '../stores/progress';
 
+const route = useRoute();
 const booksStore = useBooksStore();
 const progressStore = useProgressStore();
 const { books, isLoading, error } = storeToRefs(booksStore);
 const { toggleFavorite, isFavorite } = booksStore;
 const getBookProgress = (bookId: string) => progressStore.getPercentage(bookId);
 
-const showOnlyFavorites = ref(false);
-
 const displayedBooks = computed(() => {
-  return showOnlyFavorites.value
+  return route.path === '/'
     ? books.value.filter(book => isFavorite(book.id))
     : books.value;
 });
@@ -83,7 +88,7 @@ onMounted(async () => {
   margin-bottom: 1.5rem;
 }
 
-.favorites-link {
+.see-all-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
