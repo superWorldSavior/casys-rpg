@@ -1,6 +1,6 @@
 <template>
   <div class="library">
-    <h1>Bibliothèque</h1>
+    <h1>casys rpg</h1>
     <div class="filters">
       <button 
         :class="{ active: showOnlyFavorites }"
@@ -17,6 +17,10 @@
     </div>
     <div v-else class="book-grid">
       <div v-for="book in displayedBooks" :key="book.id" class="book-card">
+        <div class="book-info">
+          <h3>{{ book.title }}</h3>
+          <p>{{ book.author }}</p>
+        </div>
         <div class="book-card-header">
           <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" class="book-cover">
           <div v-else class="book-cover-placeholder">
@@ -33,18 +37,14 @@
             </svg>
           </button>
         </div>
-        <div class="book-info">
-          <h3>{{ book.title }}</h3>
-          <p>{{ book.author }}</p>
-          <div class="progress-indicator" v-if="getBookProgress(book.id)">
-            <div class="progress-bar">
-              <div 
-                class="progress-fill"
-                :style="{ width: `${getBookProgress(book.id)}%` }"
-              ></div>
-            </div>
-            <span class="progress-text">{{ getBookProgress(book.id) }}%</span>
+        <div class="progress-indicator" v-if="getBookProgress(book.id)">
+          <div class="progress-bar">
+            <div 
+              class="progress-fill"
+              :style="{ width: `${getBookProgress(book.id)}%` }"
+            ></div>
           </div>
+          <span class="progress-text">{{ getBookProgress(book.id) }}%</span>
         </div>
       </div>
     </div>
@@ -83,15 +83,24 @@ onMounted(async () => {
 
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
   padding: 0.5rem 0;
 }
 
 @media (max-width: 480px) {
   .book-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 0.5rem;
+    padding: 0.25rem;
+    margin: 0 -0.25rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    text-align: left;
+    margin: 0.5rem 0;
+    padding-left: 0.5rem;
   }
 }
 
