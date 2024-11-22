@@ -31,41 +31,49 @@
 
     <template v-if="!isLoginPage">
       <!-- Mobile Bottom Navigation -->
-      <nav class="mobile-nav">
-        <router-link to="/" class="nav-item" active-class="active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          </svg>
+      <v-bottom-navigation
+        v-model="activeTab"
+        grow
+        class="mobile-nav"
+      >
+        <v-btn
+          :to="{ path: '/' }"
+          value="home"
+        >
+          <v-icon>mdi-home</v-icon>
           <span>Accueil</span>
-        </router-link>
-        <router-link to="/library" class="nav-item" active-class="active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
-          </svg>
+        </v-btn>
+
+        <v-btn
+          :to="{ path: '/library' }"
+          value="library"
+        >
+          <v-icon>mdi-book-open-variant</v-icon>
           <span>Bibliothèque</span>
-        </router-link>
-        <router-link to="/browse" class="nav-item" active-class="active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
+        </v-btn>
+
+        <v-btn
+          :to="{ path: '/browse' }"
+          value="browse"
+        >
+          <v-icon>mdi-magnify</v-icon>
           <span>Parcourir</span>
-        </router-link>
-        <router-link to="/profile" class="nav-item" active-class="active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
+        </v-btn>
+
+        <v-btn
+          :to="{ path: '/profile' }"
+          value="profile"
+        >
+          <v-icon>mdi-account</v-icon>
           <span>Profil</span>
-        </router-link>
-        
-      </nav>
+        </v-btn>
+      </v-bottom-navigation>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useThemeStore } from '../stores/theme'
 
@@ -74,6 +82,16 @@ const themeStore = useThemeStore()
 const isLoginPage = computed(() => route.name === 'login')
 const theme = computed(() => themeStore.theme)
 const toggleTheme = () => themeStore.toggleTheme()
+
+const activeTab = ref('home')
+
+// Mettre à jour l'onglet actif en fonction de la route
+watch(() => route.path, (newPath) => {
+  if (newPath === '/') activeTab.value = 'home'
+  else if (newPath.startsWith('/library')) activeTab.value = 'library'
+  else if (newPath.startsWith('/browse')) activeTab.value = 'browse'
+  else if (newPath.startsWith('/profile')) activeTab.value = 'profile'
+}, { immediate: true })
 </script>
 
 <style scoped>
@@ -157,7 +175,10 @@ const toggleTheme = () => themeStore.toggleTheme()
 .app-main {
   flex: 1;
   padding: 1rem;
-  padding-bottom: 4rem; /* Space for mobile navigation */
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom)); /* Space for mobile navigation */
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Mobile Navigation */
@@ -169,66 +190,75 @@ const toggleTheme = () => themeStore.toggleTheme()
   right: 0;
   background-color: var(--header-background);
   border-top: 1px solid var(--border-color);
-  padding: 0.5rem;
+  padding: 0.35rem;
   z-index: 1000;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.75rem 0.5rem;
+  padding: 0.5rem 0.35rem;
   color: var(--text-color-secondary);
   text-decoration: none;
   flex: 1;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   position: relative;
+  border-radius: 12px;
 }
 
-.nav-item::after {
+.nav-item::before {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 25%;
-  right: 25%;
-  height: 3px;
+  bottom: -2px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
   background-color: var(--accent-color);
-  border-radius: 3px;
+  border-radius: 50%;
   opacity: 0;
-  transform: translateY(5px);
+  transform: translateX(-50%) scale(0);
   transition: all 0.2s ease;
 }
 
 .nav-item svg {
-  margin-bottom: 0.35rem;
-  width: 28px;
-  height: 28px;
-  stroke-width: 1.75;
-  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
+  transition: all 0.15s ease;
 }
 
 .nav-item span {
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  letter-spacing: -0.2px;
 }
 
 .nav-item.active {
   color: var(--accent-color);
 }
 
-.nav-item.active::after {
+.nav-item.active::before {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) scale(1);
+}
+
+.nav-item.active {
+  color: var(--accent-color);
+  background-color: var(--hover-background);
 }
 
 .nav-item.active svg {
-  stroke-width: 2.25;
-  transform: translateY(-2px);
+  stroke-width: 2;
+  transform: scale(1.1);
 }
 
 .nav-item.active span {
-  transform: translateY(-1px);
+  font-weight: 700;
 }
 
 .theme-toggle {

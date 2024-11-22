@@ -109,10 +109,28 @@ onMounted(async () => {
 
 @media (max-width: 480px) {
   .book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 0.5rem;
-    padding: 0.25rem;
-    margin: 0 -0.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    padding: 0.5rem;
+    margin: 0;
+  }
+
+  .book-cover-container {
+    aspect-ratio: 2/3;
+    height: auto;
+  }
+
+  .book-info-overlay {
+    padding: 0.75rem;
+  }
+
+  .book-info-overlay h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .book-info-overlay p {
+    font-size: 0.75rem;
   }
 
   h1 {

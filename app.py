@@ -1,6 +1,8 @@
 from typing import Optional
 from flask import Flask, jsonify, send_from_directory, request, session, redirect
 from flask_cors import CORS
+from flask_sock import Sock
+import json
 import io
 import fitz
 import os
@@ -40,6 +42,7 @@ pdf_service = PDFService(processor=pdf_processor,
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
+sock = Sock(app)
 
 # Enable CORS with credentials support
 CORS(app, resources={
@@ -264,6 +267,14 @@ def get_book_cover(filename):
             "code": 500
         }), 500
 
+@sock.route('/api/ws/books')
+def books_websocket(ws):
+    try:
+        while True:
+            data = ws.receive()
+            # Handle incoming messages if needed
+    except Exception as e:
+        app.logger.error(f"WebSocket error: {e}")
 
 # Handle 404 errors for API routes
 @app.route('/', defaults={'path': ''})
