@@ -20,9 +20,7 @@
                 <line x1="21" y1="21" x2="16.65" y2="16.65"/>
               </svg>
             </button>
-            <button class="theme-toggle desktop-only" @click="toggleTheme">
-              {{ theme === 'light' ? '🌙' : '☀️' }}
-            </button>
+            
           </div>
         </header>
       </template>
@@ -250,8 +248,13 @@ watch(() => route.path, (newPath) => {
   }
 
 :deep(.v-bottom-navigation) {
-  height: calc(72px + env(safe-area-inset-bottom)) !important;
+  height: calc(64px + env(safe-area-inset-bottom)) !important;
   padding-bottom: env(safe-area-inset-bottom) !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
 }
 
 .nav-item {
@@ -317,18 +320,6 @@ watch(() => route.path, (newPath) => {
 
 .nav-item.active span {
   font-weight: 700;
-}
-
-.theme-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-color);
-  padding: 0.5rem;
-}
-
-.theme-toggle:hover {
-  transform: scale(1.1);
 }
 
 /* Media Queries */
