@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <div class="app-layout">
+    <v-layout>
+      <div class="app-layout">
       <template v-if="!isLoginPage">
         <!-- Desktop Header -->
         <header class="app-header">
@@ -73,6 +74,7 @@
         </v-bottom-navigation>
       </template>
     </div>
+    </v-layout>
   </v-app>
 </template>
 
@@ -202,25 +204,50 @@ watch(() => route.path, (newPath) => {
 }
 
 :deep(.v-btn) {
-  min-width: unset !important;
-  border-radius: 12px !important;
-  height: 56px !important;
-  font-size: 0.75rem !important;
-}
+    min-width: unset !important;
+    border-radius: 12px !important;
+    height: 56px !important;
+    font-size: 0.75rem !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    background: transparent !important;
+  }
 
-:deep(.v-btn--active) {
-  background-color: rgb(var(--v-theme-surface-variant)) !important;
-}
+  :deep(.v-btn:hover) {
+    background: linear-gradient(45deg, rgba(110, 17, 135, 0.1), rgba(168, 112, 183, 0.2)) !important;
+    transform: translateY(-2px) !important;
+  }
 
-:deep(.v-btn .v-icon) {
-  font-size: 24px !important;
-  margin-bottom: 4px !important;
-}
+  :deep(.v-btn:active) {
+    background-color: #A870B7 !important;
+    transform: translateY(1px) !important;
+  }
 
-:deep(.v-btn .v-btn__content) {
-  flex-direction: column !important;
-  line-height: 1 !important;
-}
+  :deep(.v-btn--active) {
+    background: rgba(168, 112, 183, 0.15) !important;
+    border: 1px solid rgba(168, 112, 183, 0.3) !important;
+  }
+
+  :deep(.v-btn .v-icon) {
+    font-size: 24px !important;
+    margin-bottom: 4px !important;
+    transition: transform 0.3s ease !important;
+  }
+
+  :deep(.v-btn:hover .v-icon) {
+    transform: scale(1.1) !important;
+  }
+
+  :deep(.v-btn .v-btn__content) {
+    flex-direction: column !important;
+    line-height: 1 !important;
+    color: var(--v-theme-on-surface) !important;
+  }
+
+  :deep(.v-btn--active .v-btn__content) {
+    color: #A870B7 !important;
+  }
 
 :deep(.v-bottom-navigation) {
   height: calc(72px + env(safe-area-inset-bottom)) !important;
