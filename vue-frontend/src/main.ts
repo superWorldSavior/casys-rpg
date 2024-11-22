@@ -18,6 +18,7 @@ const vuetify = createVuetify({
     defaultTheme: 'light',
     themes: {
       light: {
+        dark: false,
         colors: {
           primary: '#6E1187',
           secondary: '#2B2B2B',
@@ -25,9 +26,12 @@ const vuetify = createVuetify({
           surface: '#FBFBFB',
           background: '#F7F7F7',
           cassis: '#6E1187',
-        },
+          gradientStart: '#6E1187',
+          gradientEnd: '#A870B7',
+        }
       },
       dark: {
+        dark: true,
         colors: {
           primary: '#6E1187',
           secondary: '#2B2B2B',
@@ -35,10 +39,12 @@ const vuetify = createVuetify({
           surface: '#1A1A1A',
           background: '#111111',
           cassis: '#6E1187',
-        },
-      },
-    },
-  },
+          gradientStart: '#6E1187',
+          gradientEnd: '#A870B7',
+        }
+      }
+    }
+  }
 })
 
 // Appliquer la police Courier New globalement
