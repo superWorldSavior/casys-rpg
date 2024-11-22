@@ -177,31 +177,58 @@ const toggleTheme = () => themeStore.toggleTheme()
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.75rem 0.5rem;
   color: var(--text-color-secondary);
   text-decoration: none;
   flex: 1;
   transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  right: 25%;
+  height: 3px;
+  background-color: var(--accent-color);
+  border-radius: 3px;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.2s ease;
 }
 
 .nav-item svg {
-  margin-bottom: 0.25rem;
-  width: 24px;
-  height: 24px;
-  stroke-width: 1.5;
+  margin-bottom: 0.35rem;
+  width: 28px;
+  height: 28px;
+  stroke-width: 1.75;
+  transition: all 0.2s ease;
 }
 
 .nav-item span {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .nav-item.active {
   color: var(--accent-color);
 }
 
+.nav-item.active::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .nav-item.active svg {
-  stroke-width: 2;
+  stroke-width: 2.25;
+  transform: translateY(-2px);
+}
+
+.nav-item.active span {
+  transform: translateY(-1px);
 }
 
 .theme-toggle {

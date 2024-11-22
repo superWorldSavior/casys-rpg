@@ -1,6 +1,14 @@
 <template>
   <div class="library">
-    <h1>Bibliothèque</h1>
+    <div class="library-header">
+      <h1>Bibliothèque</h1>
+      <router-link to="/library" class="favorites-link">
+        Mes favoris
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </router-link>
+    </div>
     <div v-if="isLoading" class="loading">
       Chargement...
     </div>
@@ -8,7 +16,12 @@
       {{ error }}
     </div>
     <div v-else class="book-grid">
-      <div v-for="book in displayedBooks" :key="book.id" class="book-card">
+      <router-link 
+        v-for="book in displayedBooks" 
+        :key="book.id" 
+        :to="{ name: 'book-detail', params: { id: book.id }}" 
+        class="book-card"
+      >
         <div class="book-cover-container">
           <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" class="book-cover">
           <div v-else class="book-cover-placeholder">
@@ -28,7 +41,7 @@
           </div>
           <span class="progress-text">{{ getBookProgress(book.id) }}%</span>
         </div>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -60,7 +73,31 @@ onMounted(async () => {
 
 <style scoped>
 .library {
-  padding: 0.5rem;
+  padding: 1rem;
+}
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.favorites-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent-color);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.favorites-link:hover {
+  background-color: var(--hover-background);
+  transform: translateY(-1px);
 }
 
 .book-grid {
