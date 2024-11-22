@@ -47,6 +47,10 @@ args = "Vue Frontend"
 task = "workflow.run"
 args = "React Native Dev"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Generate Icons"
+
 [[workflows.workflow]]
 name = "Flask Server"
 author = "agent"
@@ -176,6 +180,20 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd frontend && npx expo start --web --port 19007"
 waitForPort = 19007
+
+[[workflows.workflow]]
+name = "Generate Icons"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && node scripts/generate-icons.js"
 
 [deployment]
 run = ["sh", "-c", "python3 app.py"]

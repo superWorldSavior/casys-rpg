@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextFlow Navigator - Offline</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9fafb;
+            color: #111827;
+        }
+        .icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 24px;
+        }
+        h1 {
+            margin-bottom: 16px;
+        }
+        p {
+            margin-bottom: 24px;
+            color: #4b5563;
+        }
+        button {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <img src="/icon-192x192.png" alt="TextFlow Navigator" class="icon">
+    <h1>You're Offline</h1>
+    <p>Please check your internet connection and try again.</p>
+    <button onclick="window.location.reload()">Retry</button>
+</body>
+</html>

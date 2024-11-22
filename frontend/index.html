@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo RPG AI Narrator</title>
-    <style>
-        html, body, #root {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/icon-192x192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="description" content="AI-powered audiobook experience" />
+    <meta name="google-signin-client_id" content="%VITE_GOOGLE_CLIENT_ID%" />
+    <meta name="google-signin-fedcm-opt-in" content="silent" />
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups" />
+    
+    <!-- PWA configuration -->
+    <link rel="apple-touch-icon" href="/icon-192x192.png" />
+    <link rel="mask-icon" href="/masked-icon.svg" color="#4F46E5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <title>TextFlow Navigator</title>
+  </head>
+  <body>
     <div id="root"></div>
-</body>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
