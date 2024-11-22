@@ -21,14 +21,18 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const handleGoogleLogin = () => {
-  // Simuler une connexion
-  setTimeout(() => {
-    router.push('/library')
-  }, 1000)
+  try {
+    authStore.login();
+    router.push('/library');
+  } catch (err) {
+    console.error('Erreur lors de la connexion:', err);
+  }
 }
 </script>
 

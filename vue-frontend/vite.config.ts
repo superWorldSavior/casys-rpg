@@ -8,16 +8,20 @@ export default defineConfig({
   server: {
     port: 5174,
     host: '0.0.0.0',
-    hmr: {
-      clientPort: 443,
-      host: '0.0.0.0'
+    hmr: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false
+      }
     }
   },
   preview: {
     port: 5174,
     host: '0.0.0.0'
   },
-  base: '',
+  base: '/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

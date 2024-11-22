@@ -8,7 +8,7 @@ from pathlib import Path
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
-from auth_routes import auth_bp
+
 from pdf_processing.infrastructure.pdf_processor import MuPDFProcessor
 from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 from pdf_processing.application.pdf_service import PDFService
@@ -43,15 +43,19 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 CORS(app,
      resources={
          r"/api/*": {
-             "origins": ["http://localhost:5174", "https://*.repl.co"],
+             "origins": [
+                 "http://localhost:5174",
+                 "https://localhost:5174",
+                 "https://*.repl.co",
+                 "wss://*.repl.co"
+             ],
              "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
              "allow_headers": ["Content-Type", "Authorization"],
              "supports_credentials": True
          }
      })
 
-# Register the auth blueprint
-app.register_blueprint(auth_bp)
+
 
 
 def allowed_file(filename: str) -> bool:
@@ -230,9 +234,21 @@ def get_book(filename):
 
 
 # Handle 404 errors for API routes
-@app.errorhandler(404)
-def not_found(e):
-    return jsonify({"error": "Not found", "code": 404}), 404
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_vue_app(path):
+    if path.startswith('api/'):
+        return jsonify({"error": "Not found", "code": 404}), 404
+    
+    try:
+        # Serve static files from the dist directory
+        if path and os.path.exists(os.path.join('vue-frontend/dist', path)):
+            return send_from_directory('vue-frontend/dist', path)
+        # Default to index.html for client-side routing
+        return send_from_directory('vue-frontend/dist', 'index.html')
+    except Exception as e:
+        app.logger.error(f"Error serving Vue app: {e}")
+        return jsonify({"error": "Internal server error", "code": 500}), 500
 
 
 if __name__ == '__main__':
