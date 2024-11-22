@@ -3,8 +3,6 @@ import { createPinia } from 'pinia'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { VBottomNavigation } from 'vuetify/components'
-import { VApp, VMain, VLayout } from 'vuetify/components'
 import App from './App.vue'
 import router from './router'
 import './style.css'
@@ -14,13 +12,7 @@ import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 
 const vuetify = createVuetify({
-  components: {
-    VBottomNavigation,
-    VApp,
-    VMain,
-    VLayout,
-    ...components
-  },
+  components,
   directives,
   theme: {
     defaultTheme: 'light',
@@ -32,7 +24,7 @@ const vuetify = createVuetify({
           accent: '#A870B7',
           surface: '#FBFBFB',
           background: '#F7F7F7',
-          'cassis-gradient': 'linear-gradient(45deg, #6E1187, #A870B7)',
+          cassis: '#6E1187',
         },
       },
       dark: {
@@ -42,7 +34,7 @@ const vuetify = createVuetify({
           accent: '#A870B7',
           surface: '#1A1A1A',
           background: '#111111',
-          'cassis-gradient': 'linear-gradient(45deg, #6E1187, #A870B7)',
+          cassis: '#6E1187',
         },
       },
     },
