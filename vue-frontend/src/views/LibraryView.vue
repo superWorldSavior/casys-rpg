@@ -114,9 +114,9 @@ onMounted(async () => {
 
 @media (max-width: 480px) {
   .book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.75rem;
-    padding: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    padding: 0.75rem;
     margin: 0;
   }
 
@@ -126,16 +126,21 @@ onMounted(async () => {
   }
 
   .book-info-overlay {
-    padding: 0.75rem;
+    padding: 0.85rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.3), transparent);
   }
 
   .book-info-overlay h3 {
-    font-size: 0.9rem;
-    margin-bottom: 0.15rem;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
   }
 
   .book-info-overlay p {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
   }
 
   h1 {
