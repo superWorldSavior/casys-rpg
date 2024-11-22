@@ -39,6 +39,10 @@ args = "Run Tests"
 task = "workflow.run"
 args = "Frontend Dev Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Vue Frontend"
+
 [[workflows.workflow]]
 name = "Flask Server"
 author = "agent"
@@ -139,6 +143,21 @@ task = "shell.exec"
 args = "cd frontend && npm run dev"
 waitForPort = 5173
 
+[[workflows.workflow]]
+name = "Vue Frontend"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd vue-frontend && npm run dev"
+waitForPort = 5174
+
 [deployment]
 run = ["sh", "-c", "python3 app.py"]
 
@@ -149,3 +168,7 @@ externalPort = 80
 [[ports]]
 localPort = 5173
 externalPort = 5173
+
+[[ports]]
+localPort = 5174
+externalPort = 3000
