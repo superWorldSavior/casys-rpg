@@ -27,21 +27,30 @@ const vuetify = createVuetify({
     themes: {
       light: {
         colors: {
-          primary: '#1a73e8',
-          secondary: '#5f6368',
-          accent: '#1a73e8',
+          primary: '#6E1187',
+          secondary: '#2B2B2B',
+          accent: '#A870B7',
+          surface: '#FBFBFB',
+          background: '#F7F7F7',
+          'cassis-gradient': 'linear-gradient(45deg, #6E1187, #A870B7)',
         },
       },
       dark: {
         colors: {
-          primary: '#8ab4f8',
-          secondary: '#9aa0a6',
-          accent: '#8ab4f8',
+          primary: '#6E1187',
+          secondary: '#2B2B2B',
+          accent: '#A870B7',
+          surface: '#1A1A1A',
+          background: '#111111',
+          'cassis-gradient': 'linear-gradient(45deg, #6E1187, #A870B7)',
         },
       },
     },
   },
 })
+
+// Appliquer la police Courier New globalement
+document.documentElement.style.setProperty('font-family', '"Courier New", monospace');
 
 function initApp() {
   const app = createApp(App)

@@ -2,9 +2,8 @@
   <div class="library">
     <div class="library-header">
       <template v-if="$route.path === '/'">
-        <h1>Mes favoris</h1>
-        <router-link to="/library" class="see-all-link">
-          Voir toute la bibliothèque
+        <router-link to="/library" class="title-link">
+          <h1>Mes favoris</h1>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 18l6-6-6-6"/>
           </svg>
@@ -88,21 +87,25 @@ onMounted(async () => {
   margin-bottom: 1.5rem;
 }
 
-.see-all-link {
+.title-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   text-decoration: none;
-  color: var(--accent-color);
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  color: inherit;
   transition: all 0.2s ease;
 }
 
-.favorites-link:hover {
-  background-color: var(--hover-background);
-  transform: translateY(-1px);
+.title-link:hover {
+  color: var(--accent-color);
+}
+
+.title-link svg {
+  transition: transform 0.2s ease;
+}
+
+.title-link:hover svg {
+  transform: translateX(4px);
 }
 
 .book-grid {
