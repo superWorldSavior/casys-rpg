@@ -42,20 +42,16 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 
 # Enable CORS with credentials support
-CORS(app,
-     resources={
-         r"/api/*": {
-             "origins": [
-                 "http://localhost:5174",
-                 "https://localhost:5174",
-                 "https://*.repl.co",
-                 "wss://*.repl.co"
-             ],
-             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-             "allow_headers": ["Content-Type", "Authorization"],
-             "supports_credentials": True
-         }
-     })
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:5174"],
+        "supports_credentials": True
+    }
+})
+
+# Register auth blueprint
+from auth_routes import auth_bp
+app.register_blueprint(auth_bp)
 
 
 

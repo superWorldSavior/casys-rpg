@@ -6,9 +6,24 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
 export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
+    baseURL: API_BASE_URL,
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+    }
 });
+
+// Add response interceptor for error handling
+apiClient.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response?.status === 401) {
+            // Redirect to login page if unauthorized
+            window.location.href = '/';
+        }
+        return Promise.reject(error);
+    }
+);
 
 export const useApiCall = <T>(
   apiFunction: () => Promise<T>,
