@@ -78,22 +78,32 @@ onMounted(async () => {
 
 <style scoped>
 .library {
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  padding: 1rem 0;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 480px) {
+  .book-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
 }
 
 .book-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease-in-out;
+  background: var(--card-background, white);
+  border-radius: 12px;
+  padding: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.2s ease-in-out;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .book-card:hover {
@@ -172,21 +182,38 @@ onMounted(async () => {
 
 .book-cover {
   width: 100%;
-  height: 200px;
+  aspect-ratio: 2/3;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 8px;
+  background-color: var(--placeholder-background, #f0f0f0);
 }
 
 .book-cover-placeholder {
   width: 100%;
-  height: 200px;
-  background: #f0f0f0;
+  aspect-ratio: 2/3;
+  background: var(--placeholder-background, #f0f0f0);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  color: #666;
-  border-radius: 4px;
+  font-size: 1.5rem;
+  color: var(--text-color-secondary, #666);
+  border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+  .book-info h3 {
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0.25rem;
+  }
+  
+  .book-info p {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+  
+  .progress-text {
+    font-size: 0.7rem;
+  }
 }
 
 .loading {
