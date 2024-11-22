@@ -229,13 +229,10 @@ def get_book(filename):
         }), 500
 
 
-# Redirect all non-API routes to Vue.js development server
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def catch_all(path):
-    if path.startswith('api/'):
-        return jsonify({"error": "Not found"}), 404
-    return redirect(f'http://localhost:5174/{path}')
+# Handle 404 errors for API routes
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Not found", "code": 404}), 404
 
 
 if __name__ == '__main__':
