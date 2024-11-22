@@ -15,12 +15,14 @@ export const useBooksStore = defineStore('books', () => {
   const error = ref<string | null>(null);
 
   async function fetchBooks() {
-    isLoading.value = true;
     try {
+      isLoading.value = true;
       const response = await apiClient.get('/books');
       books.value = response.data.books;
     } catch (err) {
+      console.error('Erreur fetchBooks:', err);
       error.value = handleApiError(err);
+      books.value = [];
     } finally {
       isLoading.value = false;
     }

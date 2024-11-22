@@ -13,13 +13,17 @@ export const useAuthStore = defineStore('auth', () => {
   const error = ref<string | null>(null);
 
   function login() {
-    // Simulation d'une connexion réussie
-    isAuthenticated.value = true;
-    user.value = {
-      id: '1',
-      email: 'user@example.com',
-      username: 'User'
-    };
+    try {
+      isAuthenticated.value = true;
+      user.value = {
+        id: '1',
+        email: 'user@example.com',
+        username: 'User'
+      };
+    } catch (err) {
+      error.value = 'Erreur lors de la connexion';
+      console.error('Erreur login:', err);
+    }
   }
 
   function logout() {

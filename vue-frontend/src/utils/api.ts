@@ -52,10 +52,15 @@ export const useApiCall = <T>(
 
 export const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
+    console.error('Erreur API:', error);
     if (error.response) {
       return error.response.data.message || 'Une erreur est survenue';
     }
+    if (error.request) {
+      return 'Impossible de contacter le serveur';
+    }
     return error.message;
   }
+  console.error('Erreur inattendue:', error);
   return 'Une erreur inattendue est survenue';
 };
