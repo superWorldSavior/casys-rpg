@@ -78,8 +78,19 @@ const toggleBookFavorite = () => {
 <style scoped>
 .book-detail {
   padding: 1rem;
-  max-width: 768px;
+  max-width: 1200px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .book-detail {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .book-header {
@@ -115,13 +126,21 @@ const toggleBookFavorite = () => {
 }
 
 .book-cover-wrapper {
-  position: relative;
+  position: sticky;
+  top: 1rem;
   width: 100%;
-  max-width: 300px;
-  margin: 0 auto 2rem;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 768px) {
+  .book-cover-wrapper {
+    position: relative;
+    top: 0;
+    max-width: 200px;
+    margin: 0 auto;
+  }
 }
 
 .book-cover,

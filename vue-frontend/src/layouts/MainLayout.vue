@@ -110,10 +110,16 @@ watch(() => route.path, (newPath) => {
   padding: 0.75rem 1rem;
   background-color: var(--header-background);
   border-bottom: 1px solid var(--border-color);
-  height: 56px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .header-left, .header-center, .header-right {
@@ -248,13 +254,14 @@ watch(() => route.path, (newPath) => {
   }
 
 :deep(.v-bottom-navigation) {
-  height: calc(64px + env(safe-area-inset-bottom)) !important;
+  height: calc(56px + env(safe-area-inset-bottom)) !important;
   padding-bottom: env(safe-area-inset-bottom) !important;
   position: fixed !important;
   bottom: 0 !important;
   left: 0 !important;
   right: 0 !important;
   z-index: 1000 !important;
+  border-top: 1px solid rgba(var(--v-border-color), 0.08) !important;
 }
 
 .nav-item {
