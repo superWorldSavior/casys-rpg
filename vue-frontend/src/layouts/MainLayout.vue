@@ -5,6 +5,9 @@
         <nav class="navigation">
           <router-link to="/library" class="nav-link">Bibliothèque</router-link>
           <router-link to="/reader" class="nav-link">Lecteur</router-link>
+          <button class="theme-toggle" @click="toggleTheme">
+            {{ theme === 'light' ? '🌙' : '☀️' }}
+          </button>
         </nav>
       </header>
     </template>
@@ -26,9 +29,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useThemeStore } from '../stores/theme'
 
 const route = useRoute()
+const themeStore = useThemeStore()
 const isLoginPage = computed(() => route.name === 'login')
+const theme = computed(() => themeStore.theme)
+const toggleTheme = () => themeStore.toggleTheme()
 </script>
 
 <style scoped>
@@ -40,8 +47,8 @@ const isLoginPage = computed(() => route.name === 'login')
 
 .app-header {
   padding: 1rem;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  background-color: var(--header-background);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .navigation {
@@ -72,6 +79,18 @@ const isLoginPage = computed(() => route.name === 'login')
 }
 
 .app-footer {
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-left: auto;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
   padding: 1rem;
   background-color: #f8f9fa;
   border-top: 1px solid #e9ecef;
