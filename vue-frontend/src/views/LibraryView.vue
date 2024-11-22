@@ -1,14 +1,6 @@
 <template>
   <div class="library">
-    <h1>casys rpg</h1>
-    <div class="filters">
-      <button 
-        :class="{ active: showOnlyFavorites }"
-        @click="showOnlyFavorites = !showOnlyFavorites"
-      >
-        {{ showOnlyFavorites ? 'Tous les livres' : 'Favoris' }}
-      </button>
-    </div>
+    <h1>Bibliothèque</h1>
     <div v-if="isLoading" class="loading">
       Chargement...
     </div>
@@ -17,25 +9,15 @@
     </div>
     <div v-else class="book-grid">
       <div v-for="book in displayedBooks" :key="book.id" class="book-card">
-        <div class="book-info">
-          <h3>{{ book.title }}</h3>
-          <p>{{ book.author }}</p>
-        </div>
-        <div class="book-card-header">
+        <div class="book-cover-container">
           <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" class="book-cover">
           <div v-else class="book-cover-placeholder">
             <span>{{ book.title[0] }}</span>
           </div>
-          <button 
-            class="favorite-btn"
-            :class="{ 'is-favorite': isFavorite(book.id) }"
-            @click="toggleFavorite(book.id)"
-            :title="isFavorite(book.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'"
-          >
-            <svg viewBox="0 0 24 24" width="24" height="24">
-              <path :fill="isFavorite(book.id) ? '#FFD700' : '#ccc'" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-            </svg>
-          </button>
+          <div class="book-info-overlay">
+            <h3>{{ book.title }}</h3>
+            <p>{{ book.author }}</p>
+          </div>
         </div>
         <div class="progress-indicator" v-if="getBookProgress(book.id)">
           <div class="progress-bar">
@@ -105,96 +87,29 @@ onMounted(async () => {
 }
 
 .book-card {
-  background: var(--card-background, white);
-  border-radius: 12px;
-  padding: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: all 0.2s ease-in-out;
+  position: relative;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  transition: all 0.2s ease-in-out;
 }
 
 .book-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.book-card-header {
+.book-cover-container {
   position: relative;
-}
-
-.favorite-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.favorite-btn:hover {
-  transform: scale(1.1);
-}
-
-.favorite-btn.is-favorite svg path {
-  fill: #FFD700;
-}
-
-.book-info {
-  margin-top: 1rem;
-}
-
-.progress-indicator {
-  margin-top: 0.5rem;
-}
-
-.progress-bar {
-  height: 4px;
-  background-color: #e9ecef;
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 0.25rem;
-}
-
-.progress-fill {
+  width: 100%;
   height: 100%;
-  background-color: var(--accent-color);
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  font-size: 0.8rem;
-  color: var(--text-color);
-}
-
-.filters {
-  margin-bottom: 1rem;
-}
-
-.filters button {
-  padding: 0.5rem 1rem;
-  border: 2px solid var(--accent-color);
-  background: transparent;
-  color: var(--accent-color);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filters button.active {
-  background: var(--accent-color);
-  color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .book-cover {
   width: 100%;
+  height: 100%;
   aspect-ratio: 2/3;
   object-fit: cover;
-  border-radius: 8px;
-  background-color: var(--placeholder-background, #f0f0f0);
 }
 
 .book-cover-placeholder {
@@ -206,23 +121,59 @@ onMounted(async () => {
   justify-content: center;
   font-size: 1.5rem;
   color: var(--text-color-secondary, #666);
-  border-radius: 8px;
 }
 
-@media (max-width: 480px) {
-  .book-info h3 {
-    font-size: 0.9rem;
-    margin: 0.5rem 0 0.25rem;
-  }
-  
-  .book-info p {
-    font-size: 0.8rem;
-    margin: 0;
-  }
-  
-  .progress-text {
-    font-size: 0.7rem;
-  }
+.book-info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  color: white;
+}
+
+.book-info-overlay h3 {
+  font-size: 1rem;
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+}
+
+.book-info-overlay p {
+  font-size: 0.875rem;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.progress-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem;
+  background: rgba(0,0,0,0.5);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.progress-bar {
+  height: 3px;
+  background-color: rgba(255,255,255,0.3);
+  border-radius: 1.5px;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: white;
+  text-align: right;
 }
 
 .loading {
