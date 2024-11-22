@@ -1,5 +1,5 @@
 from typing import Optional
-from flask import Flask, jsonify, send_from_directory, request, session
+from flask import Flask, jsonify, send_from_directory, request, session, redirect
 from flask_cors import CORS
 import os
 import mimetypes
@@ -36,16 +36,16 @@ pdf_processor = MuPDFProcessor(
 pdf_service = PDFService(processor=pdf_processor,
                          repository=pdf_repository)  # Tout connecter
 
-app = Flask(__name__, static_folder='frontend/dist')
+app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 
 # Enable CORS with credentials support
 CORS(app,
      resources={
          r"/api/*": {
-             "origins": ["http://localhost:5000", "https://*.repl.co"],
-             "methods": ["GET", "POST", "OPTIONS"],
-             "allow_headers": ["Content-Type"],
+             "origins": ["http://localhost:5174", "https://*.repl.co"],
+             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             "allow_headers": ["Content-Type", "Authorization"],
              "supports_credentials": True
          }
      })
@@ -229,14 +229,13 @@ def get_book(filename):
         }), 500
 
 
-# Serve static files or React app
+# Redirect all non-API routes to Vue.js development server
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def serve(path):
-    static_folder = app.static_folder
-    if path and os.path.exists(os.path.join(static_folder, path)):
-        return send_from_directory(static_folder, path)
-    return send_from_directory(static_folder, 'index.html')
+def catch_all(path):
+    if path.startswith('api/'):
+        return jsonify({"error": "Not found"}), 404
+    return redirect(f'http://localhost:5174/{path}')
 
 
 if __name__ == '__main__':
