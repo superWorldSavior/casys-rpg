@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { ref } from 'vue';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 

@@ -44,7 +44,7 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 # Enable CORS with credentials support
 CORS(app, resources={
     r"/api/*": {
-        "origins": ["http://localhost:5174"],
+        "origins": ["http://localhost:5174", "http://172.31.196.48:5174"],
         "supports_credentials": True
     }
 })
@@ -245,14 +245,16 @@ def get_book_cover(filename):
         # Utiliser MuPDF pour extraire la première page
         doc = fitz.open(pdf_path)
         page = doc[0]
-        pix = page.get_pixmap()
+        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
         
         # Convertir en PNG
         img_data = pix.tobytes("png")
         
+        from flask import send_file
         return send_file(
             io.BytesIO(img_data),
-            mimetype='image/png'
+            mimetype='image/png',
+            download_name=f"{filename}_cover.png"
         )
     except Exception as e:
         app.logger.error(f"Error getting book cover for {filename}: {e}")
