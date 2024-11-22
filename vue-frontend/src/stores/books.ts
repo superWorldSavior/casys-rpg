@@ -18,7 +18,10 @@ export const useBooksStore = defineStore('books', () => {
     try {
       isLoading.value = true;
       const response = await apiClient.get('/books');
-      books.value = response.data.books;
+      books.value = response.data.books.map((book: any) => ({
+        ...book,
+        cover_image: `/api/books/${book.filename}/cover`
+      }));
     } catch (err) {
       console.error('Erreur fetchBooks:', err);
       error.value = handleApiError(err);

@@ -1,6 +1,8 @@
 from typing import Optional
 from flask import Flask, jsonify, send_from_directory, request, session, redirect
 from flask_cors import CORS
+import io
+import fitz
 import os
 import mimetypes
 import traceback
@@ -226,6 +228,38 @@ def get_book(filename):
         return jsonify(metadata)
     except Exception as e:
         app.logger.error(f"Error retrieving book metadata for {filename}: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "code": 500
+        }), 500
+
+@app.route('/api/books/<filename>/cover')
+def get_book_cover(filename):
+    try:
+        # Récupérer la première page du PDF comme couverture
+        pdf_path = os.path.join(UPLOAD_FOLDER, filename)
+        if not os.path.exists(pdf_path):
+            return jsonify({
+                "status": "error",
+                "message": "PDF not found",
+                "code": 404
+            }), 404
+
+        # Utiliser MuPDF pour extraire la première page
+        doc = fitz.open(pdf_path)
+        page = doc[0]
+        pix = page.get_pixmap()
+        
+        # Convertir en PNG
+        img_data = pix.tobytes("png")
+        
+        return send_file(
+            io.BytesIO(img_data),
+            mimetype='image/png'
+        )
+    except Exception as e:
+        app.logger.error(f"Error getting book cover for {filename}: {e}")
         return jsonify({
             "status": "error",
             "message": str(e),
