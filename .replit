@@ -43,6 +43,10 @@ args = "Frontend Dev Server"
 task = "workflow.run"
 args = "Vue Frontend"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "React Native Dev"
+
 [[workflows.workflow]]
 name = "Flask Server"
 author = "agent"
@@ -158,6 +162,21 @@ task = "shell.exec"
 args = "cd vue-frontend && npm run dev"
 waitForPort = 5174
 
+[[workflows.workflow]]
+name = "React Native Dev"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npx expo start --web --port 19007"
+waitForPort = 19007
+
 [deployment]
 run = ["sh", "-c", "python3 app.py"]
 
@@ -172,3 +191,15 @@ externalPort = 5173
 [[ports]]
 localPort = 5174
 externalPort = 3000
+
+[[ports]]
+localPort = 8081
+externalPort = 8081
+
+[[ports]]
+localPort = 19006
+externalPort = 3001
+
+[[ports]]
+localPort = 19007
+externalPort = 3002

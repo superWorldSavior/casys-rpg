@@ -1,38 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@pages/*": ["src/pages/*"],
-      "@assets/*": ["src/assets/*"],
-      "@lib/*": ["src/lib/*"]
-    },
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "vue"],
-    "allowJs": true,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "vite.config.ts"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "compilerOptions": {},
+  "extends": "expo/tsconfig.base"
 }
