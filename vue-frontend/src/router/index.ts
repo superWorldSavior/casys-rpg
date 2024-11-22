@@ -4,6 +4,7 @@ import LibraryView from '../views/LibraryView.vue'
 import ReaderView from '../views/ReaderView.vue'
 import LoginView from '../views/LoginView.vue'
 import BookDetailView from '../views/BookDetailView.vue'
+import ChatView from '../views/ChatView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,12 @@ const router = createRouter({
       path: '/reader/:id?',
       component: ReaderView,
       name: 'reader',
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/chat',
+      component: ChatView,
+      name: 'chat',
       meta: { requiresAuth: true }
     },
     {
