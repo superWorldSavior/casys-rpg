@@ -1,75 +1,79 @@
 <template>
-  <div class="app-layout">
-    <template v-if="!isLoginPage">
-      <!-- Desktop Header -->
-      <header class="app-header">
-        <div class="header-left">
-          <router-link to="/" class="logo">casys rpg</router-link>
-        </div>
-        <div class="header-center">
-          <button class="credits-button">
-            Acheter des crédits
-          </button>
-        </div>
-        <div class="header-right">
-          <button class="search-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-          </button>
-          <button class="theme-toggle desktop-only" @click="toggleTheme">
-            {{ theme === 'light' ? '🌙' : '☀️' }}
-          </button>
-        </div>
-      </header>
-    </template>
-    
-    <main class="app-main" :class="{ 'no-padding': isLoginPage }">
-      <router-view></router-view>
-    </main>
+  <v-app>
+    <div class="app-layout">
+      <template v-if="!isLoginPage">
+        <!-- Desktop Header -->
+        <header class="app-header">
+          <div class="header-left">
+            <router-link to="/" class="logo">casys rpg</router-link>
+          </div>
+          <div class="header-center">
+            <button class="credits-button">
+              Acheter des crédits
+            </button>
+          </div>
+          <div class="header-right">
+            <button class="search-button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </button>
+            <button class="theme-toggle desktop-only" @click="toggleTheme">
+              {{ theme === 'light' ? '🌙' : '☀️' }}
+            </button>
+          </div>
+        </header>
+      </template>
+      
+      <v-main>
+        <main class="app-main" :class="{ 'no-padding': isLoginPage }">
+          <router-view></router-view>
+        </main>
+      </v-main>
 
-    <template v-if="!isLoginPage">
-      <!-- Mobile Bottom Navigation -->
-      <v-bottom-navigation
-        v-model="activeTab"
-        grow
-        class="mobile-nav"
-      >
-        <v-btn
-          :to="{ path: '/' }"
-          value="home"
+      <template v-if="!isLoginPage">
+        <!-- Mobile Bottom Navigation -->
+        <v-bottom-navigation
+          v-model="activeTab"
+          grow
+          class="mobile-nav"
         >
-          <v-icon>mdi-home</v-icon>
-          <span>Accueil</span>
-        </v-btn>
+          <v-btn
+            :to="{ path: '/' }"
+            value="home"
+          >
+            <v-icon>mdi-home</v-icon>
+            <span>Accueil</span>
+          </v-btn>
 
-        <v-btn
-          :to="{ path: '/library' }"
-          value="library"
-        >
-          <v-icon>mdi-book-open-variant</v-icon>
-          <span>Bibliothèque</span>
-        </v-btn>
+          <v-btn
+            :to="{ path: '/library' }"
+            value="library"
+          >
+            <v-icon>mdi-book-open-variant</v-icon>
+            <span>Bibliothèque</span>
+          </v-btn>
 
-        <v-btn
-          :to="{ path: '/browse' }"
-          value="browse"
-        >
-          <v-icon>mdi-magnify</v-icon>
-          <span>Parcourir</span>
-        </v-btn>
+          <v-btn
+            :to="{ path: '/browse' }"
+            value="browse"
+          >
+            <v-icon>mdi-magnify</v-icon>
+            <span>Parcourir</span>
+          </v-btn>
 
-        <v-btn
-          :to="{ path: '/profile' }"
-          value="profile"
-        >
-          <v-icon>mdi-account</v-icon>
-          <span>Profil</span>
-        </v-btn>
-      </v-bottom-navigation>
-    </template>
-  </div>
+          <v-btn
+            :to="{ path: '/profile' }"
+            value="profile"
+          >
+            <v-icon>mdi-account</v-icon>
+            <span>Profil</span>
+          </v-btn>
+        </v-bottom-navigation>
+      </template>
+    </div>
+  </v-app>
 </template>
 
 <script setup lang="ts">
