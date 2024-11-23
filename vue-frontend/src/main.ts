@@ -9,7 +9,7 @@ import router from './router'
 import './style.css'
 
 // Vuetify
-import 'vuetify/styles/main.css'
+import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 
 const vuetify = createVuetify({

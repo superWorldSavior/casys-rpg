@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ChatInterface } from '@/components/features/chat'
+import ChatInterface from '@/components/chat/ChatInterface.vue'
 import { useChatStore } from '@/stores/chat'
 
 const chatStore = useChatStore()

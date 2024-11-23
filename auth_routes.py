@@ -65,7 +65,7 @@ def register():
         'age': age,
         'role': 'user'
     }
-
+    
     users[email] = user
     session_user = {k: v for k, v in user.items() if k != 'password'}
     session['user'] = session_user
@@ -77,82 +77,81 @@ def register():
 
 @auth_bp.route('/api/auth/login', methods=['POST'])
 def login():
-    # Simuler une connexion réussie
-    session['user'] = {
-        'id': 'temp_user',
-        'email': 'user@example.com',
-        'username': 'Utilisateur',
-        'role': 'user'
-    }
-    return jsonify({
-        'message': 'Login successful',
-        'user': session['user']
-    })
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
-# Google OAuth routes temporairement désactivées
-# @auth_bp.route('/api/auth/google')
-# def google_login():
-#     google_provider_cfg = get_google_provider_cfg()
-#     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+    if not email or not password:
+        return jsonify({'message': 'Missing email or password'}), 400
+
+    user = users.get(email)
+    if user and check_password_hash(user['password'], password):
+        session_user = {k: v for k, v in user.items() if k != 'password'}
+        session['user'] = session_user
+        return jsonify({
+            'message': 'Login successful',
+            'user': session_user
+        })
+
+    return jsonify({'message': 'Invalid email or password'}), 401
+
+@auth_bp.route('/api/auth/google')
+def google_login():
+    google_provider_cfg = get_google_provider_cfg()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
     
-#     # Utiliser l'URL complète de Replit
-#     redirect_uri = "https://solo-rpg-ai-narrator.replit.app/api/auth/google/callback"
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=request.base_url + "/callback",
+        scope=["openid", "email", "profile"],
+    )
+    return redirect(request_uri)
+
+@auth_bp.route('/api/auth/google/callback')
+def callback():
+    code = request.args.get("code")
+    google_provider_cfg = get_google_provider_cfg()
+    token_endpoint = google_provider_cfg["token_endpoint"]
     
-#     request_uri = client.prepare_request_uri(
-#         authorization_endpoint,
-#         redirect_uri=redirect_uri,
-#         scope=["openid", "email", "profile"],
-#     )
-#     return redirect(request_uri)
+    token_url, headers, body = client.prepare_token_request(
+        token_endpoint,
+        authorization_response=request.url,
+        redirect_url=request.base_url,
+        code=code
+    )
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(os.environ.get('GOOGLE_CLIENT_ID'), os.environ.get('GOOGLE_CLIENT_SECRET')),
+    )
 
-# @auth_bp.route('/api/auth/google/callback')
-# def callback():
-#     code = request.args.get("code")
-#     google_provider_cfg = get_google_provider_cfg()
-#     token_endpoint = google_provider_cfg["token_endpoint"]
-
-#     # Utiliser l'URL complète de Replit pour le callback
-#     redirect_url = "https://solo-rpg-ai-narrator.replit.app/api/auth/google/callback"
+    client.parse_request_body_response(json.dumps(token_response.json()))
     
-#     token_url, headers, body = client.prepare_token_request(
-#         token_endpoint,
-#         authorization_response=request.base_url.replace('http://localhost:5000', 'https://solo-rpg-ai-narrator.replit.app') + '?' + request.query_string.decode(),
-#         redirect_url=redirect_url,
-#         code=code
-#     )
-#     token_response = requests.post(
-#         token_url,
-#         headers=headers,
-#         data=body,
-#         auth=(os.environ.get('GOOGLE_CLIENT_ID'), os.environ.get('GOOGLE_CLIENT_SECRET')),
-#     )
-
-#     client.parse_request_body_response(json.dumps(token_response.json()))
-
-#     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
-#     uri, headers, body = client.add_token(userinfo_endpoint)
-#     userinfo_response = requests.get(uri, headers=headers, data=body)
-
-#     if userinfo_response.json().get("email_verified"):
-#         unique_id = userinfo_response.json()["sub"]
-#         user_email = userinfo_response.json()["email"]
-#         username = userinfo_response.json()["given_name"]
-#         picture = userinfo_response.json()["picture"]
-
-#         # Create or update user
-#         if user_email not in users:
-#             users[user_email] = {
-#                 'id': unique_id,
-#                 'email': user_email,
-#                 'username': username,
-#                 'picture': picture,
-#                 'role': 'user'
-#             }
-
-#         session_user = users[user_email]
-#         session['user'] = session_user
-#         return redirect('https://solo-rpg-ai-narrator.replit.app/')
-#     return "User email not available or not verified", 400
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(uri, headers=headers, data=body)
+    
+    if userinfo_response.json().get("email_verified"):
+        unique_id = userinfo_response.json()["sub"]
+        user_email = userinfo_response.json()["email"]
+        username = userinfo_response.json()["given_name"]
+        picture = userinfo_response.json()["picture"]
+        
+        # Create or update user
+        if user_email not in users:
+            users[user_email] = {
+                'id': unique_id,
+                'email': user_email,
+                'username': username,
+                'picture': picture,
+                'role': 'user'
+            }
+        
+        session_user = users[user_email]
+        session['user'] = session_user
+        return redirect('/')
+    return "User email not available or not verified", 400
 
 @auth_bp.route('/api/auth/status')
 def auth_status():

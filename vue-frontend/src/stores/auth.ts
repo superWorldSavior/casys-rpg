@@ -1,30 +1,40 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { User } from '@/types/auth';
+
+interface User {
+  id: string;
+  email: string;
+  username: string;
+}
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref(false);
-  const currentUser = ref<User | null>(null);
+  const user = ref<User | null>(null);
+  const error = ref<string | null>(null);
 
-  const login = () => {
-    const user = {
-      id: '1',
-      name: 'Utilisateur',
-      email: 'user@example.com'
-    };
-    
-    isAuthenticated.value = true;
-    currentUser.value = user;
-  };
+  function login() {
+    try {
+      isAuthenticated.value = true;
+      user.value = {
+        id: '1',
+        email: 'user@example.com',
+        username: 'User'
+      };
+    } catch (err) {
+      error.value = 'Erreur lors de la connexion';
+      console.error('Erreur login:', err);
+    }
+  }
 
-  const logout = () => {
+  function logout() {
     isAuthenticated.value = false;
-    currentUser.value = null;
-  };
+    user.value = null;
+  }
 
   return {
     isAuthenticated,
-    currentUser,
+    user,
+    error,
     login,
     logout
   };
