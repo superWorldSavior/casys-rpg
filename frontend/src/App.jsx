@@ -27,13 +27,21 @@ const LoadingFallback = () => (
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
 
+  console.log('ProtectedRoute - Auth state:', { user, loading, path: location.pathname });
+
+  if (loading) {
+    return <LoadingFallback />;
+  }
+
   if (!user) {
+    console.log('User not authenticated, redirecting to login');
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  console.log('User authenticated, rendering protected content');
   return children;
 };
 

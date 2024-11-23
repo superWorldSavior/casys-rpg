@@ -15,6 +15,7 @@ const publicRoutes = [
     path: '/',
     element: <Navigate to="/login" replace />,
   },
+  // Add other public routes here
 ];
 
 const protectedRoutes = [

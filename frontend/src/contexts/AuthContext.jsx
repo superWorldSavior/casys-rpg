@@ -7,22 +7,39 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for existing session
+    console.log('Initializing authentication state...');
     const storedUser = localStorage.getItem('user');
+    
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      console.log('Found stored user session');
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        console.log('User session restored:', parsedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('user');
+      }
+    } else {
+      console.log('No stored user session found');
     }
+    
     setLoading(false);
+    console.log('Authentication state initialized');
   }, []);
 
   const login = (userData) => {
+    console.log('Logging in user:', userData);
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
+    console.log('User logged in successfully');
   };
 
   const logout = () => {
+    console.log('Logging out user');
     setUser(null);
     localStorage.removeItem('user');
+    console.log('User logged out successfully');
   };
 
   if (loading) {
