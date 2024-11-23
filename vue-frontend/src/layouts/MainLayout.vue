@@ -84,7 +84,10 @@ import { useThemeStore } from '../stores/theme'
 const route = useRoute()
 const themeStore = useThemeStore()
 const isLoginPage = computed(() => route.name === 'login')
-const isFullscreenPage = computed(() => ['chat', 'reader'].includes(route.name as string))
+const isFullscreenPage = computed(() => {
+  const fullscreenRoutes = ['chat', 'reader']
+  return fullscreenRoutes.includes(route.name as string)
+})
 const theme = computed(() => themeStore.theme)
 const toggleTheme = () => themeStore.toggleTheme()
 
