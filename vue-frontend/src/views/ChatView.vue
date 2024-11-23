@@ -17,16 +17,16 @@
       </v-btn>
       
       <v-btn
-        icon="mdi-history"
+        icon="mdi-file-document"
         size="large"
-        class="float-btn history-btn"
+        class="float-btn adventure-sheet-btn"
         @click="showHistory = !showHistory"
         v-touch="{
           tap: () => showHistory = !showHistory
         }"
       >
         <v-tooltip activator="parent" location="left">
-          {{ showHistory ? 'Masquer l\'historique' : 'Afficher l\'historique' }}
+          {{ showHistory ? 'Masquer la feuille d\'aventure' : 'Afficher la feuille d\'aventure' }}
         </v-tooltip>
       </v-btn>
     </div>
@@ -49,9 +49,9 @@
             :key="index"
             :class="{ 'user-message': message.isUser }"
           >
-            <v-list-item-text>
+            <v-list-item-title>
               {{ message.content }}
-            </v-list-item-text>
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ChatInterface from '@/components/ChatInterface.vue'
 import { useChatStore } from '@/stores/chat'
 
