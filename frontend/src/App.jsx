@@ -1,115 +1,36 @@
-import React, { Suspense } from 'react';
-import { 
-  createBrowserRouter,
-  RouterProvider,
-  createRoutesFromElements,
-  Route,
-  Navigate,
-  useLocation
-} from 'react-router-dom';
-import { CircularProgress, Container, ThemeProvider } from '@mui/material';
-import ErrorBoundary from './components/common/ErrorBoundary';
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material';
+import { Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import { casysTheme } from './theme/casysTheme';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { publicRoutes, protectedRoutes } from './router/config';
+import LoginPage from './pages/Auth/LoginPage';
+import HomePage from './pages/Home';
+import ReaderPage from './pages/Reader';
+import { ProtectedRoute } from './router/ProtectedRoute';
 
-// Loading Component
-const LoadingFallback = () => (
-  <Container sx={{ 
-    mt: 4, 
-    display: 'flex', 
-    justifyContent: 'center', 
-    alignItems: 'center' 
-  }}>
-    <CircularProgress />
-  </Container>
-);
-
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  const location = useLocation();
-
-  console.log('ProtectedRoute - Auth state:', { user, loading, path: location.pathname });
-
-  if (loading) {
-    return <LoadingFallback />;
-  }
-
-  if (!user) {
-    console.log('User not authenticated, redirecting to login');
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  console.log('User authenticated, rendering protected content');
-  return children;
-};
-
-// Create router with future flags
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      {/* Public Routes */}
-      {publicRoutes.map((route) => (
-        <Route
-          key={route.path}
-          path={route.path}
-          element={
-            <ErrorBoundary fallbackMessage="Une erreur s'est produite">
-              <Suspense fallback={<LoadingFallback />}>
-                {route.element}
-              </Suspense>
-            </ErrorBoundary>
-          }
-        />
-      ))}
-
-      {/* Protected Routes */}
-      {protectedRoutes.map((route) => (
-        <Route
-          key={route.path}
-          path={route.path}
-          element={
-            <ErrorBoundary fallbackMessage="Une erreur s'est produite">
-              <ProtectedRoute>
-                <Suspense fallback={<LoadingFallback />}>
-                  {route.element}
-                </Suspense>
-              </ProtectedRoute>
-            </ErrorBoundary>
-          }
-        >
-          {route.children?.map((childRoute) => (
-            <Route
-              key={childRoute.path || 'index'}
-              index={childRoute.index}
-              path={childRoute.path}
-              element={
-                <ErrorBoundary fallbackMessage="Une erreur s'est produite">
-                  <Suspense fallback={<LoadingFallback />}>
-                    {childRoute.element}
-                  </Suspense>
-                </ErrorBoundary>
-              }
-            />
-          ))}
-        </Route>
-      ))}
-
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </>
-  ),
+const router = createBrowserRouter([
   {
-    future: {
-      v7_startTransition: true,
-      v7_relativeSplatPath: true,
-      v7_fetcherPersist: true,
-      v7_normalizeFormMethod: true,
-      v7_partialHydration: true,
-      v7_skipActionErrorRevalidation: true
-    }
+    path: '/',
+    element: <Navigate to="/login" replace />
+  },
+  {
+    path: '/login',
+    element: <LoginPage />
+  },
+  {
+    path: '/home',
+    element: <ProtectedRoute><HomePage /></ProtectedRoute>
+  },
+  {
+    path: '/reader/:bookId',
+    element: <ProtectedRoute><ReaderPage /></ProtectedRoute>
   }
-);
+], {
+  future: {
+    v7_startTransition: true
+  }
+});
 
 function App() {
   return (
