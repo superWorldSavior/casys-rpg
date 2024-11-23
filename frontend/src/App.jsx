@@ -4,16 +4,14 @@ import {
   RouterProvider,
   createRoutesFromElements,
   Route,
-  Navigate
+  Navigate,
+  useLocation
 } from 'react-router-dom';
 import { CircularProgress, Container, ThemeProvider } from '@mui/material';
-import MainLayout from './layouts/MainLayout';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import { casysTheme } from './theme/casysTheme';
-
-// Lazy load pages
-const HomePage = React.lazy(() => import('./pages/Home'));
-const ReaderPage = React.lazy(() => import('./pages/Reader'));
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { publicRoutes, protectedRoutes } from './router/config';
 
 // Loading Component
 const LoadingFallback = () => (
@@ -27,39 +25,71 @@ const LoadingFallback = () => (
   </Container>
 );
 
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+};
+
 // Create router with future flags
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path="/"
-      element={
-        <ErrorBoundary fallbackMessage="An error occurred in the application layout">
-          <MainLayout />
-        </ErrorBoundary>
-      }
-    >
-      <Route
-        index
-        element={
-          <ErrorBoundary fallbackMessage="An error occurred while loading the library">
-            <Suspense fallback={<LoadingFallback />}>
-              <HomePage />
-            </Suspense>
-          </ErrorBoundary>
-        }
-      />
-      <Route
-        path="reader/:bookId"
-        element={
-          <ErrorBoundary fallbackMessage="An error occurred while loading the reader">
-            <Suspense fallback={<LoadingFallback />}>
-              <ReaderPage />
-            </Suspense>
-          </ErrorBoundary>
-        }
-      />
+    <>
+      {/* Public Routes */}
+      {publicRoutes.map((route) => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={
+            <ErrorBoundary fallbackMessage="Une erreur s'est produite">
+              <Suspense fallback={<LoadingFallback />}>
+                {route.element}
+              </Suspense>
+            </ErrorBoundary>
+          }
+        />
+      ))}
+
+      {/* Protected Routes */}
+      {protectedRoutes.map((route) => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={
+            <ErrorBoundary fallbackMessage="Une erreur s'est produite">
+              <ProtectedRoute>
+                <Suspense fallback={<LoadingFallback />}>
+                  {route.element}
+                </Suspense>
+              </ProtectedRoute>
+            </ErrorBoundary>
+          }
+        >
+          {route.children?.map((childRoute) => (
+            <Route
+              key={childRoute.path || 'index'}
+              index={childRoute.index}
+              path={childRoute.path}
+              element={
+                <ErrorBoundary fallbackMessage="Une erreur s'est produite">
+                  <Suspense fallback={<LoadingFallback />}>
+                    {childRoute.element}
+                  </Suspense>
+                </ErrorBoundary>
+              }
+            />
+          ))}
+        </Route>
+      ))}
+
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Route>
+    </>
   ),
   {
     future: {
@@ -76,7 +106,9 @@ const router = createBrowserRouter(
 function App() {
   return (
     <ThemeProvider theme={casysTheme}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

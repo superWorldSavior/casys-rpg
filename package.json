@@ -4,6 +4,7 @@
   "main": "index.js",
   "dependencies": {
     "@vite-pwa/assets-generator": "^0.2.6",
+    "@vitejs/plugin-react": "^4.3.3",
     "abab": "^2.0.6",
     "abbrev": "^1.1.1",
     "abort-controller": "^3.0.0",

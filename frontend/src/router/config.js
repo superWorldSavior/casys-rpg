@@ -1,16 +1,33 @@
-"""React Router configuration."""
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import MainLayout from '../layouts/MainLayout';
+import LoginPage from '../pages/Auth/LoginPage';
+import { lazy } from 'react';
 
-// Enable v7_startTransition flag
-const routerOptions = {
-  future: {
-    v7_startTransition: true,
+const HomePage = lazy(() => import('../pages/Home'));
+const ReaderPage = lazy(() => import('../pages/Reader'));
+
+const publicRoutes = [
+  {
+    path: '/login',
+    element: <LoginPage />,
   },
-};
+];
 
-export const router = createBrowserRouter(
-  [
-    // Your routes here
-  ],
-  routerOptions
-);
+const protectedRoutes = [
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: 'reader/:bookId',
+        element: <ReaderPage />,
+      },
+    ],
+  },
+];
+
+export { publicRoutes, protectedRoutes };
