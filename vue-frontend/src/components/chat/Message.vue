@@ -17,30 +17,28 @@ const props = defineProps<{
 
 <style scoped>
 .message {
-  padding: 0.5rem 1rem;
-  margin: 0;
-  border-radius: 0;
-  background: none;
-  max-width: 100%;
-  box-shadow: none;
+  padding: 0.75rem;
+  margin: 0.25rem 0;
+  border-radius: 0.5rem;
+  background-color: #f0f0f0;
+  max-width: 80%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user-message {
-  margin-left: 0;
-  background: none;
-  font-style: italic;
-  color: #666;
+  margin-left: auto;
+  background-color: #e3f2fd;
 }
 
 .message-content {
-  font-family: 'Courier New', monospace;
-  line-height: 1.6;
-  font-size: 1.1rem;
-  white-space: pre-wrap;
   margin: 0;
+  white-space: pre-wrap;
 }
 
 .message-timestamp {
-  display: none;
+  display: block;
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
 }
 </style>
