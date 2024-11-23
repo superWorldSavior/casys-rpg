@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useParams } from 'react-router-dom';
 import TextDisplay from '../../components/features/reader/TextDisplay';
 import NavigationControls from '../../components/features/reader/NavigationControls';
@@ -74,11 +75,31 @@ function ReaderPage() {
     );
   }
 
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0.5,
+    triggerOnce: false
+  });
+
+  const debouncedScroll = useCallback((e) => {
+    if (e.target.scrollTop === 0) {
+      // At the top - load previous content if available
+      if (currentSection > 0) {
+        setCurrentSection(prev => prev - 1);
+      }
+    }
+  }, [currentSection]);
+
   return (
-    <div className="row justify-content-center">
-      <div className="col-md-8">
-        <div className="card">
-          <div className="card-body">
+    <div className="row justify-content-center m-0">
+      <div className="col-12 col-md-8 p-0">
+        <div className="card border-0 rounded-0 h-100">
+          <div className="card-body px-2 py-1"
+               style={{ 
+                 height: '100vh', 
+                 overflowY: 'auto',
+                 WebkitOverflowScrolling: 'touch'
+               }}
+               onScroll={debouncedScroll}>
             <TextDisplay
               textContent={textContent}
               currentSection={currentSection}

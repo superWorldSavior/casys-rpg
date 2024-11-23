@@ -29,24 +29,48 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\./i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
-              networkTimeoutSeconds: 10,
+              networkTimeoutSeconds: 5,
               expiration: {
-                maxEntries: 100,
+                maxEntries: 50,
                 maxAgeSeconds: 24 * 60 * 60 // 24 hours
               },
               cacheableResponse: {
                 statuses: [0, 200]
               }
             }
+          },
+          {
+            urlPattern: /\.(png|jpg|jpeg|svg|gif)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-cache',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 7 * 24 * 60 * 60 // 7 days
+              }
+            }
+          },
+          {
+            urlPattern: /\.(woff2|woff|ttf)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'font-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+              }
+            }
           }
-        ]
+        ],
+        skipWaiting: true,
+        clientsClaim: true
       }
     })
   ],
@@ -64,13 +88,15 @@ export default defineConfig({
     outDir: path.resolve(__dirname, 'dist'),
     assetsDir: 'assets',
     emptyOutDir: true,
-    sourcemap: process.env.NODE_ENV === 'development',
+    sourcemap: false,
     manifest: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom'],
-          'mui': ['@mui/material', '@emotion/react', '@emotion/styled'],
+          'vendor': ['react', 'react-dom'],
+          'router': ['react-router-dom'],
+          'mui': ['@mui/material'],
+          'mui-deps': ['@emotion/react', '@emotion/styled'],
         }
       }
     },
@@ -78,10 +104,17 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: process.env.NODE_ENV === 'production',
-        drop_debugger: true
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        passes: 2
+      },
+      mangle: {
+        safari10: true
       }
-    }
+    },
+    cssMinify: true,
+    cssCodeSplit: true
   },
   base: '/',
   optimizeDeps: {
