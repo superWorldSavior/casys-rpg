@@ -28,4 +28,5 @@ dependencies = [
     "oauthlib>=3.2.2",
     "pyopenssl>=24.2.1",
     "flask-sock>=0.7.0",
+    "fitz>=0.0.1.dev2",
 ]
