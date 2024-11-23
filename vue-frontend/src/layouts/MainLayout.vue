@@ -2,7 +2,7 @@
   <v-app>
     <v-layout>
       <div class="app-layout">
-      <template v-if="!isLoginPage">
+      <template v-if="!isLoginPage && !isFullscreenPage">
         <!-- Desktop Header -->
         <header class="app-header">
           <div class="header-left">
@@ -31,7 +31,7 @@
         </main>
       </v-main>
 
-      <template v-if="!isLoginPage">
+      <template v-if="!isLoginPage && !isFullscreenPage">
         <!-- Mobile Bottom Navigation -->
         <v-bottom-navigation
           v-model="activeTab"
@@ -84,6 +84,7 @@ import { useThemeStore } from '../stores/theme'
 const route = useRoute()
 const themeStore = useThemeStore()
 const isLoginPage = computed(() => route.name === 'login')
+const isFullscreenPage = computed(() => ['chat', 'reader'].includes(route.name as string))
 const theme = computed(() => themeStore.theme)
 const toggleTheme = () => themeStore.toggleTheme()
 
