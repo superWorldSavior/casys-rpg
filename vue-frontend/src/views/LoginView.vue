@@ -3,29 +3,13 @@
     <div class="login-card">
       <h1 class="title">RPG AI Narrator</h1>
       <p class="welcome-text">Bienvenue dans votre compagnon de jeu de rôle</p>
-      
-      <button class="login-btn" @click="handleLogin">
-        Se connecter
-      </button>
+      <LoginForm />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
-
-const router = useRouter()
-const authStore = useAuthStore()
-
-const handleLogin = () => {
-  try {
-    authStore.login();
-    router.push('/library');
-  } catch (err) {
-    console.error('Erreur lors de la connexion:', err);
-  }
-}
+import LoginForm from '@/components/features/auth/LoginForm.vue'
 </script>
 
 <style scoped>
