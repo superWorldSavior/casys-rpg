@@ -1739,6 +1739,12 @@ wheels = [
 ]
 
 [[package]]
+name = "pytils"
+version = "0.4.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ad/95/2b45cef6ffe18cbda05266f9959601df3321c66cd11ba41ab534dda67951/pytils-0.4.1.tar.gz", hash = "sha256:aa109b1bc0ec4bdb7c9768520110348d8aeb0706600e6cf641272e6850e26eab", size = 99144 }
+
+[[package]]
 name = "pytz"
 version = "2024.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1803,6 +1809,7 @@ dependencies = [
     { name = "reportlab" },
     { name = "requests" },
     { name = "tenacity" },
+    { name = "tools" },
     { name = "werkzeug" },
 ]
 
@@ -1832,6 +1839,7 @@ requires-dist = [
     { name = "reportlab", specifier = ">=4.2.5" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "tenacity", specifier = ">=9.0.0" },
+    { name = "tools" },
     { name = "werkzeug" },
 ]
 
@@ -2066,6 +2074,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/cd/94/91fccdb4b81106424
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b6/cb/b86984bed139586d01532a587464b5805f12e397594f19f931c4c2fbfa61/tenacity-9.0.0-py3-none-any.whl", hash = "sha256:93de0c98785b27fcf659856aa9f54bfbd399e29969b0621bc7f762bd441b4539", size = 28169 },
 ]
+
+[[package]]
+name = "tools"
+version = "0.1.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "lxml" },
+    { name = "pytils" },
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/de/20/2a2dddb083fd0ce56b453cf016768b2c49f3c0194090500f78865b7d110c/tools-0.1.9.tar.gz", hash = "sha256:7b7f998462cf5b02635fba76cc7cdb3653468aa46ff074b979dbecdb2a2fb014", size = 34445 }
 
 [[package]]
 name = "tqdm"

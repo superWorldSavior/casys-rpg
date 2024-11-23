@@ -216,7 +216,7 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd frontend && npm run preview -- --host 0.0.0.0"
-waitForPort = 4174
+waitForPort = 4173
 
 [[workflows.workflow]]
 name = "Frontend Build"
@@ -240,6 +240,10 @@ localPort = 3000
 externalPort = 3003
 
 [[ports]]
+localPort = 4173
+externalPort = 5000
+
+[[ports]]
 localPort = 4174
 externalPort = 4200
 
@@ -250,6 +254,7 @@ externalPort = 80
 [[ports]]
 localPort = 5173
 externalPort = 5173
+exposeLocalhost = true
 
 [[ports]]
 localPort = 5174
