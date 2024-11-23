@@ -23,20 +23,20 @@ const router = createRouter({
       path: '/',
       component: LibraryView,
       name: 'home',
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/books/:id',
       component: BookDetailView,
       name: 'book-detail',
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/reader/:id?',
       component: ChatView,
       name: 'reader',
       props: true,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/:pathMatch(.*)*',
@@ -45,16 +45,9 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, _from, next) => {
-  const authStore = useAuthStore()
-
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'login' })
-  } else if (to.name === 'login' && authStore.isAuthenticated) {
-    next({ name: 'library' })
-  } else {
-    next()
-  }
+// Commenté pour simplifier l'authentification
+router.beforeEach((_to, _from, next) => {
+  next()
 })
 
 export default router

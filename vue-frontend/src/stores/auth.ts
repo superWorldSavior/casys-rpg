@@ -8,8 +8,13 @@ interface User {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const isAuthenticated = ref(false);
-  const user = ref<User | null>(null);
+  // Authentification simplifiée : toujours authentifié
+  const isAuthenticated = ref(true);
+  const user = ref<User>({
+    id: '1',
+    email: 'user@example.com',
+    username: 'User'
+  });
   const error = ref<string | null>(null);
 
   function login() {
