@@ -77,24 +77,21 @@ def register():
 
 @auth_bp.route('/api/auth/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    # Simplified authentication - creates a default user session
+    default_user = {
+        'id': 'default',
+        'email': 'user@example.com',
+        'username': 'Default User',
+        'role': 'user'
+    }
+    session['user'] = default_user
+    return jsonify({
+        'message': 'Login successful',
+        'user': default_user
+    })
 
-    if not email or not password:
-        return jsonify({'message': 'Missing email or password'}), 400
-
-    user = users.get(email)
-    if user and check_password_hash(user['password'], password):
-        session_user = {k: v for k, v in user.items() if k != 'password'}
-        session['user'] = session_user
-        return jsonify({
-            'message': 'Login successful',
-            'user': session_user
-        })
-
-    return jsonify({'message': 'Invalid email or password'}), 401
-
+# Google Authentication routes commented out for simplified version
+"""
 @auth_bp.route('/api/auth/google')
 def google_login():
     google_provider_cfg = get_google_provider_cfg()
@@ -152,6 +149,7 @@ def callback():
         session['user'] = session_user
         return redirect('/')
     return "User email not available or not verified", 400
+"""
 
 @auth_bp.route('/api/auth/status')
 def auth_status():
