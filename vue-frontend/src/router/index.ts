@@ -1,7 +1,11 @@
+// Core imports
 import { createRouter, createWebHistory } from 'vue-router'
+
+// Store imports
 import { useAuthStore } from '../stores/auth'
+
+// View imports
 import LibraryView from '../views/LibraryView.vue'
-import ReaderView from '../views/ReaderView.vue'
 import LoginView from '../views/LoginView.vue'
 import BookDetailView from '../views/BookDetailView.vue'
 import ChatView from '../views/ChatView.vue'
@@ -22,12 +26,6 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/library',
-      component: LibraryView,
-      name: 'library',
-      meta: { requiresAuth: true }
-    },
-    {
       path: '/books/:id',
       component: BookDetailView,
       name: 'book-detail',
@@ -38,12 +36,6 @@ const router = createRouter({
       component: ChatView,
       name: 'reader',
       props: true,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/chat',
-      component: ChatView,
-      name: 'chat',
       meta: { requiresAuth: true }
     },
     {
