@@ -29,33 +29,41 @@ const handleSpeedChange = (event: Event) => {
 
 <style scoped>
 .chat-controls {
-  padding: 1rem;
+  padding: 0.5rem;
   border-top: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  background-color: #f8f9fa;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
 }
 
 .speed-control {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: #666;
 }
 
 input[type="range"] {
   flex: 1;
-}
-
-button {
-  padding: 0.5rem;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
+  height: 2px;
+  background-color: #ccc;
+  -webkit-appearance: none;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #d32f2f;
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]:focus {
+  outline: none;
 }
 </style>

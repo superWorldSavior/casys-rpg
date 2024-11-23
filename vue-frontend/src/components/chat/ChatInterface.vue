@@ -18,29 +18,24 @@ import ChatControls from './ChatControls.vue'
 
 <style scoped>
 .chat-wrapper {
-  position: relative;
   width: 100%;
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
+  flex-direction: column;
 }
 
 .chat-container {
   width: 100%;
-  max-width: 800px;
-  height: calc(100vh - 2rem);
-  position: relative;
+  height: 100%;
 }
 
 .chat-interface {
   height: 100%;
+  width: 100%;
+  border-radius: 0;
+  background-color: #f8f9fa;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  border-radius: 8px;
   overflow: hidden;
-  position: relative;
 }
 </style>

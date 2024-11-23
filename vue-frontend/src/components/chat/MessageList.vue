@@ -35,9 +35,9 @@ onMounted(() => {
 .messages-container {
   flex: 1;
   overflow-y: auto;
-  padding: 0.5rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 1rem;
 }
 </style>

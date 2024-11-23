@@ -38,8 +38,9 @@ const handleSubmit = async () => {
 
 <style scoped>
 .message-input-container {
-  padding: 1rem;
+  padding: 0.5rem;
   border-top: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
 }
 
 .input-form {
@@ -50,18 +51,30 @@ const handleSubmit = async () => {
 input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  font-family: inherit;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-family: 'Courier New', monospace;
+  background-color: transparent;
+}
+
+input:focus {
+  outline: none;
+  border-bottom-color: var(--primary-color);
 }
 
 button {
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.75rem;
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+button:hover:not(:disabled) {
   background-color: var(--primary-color);
   color: white;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
 }
 
 button:disabled {
