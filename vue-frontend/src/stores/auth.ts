@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+const API_URL = 'https://34cf92a7-5a78-490c-81f5-13bbd10ad94d-00-1d3jqfgfypu5.pike.replit.dev';
+
 interface User {
   id: string;
   email: string;
@@ -20,6 +22,7 @@ export const useAuthStore = defineStore('auth', () => {
         email: 'user@example.com',
         username: 'User'
       };
+      // La redirection sera gérée par le composant
     } catch (err) {
       error.value = 'Erreur lors de la connexion';
       console.error('Erreur login:', err);
