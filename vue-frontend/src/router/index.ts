@@ -35,8 +35,9 @@ const router = createRouter({
     },
     {
       path: '/reader/:id?',
-      component: ReaderView,
+      component: ChatView,
       name: 'reader',
+      props: true,
       meta: { requiresAuth: true }
     },
     {

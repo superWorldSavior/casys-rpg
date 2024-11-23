@@ -41,12 +41,17 @@ export const useChatStore = defineStore('chat', () => {
       ajouterMessage(message, true)
       
       // Appel à l'API backend
-      const response = await fetch('/api/books/test_book.pdf/sections/1', {
+      const response = await fetch('/api/books/test_book/sections/histoire', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
       })
+      
+      if (response.status === 404) {
+        ajouterMessage("Je ne trouve pas la section demandée. Veuillez réessayer.", false)
+        return
+      }
       
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération de la section')
