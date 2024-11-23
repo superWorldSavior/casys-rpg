@@ -1,10 +1,12 @@
 <template>
-  <div class="chat-container">
-    <v-card class="chat-interface" :elevation="2">
-      <MessageList />
-      <ChatControls />
-      <MessageInput />
-    </v-card>
+  <div class="chat-wrapper">
+    <div class="chat-container">
+      <v-card class="chat-interface" :elevation="2">
+        <MessageList />
+        <ChatControls />
+        <MessageInput />
+      </v-card>
+    </div>
   </div>
 </template>
 
@@ -15,12 +17,21 @@ import ChatControls from './ChatControls.vue'
 </script>
 
 <style scoped>
+.chat-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
 .chat-container {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto;
-  height: 100%;
-  padding: 0;
+  height: calc(100vh - 2rem);
+  position: relative;
 }
 
 .chat-interface {
@@ -30,5 +41,6 @@ import ChatControls from './ChatControls.vue'
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
 }
 </style>
