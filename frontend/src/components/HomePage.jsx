@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useFeedback } from '../contexts/FeedbackContext';
 import {
   Container,
   Grid,
@@ -32,6 +33,30 @@ const HomePage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+  const { showSuccess, showError, showLoading } = useFeedback();
+
+  const testFeedbackInteractions = async () => {
+    try {
+      showLoading("Chargement en cours...");
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      showSuccess("Action réussie !");
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      showError("Une erreur s'est produite");
+      
+      // Add ripple effect to button
+      const button = document.querySelector('[data-testid="test-interactions-button"]');
+      if (button) {
+        button.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 200);
+      }
+    } catch (error) {
+      console.error('Error in feedback test:', error);
+    }
+  };
 
   useEffect(() => {
     fetchBooks();
@@ -61,6 +86,12 @@ const HomePage = () => {
 
     if (file.type !== 'application/pdf') {
       setError('Veuillez sélectionner un fichier PDF valide');
+      // Ajouter une animation de secousse pour indiquer l'erreur
+      const input = event.target;
+      input.style.animation = 'shake 0.5s';
+      setTimeout(() => {
+        input.style.animation = '';
+      }, 500);
       return;
     }
 
@@ -78,7 +109,7 @@ const HomePage = () => {
       if (response.ok) {
         const result = await response.json();
         setBooks(prevBooks => [...prevBooks, result.metadata]);
-        setSuccessMessage('Le livre a été téléchargé avec succès');
+        handleSuccessMessage('Le livre a été téléchargé avec succès');
         event.target.value = '';
       } else {
         const errorData = await response.json();
@@ -97,8 +128,33 @@ const HomePage = () => {
   };
 
   const handlePreviewBook = (book) => {
+    const button = event.currentTarget;
+    const circle = document.createElement('span');
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+    circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+    circle.classList.add('ripple');
+
+    const ripple = button.getElementsByClassName('ripple')[0];
+    if (ripple) {
+      ripple.remove();
+    }
+
+    button.appendChild(circle);
     setSelectedBook(book);
     setPreviewOpen(true);
+  };
+
+  const handleSuccessMessage = (message) => {
+    setSuccessMessage(message);
+    const snackbar = document.querySelector('.MuiSnackbar-root');
+    if (snackbar) {
+      snackbar.classList.add('feedback-success');
+      setTimeout(() => snackbar.classList.remove('feedback-success'), 500);
+    }
   };
 
   return (
@@ -123,9 +179,19 @@ const HomePage = () => {
             py: 1.5,
             borderRadius: 2,
             backgroundColor: theme.palette.primary.main,
+            transition: 'all 0.3s ease-in-out',
+            transform: 'scale(1)',
             '&:hover': {
               backgroundColor: theme.palette.primary.dark,
-            }
+              transform: 'scale(1.05)',
+              boxShadow: theme.shadows[4],
+            },
+            '&:active': {
+              transform: 'scale(0.95)',
+            },
+            ...(uploading && {
+              animation: 'pulse 1.5s infinite'
+            })
           }}
           disabled={uploading}
         >
@@ -136,6 +202,23 @@ const HomePage = () => {
             accept=".pdf"
             onChange={handleFileUpload}
           />
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={testFeedbackInteractions}
+          sx={{ 
+            ml: 2,
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              backgroundColor: 'rgba(0, 0, 0, 0.04)'
+            },
+            '&:active': {
+              transform: 'scale(0.95)'
+            }
+          }}
+        >
+          Tester les Interactions
         </Button>
       </Box>
 

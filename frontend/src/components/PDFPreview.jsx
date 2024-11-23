@@ -36,12 +36,20 @@ const PDFPreview = ({ open, onClose, pdfUrl, bookTitle }) => {
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      TransitionProps={{
+        timeout: 300,
+      }}
       PaperProps={{
         sx: {
           height: '90vh',
           maxHeight: '90vh',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          transform: 'scale(1)',
+          transition: 'transform 0.2s ease-in-out',
+          '&:hover': {
+            transform: 'scale(1.01)'
+          }
         }
       }}
     >
@@ -93,6 +101,16 @@ const PDFPreview = ({ open, onClose, pdfUrl, bookTitle }) => {
                 startIcon={<NavigateBeforeIcon />}
                 onClick={() => changePage(-1)}
                 disabled={pageNumber <= 1}
+                sx={{
+                  transition: 'all 0.2s ease-in-out',
+                  '&:not(:disabled):hover': {
+                    transform: 'translateX(-2px)',
+                    backgroundColor: 'primary.light'
+                  },
+                  '&:active': {
+                    transform: 'translateX(-1px)'
+                  }
+                }}
               >
                 Précédent
               </Button>
@@ -103,6 +121,16 @@ const PDFPreview = ({ open, onClose, pdfUrl, bookTitle }) => {
                 endIcon={<NavigateNextIcon />}
                 onClick={() => changePage(1)}
                 disabled={pageNumber >= numPages}
+                sx={{
+                  transition: 'all 0.2s ease-in-out',
+                  '&:not(:disabled):hover': {
+                    transform: 'translateX(2px)',
+                    backgroundColor: 'primary.light'
+                  },
+                  '&:active': {
+                    transform: 'translateX(1px)'
+                  }
+                }}
               >
                 Suivant
               </Button>
