@@ -11,11 +11,15 @@ const publicRoutes = [
     path: '/login',
     element: <LoginPage />,
   },
+  {
+    path: '/',
+    element: <Navigate to="/login" replace />,
+  },
 ];
 
 const protectedRoutes = [
   {
-    path: '/',
+    path: '/home',
     element: <MainLayout />,
     children: [
       {

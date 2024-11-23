@@ -50,7 +50,7 @@ const LoginPage = () => {
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
       const userData = { id: '1', email: credentials.email, username: 'User' };
       await login(userData);
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       setError('Identifiants invalides. Veuillez réessayer.');
       console.error('Login failed:', error);
