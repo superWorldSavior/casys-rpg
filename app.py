@@ -45,18 +45,18 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 sock = Sock(app)
 
 # Enable CORS with credentials support
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["http://localhost:5174", "http://172.31.196.48:5174"],
-        "supports_credentials": True
-    }
-})
+CORS(app,
+     resources={
+         r"/api/*": {
+             "origins": ["http://localhost:5174", "http://172.31.196.48:5174"],
+             "supports_credentials": True
+         }
+     })
 
 # Register auth blueprint
-from auth_routes import auth_bp
-app.register_blueprint(auth_bp)
+# from auth_routes import auth_bp
 
-
+# app.register_blueprint(auth_bp)
 
 
 def allowed_file(filename: str) -> bool:
@@ -233,20 +233,22 @@ def get_book(filename):
             "code": 500
         }), 500
 
+
 @app.route('/api/books/<filename>/sections/<section_id>')
 def get_book_section(filename, section_id):
     try:
-        section_path = os.path.join(SECTIONS_FOLDER, filename, f"{section_id}.txt")
+        section_path = os.path.join(SECTIONS_FOLDER, filename,
+                                    f"{section_id}.txt")
         if not os.path.exists(section_path):
             return jsonify({
                 "status": "error",
                 "message": "Section not found",
                 "code": 404
             }), 404
-            
+
         with open(section_path, 'r', encoding='utf-8') as f:
             content = f.read()
-            
+
         return jsonify({
             "status": "success",
             "section": {
@@ -255,12 +257,15 @@ def get_book_section(filename, section_id):
             }
         })
     except Exception as e:
-        app.logger.error(f"Error getting book section {section_id} for {filename}: {e}")
+        app.logger.error(
+            f"Error getting book section {section_id} for {filename}: {e}")
         return jsonify({
             "status": "error",
             "message": str(e),
             "code": 500
         }), 500
+
+
 @app.route('/api/books/<filename>/cover')
 def get_book_cover(filename):
     try:
@@ -277,16 +282,14 @@ def get_book_cover(filename):
         doc = fitz.open(pdf_path)
         page = doc[0]
         pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
-        
+
         # Convertir en PNG
         img_data = pix.tobytes("png")
-        
+
         from flask import send_file
-        return send_file(
-            io.BytesIO(img_data),
-            mimetype='image/png',
-            download_name=f"{filename}_cover.png"
-        )
+        return send_file(io.BytesIO(img_data),
+                         mimetype='image/png',
+                         download_name=f"{filename}_cover.png")
     except Exception as e:
         app.logger.error(f"Error getting book cover for {filename}: {e}")
         return jsonify({
@@ -294,6 +297,7 @@ def get_book_cover(filename):
             "message": str(e),
             "code": 500
         }), 500
+
 
 @sock.route('/api/ws/books')
 def books_websocket(ws):
@@ -304,13 +308,14 @@ def books_websocket(ws):
     except Exception as e:
         app.logger.error(f"WebSocket error: {e}")
 
+
 # Handle 404 errors for API routes
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_vue_app(path):
     if path.startswith('api/'):
         return jsonify({"error": "Not found", "code": 404}), 404
-    
+
     try:
         # Serve static files from the dist directory
         if path and os.path.exists(os.path.join('vue-frontend/dist', path)):

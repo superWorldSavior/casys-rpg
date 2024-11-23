@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useThemeStore } from '../stores/theme'
+import { useThemeStore } from '@/stores/theme'
 import { AppHeader, MobileNavigation } from '@/components/layout'
 
 const route = useRoute()
