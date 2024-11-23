@@ -51,6 +51,14 @@ args = "React Native Dev"
 task = "workflow.run"
 args = "Generate Icons"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Frontend Preview"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Frontend Build"
+
 [[workflows.workflow]]
 name = "Flask Server"
 author = "agent"
@@ -195,12 +203,45 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd frontend && node scripts/generate-icons.js"
 
+[[workflows.workflow]]
+name = "Frontend Preview"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm run preview -- --host 0.0.0.0"
+waitForPort = 4174
+
+[[workflows.workflow]]
+name = "Frontend Build"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "ls -la frontend/dist && echo '---' && ls -la frontend/dist/assets"
+
 [deployment]
 run = ["sh", "-c", "python3 app.py"]
 
 [[ports]]
 localPort = 3000
 externalPort = 3003
+
+[[ports]]
+localPort = 4174
+externalPort = 4200
 
 [[ports]]
 localPort = 5000
