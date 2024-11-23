@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import LoginPage from '../pages/Auth/LoginPage';
 import HomePage from '../pages/Home';
 import ReaderPage from '../pages/Reader';
+import BrowsePage from '../pages/Browse';
+import ProfilePage from '../pages/Profile';
 import Layout from '../layouts/MainLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 
@@ -21,6 +23,18 @@ export const router = createBrowserRouter([
       {
         path: 'home',
         element: <ProtectedRoute><HomePage /></ProtectedRoute>
+      },
+      {
+        path: 'library',
+        element: <ProtectedRoute><HomePage /></ProtectedRoute>
+      },
+      {
+        path: 'browse',
+        element: <ProtectedRoute><BrowsePage /></ProtectedRoute>
+      },
+      {
+        path: 'profile',
+        element: <ProtectedRoute><ProfilePage /></ProtectedRoute>
       },
       {
         path: 'reader/:bookId',
