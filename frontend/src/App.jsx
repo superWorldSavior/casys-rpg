@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material';
+import { ThemeProvider, CircularProgress } from '@mui/material';
 import { Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { casysTheme } from './theme/casysTheme';
-import LoginPage from './pages/Auth/LoginPage';
-import HomePage from './pages/Home';
-import ReaderPage from './pages/Reader';
 import { ProtectedRoute } from './router/ProtectedRoute';
+
+// Lazy load components
+const LoginPage = lazy(() => import('./pages/Auth/LoginPage'));
+const HomePage = lazy(() => import('./pages/Home'));
+const ReaderPage = lazy(() => import('./pages/Reader'));
+
+// Loading fallback
+const LoadingFallback = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '100vh' 
+  }}>
+    <CircularProgress />
+  </div>
+);
 
 const router = createBrowserRouter([
   {
@@ -16,15 +30,27 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <LoginPage />
+    element: <Suspense fallback={<LoadingFallback />}><LoginPage /></Suspense>
   },
   {
     path: '/home',
-    element: <ProtectedRoute><HomePage /></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <Suspense fallback={<LoadingFallback />}>
+          <HomePage />
+        </Suspense>
+      </ProtectedRoute>
+    )
   },
   {
     path: '/reader/:bookId',
-    element: <ProtectedRoute><ReaderPage /></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <Suspense fallback={<LoadingFallback />}>
+          <ReaderPage />
+        </Suspense>
+      </ProtectedRoute>
+    )
   }
 ], {
   future: {

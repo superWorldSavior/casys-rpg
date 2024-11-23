@@ -64,11 +64,22 @@ export default defineConfig({
     outDir: path.resolve(__dirname, 'dist'),
     assetsDir: 'assets',
     emptyOutDir: true,
-    sourcemap: true,
+    sourcemap: process.env.NODE_ENV === 'development',
     manifest: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'react-router-dom'],
+          'mui': ['@mui/material', '@emotion/react', '@emotion/styled'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: process.env.NODE_ENV === 'production',
+        drop_debugger: true
       }
     }
   },
