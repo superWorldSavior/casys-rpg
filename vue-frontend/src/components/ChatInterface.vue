@@ -187,25 +187,24 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .messages-container {
   flex-grow: 1;
   overflow-y: auto;
-  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
   touch-action: pan-y;
+  padding: 0.5rem;
 }
 
 .message-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  max-width: 80%;
+  gap: 0.125rem;
+  max-width: 85%;
 }
 
 .message-utilisateur {
@@ -217,25 +216,31 @@ onMounted(() => {
 }
 
 .message {
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
   word-break: break-word;
+  margin: 0;
 }
 
 .message-time {
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.5);
   align-self: flex-end;
+  margin-right: 0.25rem;
 }
 
 .input-zone {
-  padding: 1rem;
-  background-color: rgba(var(--v-theme-surface), 0.8);
-  backdrop-filter: blur(10px);
+  padding: 0.5rem;
+  border-top: 1px solid rgba(0,0,0,0.1);
 }
 
 .loading-indicator {
   align-self: center;
-  margin: 1rem;
+  margin: 0.5rem;
+}
+
+.v-text-field {
+  margin: 0;
+  padding: 0;
 }
 </style>
