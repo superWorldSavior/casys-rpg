@@ -1,44 +1,44 @@
-# from flask import Blueprint, jsonify, session, redirect, url_for, request
-# from oauthlib.oauth2 import WebApplicationClient
-# from werkzeug.security import generate_password_hash, check_password_hash
-# import os
-# import requests
-# import json
-# from functools import wraps
+from flask import Blueprint, jsonify, session, redirect, url_for, request
+from oauthlib.oauth2 import WebApplicationClient
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
+import requests
+import json
+from functools import wraps
 
-# auth_bp = Blueprint('auth', __name__)
-# client = WebApplicationClient(os.environ.get('GOOGLE_CLIENT_ID'))
+auth_bp = Blueprint('auth', __name__)
+client = WebApplicationClient(os.environ.get('GOOGLE_CLIENT_ID'))
 
-# GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
-# # In-memory user store (replace with database in production)
-# users = {
-#     'admin@admin.com': {
-#         'id': 'admin',
-#         'email': 'admin@admin.com',
-#         'username': 'admin',
-#         'password': generate_password_hash('admin'),
-#         'age': 30,
-#         'role': 'admin'
-#     }
-# }
+# In-memory user store (replace with database in production)
+users = {
+    'admin@admin.com': {
+        'id': 'admin',
+        'email': 'admin@admin.com',
+        'username': 'admin',
+        'password': generate_password_hash('admin'),
+        'age': 30,
+        'role': 'admin'
+    }
+}
 
-# def login_required(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if not session.get('user'):
-#             return jsonify({'message': 'Unauthorized'}), 401
-#         return f(*args, **kwargs)
-#     return decorated_function
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('user'):
+            return jsonify({'message': 'Unauthorized'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
 
-# def admin_required(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         user = session.get('user')
-#         if not user or user.get('role') != 'admin':
-#             return jsonify({'message': 'Admin access required'}), 403
-#         return f(*args, **kwargs)
-#     return decorated_function
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = session.get('user')
+        if not user or user.get('role') != 'admin':
+            return jsonify({'message': 'Admin access required'}), 403
+        return f(*args, **kwargs)
+    return decorated_function
 
 # def get_google_provider_cfg():
 #     return requests.get(GOOGLE_DISCOVERY_URL).json()
