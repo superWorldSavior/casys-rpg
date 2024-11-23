@@ -9,7 +9,10 @@ import PersonIcon from '@mui/icons-material/Person';
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [value, setValue] = React.useState(location.pathname);
+  const [value, setValue] = React.useState(() => {
+    const path = location.pathname;
+    return path === '/' || path === '/home' ? '/home' : path;
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

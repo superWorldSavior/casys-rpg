@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Container, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Button, Box, CircularProgress } from '@mui/material';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import BottomNav from '../components/navigation/BottomNav';
 
@@ -50,10 +50,15 @@ const MainLayout = () => {
           minHeight: 'calc(100vh - 64px)',
           backgroundColor: 'background.default',
           py: 3,
-          pb: { xs: 7, sm: 3 } // Add padding at bottom for mobile to account for navigation bar
+          pb: { xs: 9, sm: 3 }, // Increased bottom padding for mobile to prevent content from being hidden behind the navigation bar
+          overflowX: 'hidden' // Prevent horizontal scrolling
         }}
       >
-        <Outlet />
+        <Suspense fallback={<Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+          <CircularProgress />
+        </Box>}>
+          <Outlet />
+        </Suspense>
       </Container>
       <BottomNav />
     </>
