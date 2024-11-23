@@ -24,9 +24,6 @@ const handleSpeedChange = (event: Event) => {
       />
       <span>{{ chatStore.vitesseLecture }}ms</span>
     </div>
-    <button @click="chatStore.effacerHistorique">
-      Effacer l'historique
-    </button>
   </div>
 </template>
 

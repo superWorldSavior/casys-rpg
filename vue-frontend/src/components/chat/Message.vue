@@ -17,11 +17,12 @@ const props = defineProps<{
 
 <style scoped>
 .message {
-  padding: 0.5rem 1rem;
-  margin: 0.5rem 0;
+  padding: 0.75rem;
+  margin: 0.25rem 0;
   border-radius: 0.5rem;
   background-color: #f0f0f0;
   max-width: 80%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user-message {

@@ -18,5 +18,9 @@ import ChatControls from './ChatControls.vue'
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
 }
 </style>
