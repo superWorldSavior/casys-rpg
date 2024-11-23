@@ -233,6 +233,34 @@ def get_book(filename):
             "code": 500
         }), 500
 
+@app.route('/api/books/<filename>/sections/<section_id>')
+def get_book_section(filename, section_id):
+    try:
+        section_path = os.path.join(SECTIONS_FOLDER, filename, f"{section_id}.txt")
+        if not os.path.exists(section_path):
+            return jsonify({
+                "status": "error",
+                "message": "Section not found",
+                "code": 404
+            }), 404
+            
+        with open(section_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+        return jsonify({
+            "status": "success",
+            "section": {
+                "id": section_id,
+                "content": content
+            }
+        })
+    except Exception as e:
+        app.logger.error(f"Error getting book section {section_id} for {filename}: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "code": 500
+        }), 500
 @app.route('/api/books/<filename>/cover')
 def get_book_cover(filename):
     try:

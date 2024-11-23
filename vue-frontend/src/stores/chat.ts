@@ -39,11 +39,25 @@ export const useChatStore = defineStore('chat', () => {
     estEnChargement.value = true
     try {
       ajouterMessage(message, true)
-      // TODO: Integrate with AI backend
-      const reponse = "Réponse temporaire de l'AI..." // Placeholder
+      
+      // Appel à l'API backend
+      const response = await fetch('/api/books/test_book.pdf/sections/1', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération de la section')
+      }
+      
+      const data = await response.json()
+      const reponse = data.section.content
       ajouterMessage(reponse, false)
     } catch (erreur) {
       console.error("[ChatStore] Erreur d'envoi du message:", erreur)
+      ajouterMessage("Une erreur est survenue lors de la communication avec l'AI.", false)
       throw erreur
     } finally {
       estEnChargement.value = false
