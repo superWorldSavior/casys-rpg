@@ -1,11 +1,16 @@
-// Layout components exports
-export { default as AppHeader } from './AppHeader.vue'
-export { default as MainLayout } from './MainLayout.vue'
-export { default as MobileNavigation } from './MobileNavigation.vue'
+// Layout components imports
+import AppHeader from './AppHeader.vue'
+import MainLayout from './MainLayout.vue'
+import MobileNavigation from './MobileNavigation.vue'
 
-// Re-export all layout components for easier imports
-export default {
+// Named exports
+export { AppHeader, MainLayout, MobileNavigation }
+
+// Default export of all components
+const layoutComponents = {
   AppHeader,
   MainLayout,
   MobileNavigation
 }
+
+export default layoutComponents
