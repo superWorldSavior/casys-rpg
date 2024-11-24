@@ -2,10 +2,14 @@ import json
 
 import fitz  # PyMuPDF
 import logging
+
+logger = logging.getLogger(__name__)
 import os
-from typing import List, Dict
+from typing import List, Dict, Union
+import fitz
 
 from .rules_processor import RulesProcessor
+from ..domain.entities import PDFImage
 from ..domain.entities import Section, ProcessedPDF, ProcessingProgress, ProcessingStatus
 from .ai_processor import AIProcessor
 from .section_processor import SectionProcessor
@@ -41,11 +45,12 @@ class MuPDFProcessor(PDFProcessor):
         histoire_dir = paths["histoire_dir"]
         images_dir = paths["images_dir"]
         metadata_dir = paths["metadata_dir"]
+        progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING,
+                                    total_pages=0)
 
         try:
-            doc = fitz.open(pdf_path)
-            progress = ProcessingProgress(status=ProcessingStatus.INITIALIZING,
-                                          total_pages=len(doc))
+            doc = fitz.Document(pdf_path)  # Open PDF document using PyMuPDF
+            progress.total_pages = len(doc)
             sections = []
             content_buffer = ""
             current_chapter_number = 0
@@ -72,7 +77,7 @@ class MuPDFProcessor(PDFProcessor):
                 logger.debug(f"Processing page {page_num}")
 
                 # Stop extraction before the section 1 page
-                if section_one_page and page_num >= section_one_page:
+                if section_one_page and int(page_num) >= section_one_page:
                     logger.info(
                         f"Stopping extraction before page {page_num} (section 1 detected)."
                     )
@@ -107,9 +112,12 @@ class MuPDFProcessor(PDFProcessor):
             if content_buffer.strip():
                 current_chapter_number += 1
                 await self._save_chapter(current_chapter_number,
-                                         content_buffer.strip(), page_num,
-                                         histoire_dir, pdf_folder_name,
-                                         sections, progress)
+                                         content_buffer.strip(), 
+                                         page["num"],  # Use the current page number from the page dict
+                                         histoire_dir, 
+                                         pdf_folder_name,
+                                         sections, 
+                                         progress)
 
             # Call RulesProcessor after extracting chapters
             try:
@@ -155,7 +163,7 @@ class MuPDFProcessor(PDFProcessor):
             raise
 
     async def _save_chapter(self, chapter_number: int, content: str,
-                            page_num: int, histoire_dir: str, pdf_name: str,
+                            page_num: Union[str, int], histoire_dir: str, pdf_name: str,
                             sections: List[Section],
                             progress: ProcessingProgress):
         """
@@ -174,11 +182,27 @@ class MuPDFProcessor(PDFProcessor):
                                          f"chapter_{chapter_number}.md")
         section = Section(number=chapter_number,
                           content=content,
-                          page_number=page_num,
+                          page_number=int(page_num) if isinstance(page_num, str) else page_num,
                           file_path=section_file_path,
                           pdf_name=pdf_name,
                           is_chapter=True)
         await self.repository.save_section(section)
         sections.append(section)
         progress.processed_sections += 1
-        logger.info(f"Chapter {chapter_number} saved.")
+    async def extract_images(self, pdf_path: str, base_output_dir: str = "sections") -> List[PDFImage]:
+        """Extract images from a PDF file."""
+        try:
+            pdf_folder_name = self.file_system_processor.get_pdf_folder_name(pdf_path)
+            paths = self.file_system_processor.create_book_structure(base_output_dir, pdf_folder_name)
+            
+            images = self.image_processor.extract_images(
+                pdf_path,
+                paths["images_dir"],
+                paths["metadata_dir"],
+                pdf_folder_name
+            )
+            logger.info(f"Extracted {len(images)} images from PDF")
+            return images
+        except Exception as e:
+            logger.error(f"Error extracting images from PDF: {e}")
+            return []

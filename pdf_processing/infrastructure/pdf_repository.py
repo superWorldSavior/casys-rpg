@@ -9,6 +9,28 @@ logger = logging.getLogger(__name__)
 
 
 class FileSystemPDFRepository(PDFRepository):
+    def format_to_markdown(self, formatted_blocks: Any) -> str:
+        """Format blocks to markdown."""
+        if not formatted_blocks:
+            return ""
+            
+        markdown_content = []
+        for block in formatted_blocks:
+            if isinstance(block, dict):
+                if block.get('type') == 'heading':
+                    level = block.get('level', 1)
+                    text = block.get('text', '')
+                    markdown_content.append(f"{'#' * level} {text}\n")
+                elif block.get('type') == 'paragraph':
+                    markdown_content.append(f"{block.get('text', '')}\n\n")
+                elif block.get('type') == 'list':
+                    for item in block.get('items', []):
+                        markdown_content.append(f"- {item}\n")
+                    markdown_content.append("\n")
+            else:
+                markdown_content.append(f"{str(block)}\n\n")
+                
+        return "".join(markdown_content)
 
     async def save_section(self, section: Section) -> None:
         """Save a section directly using the content from AI."""

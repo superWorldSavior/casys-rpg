@@ -31,7 +31,7 @@ class SectionProcessor:
                     line = line.strip()
                     if line.isdigit() and int(line) == section_number:
                         logger.info(f"Section {section_number} detected on page {page_number}.")
-                        return page_number
+                        return int(page_number)
             except Exception as e:
                 logger.error(f"Error processing page {page_number}: {e}")
 

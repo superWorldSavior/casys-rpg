@@ -1,6 +1,8 @@
 import os
-import fitz
+import fitz  # PyMuPDF
 import io
+from typing import List, Optional
+from ..domain.entities import Section, PDFImage
 from PIL import Image
 import json
 from typing import List, Optional, Dict
@@ -19,7 +21,7 @@ class ImageProcessor:
         images_metadata = []
 
         try:
-            doc = fitz.open(doc_path)
+            doc = fitz.Document(doc_path)  # Open PDF document using PyMuPDF
 
             for page_num in range(len(doc)):
                 page = doc[page_num]

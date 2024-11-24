@@ -38,8 +38,8 @@ async def main():
     args = parser.parse_args()
 
     # Initialize components
-    processor = MuPDFProcessor(repository=FileSystemPDFRepository)
     repository = FileSystemPDFRepository()
+    processor = MuPDFProcessor(repository=repository)
     service = PDFService(processor, repository)
 
     if args.pdf:

@@ -8,7 +8,8 @@ from pdf_processing.domain.entities import Section, ProcessingStatus, FormattedT
 from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 class TestPDFProcessor(unittest.TestCase):
     def setUp(self):
-        self.processor = MuPDFProcessor(repository=FileSystemPDFRepository)
+        self.repository = FileSystemPDFRepository()
+        self.processor = MuPDFProcessor(repository=self.repository)
         self.test_pdf_path = "test_book.pdf"
         self.output_dir = "test_sections"
         # Clean up test directory if it exists
