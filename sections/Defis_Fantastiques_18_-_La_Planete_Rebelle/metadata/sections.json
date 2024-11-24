@@ -1,0 +1,40 @@
+{
+  "sections": [
+    {
+      "section_number": 1,
+      "chapter_number": null,
+      "file_path": "Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_1.md",
+      "pdf_name": "Defis_Fantastiques_18_-_La_Planete_Rebelle",
+      "page_number": 8,
+      "is_chapter": true,
+      "title": null
+    },
+    {
+      "section_number": 2,
+      "chapter_number": null,
+      "file_path": "Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_2.md",
+      "pdf_name": "Defis_Fantastiques_18_-_La_Planete_Rebelle",
+      "page_number": 10,
+      "is_chapter": true,
+      "title": null
+    },
+    {
+      "section_number": 3,
+      "chapter_number": null,
+      "file_path": "Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_3.md",
+      "pdf_name": "Defis_Fantastiques_18_-_La_Planete_Rebelle",
+      "page_number": 18,
+      "is_chapter": true,
+      "title": null
+    },
+    {
+      "section_number": 4,
+      "chapter_number": null,
+      "file_path": "Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_4.md",
+      "pdf_name": "Defis_Fantastiques_18_-_La_Planete_Rebelle",
+      "page_number": 20,
+      "is_chapter": true,
+      "title": null
+    }
+  ]
+}

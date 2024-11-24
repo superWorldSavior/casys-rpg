@@ -1,0 +1,391 @@
+{
+  "rule_format_version": "1.0",
+  "rules": [
+    {
+      "id": 1,
+      "name": "Colonization of Planets",
+      "description": "Terrans began colonizing distant planets starting in 2070, with the first expedition to Tropos.",
+      "structure": [
+        "Terrans",
+        "Planets",
+        "Expeditions"
+      ],
+      "behavior": "Terrans send expeditions to distant planets for colonization.",
+      "logic": "If the year is 2070 or later, then Terrans can colonize distant planets.",
+      "trigger": "At the start of the colonization era (2070)",
+      "parameters": {
+        "start_year": 2070
+      },
+      "requirements": []
+    },
+    {
+      "id": 2,
+      "name": "Discovery of Ziridium",
+      "description": "The discovery of ziridium on Tropos allowed for the construction of advanced spacecraft.",
+      "structure": [
+        "Ziridium",
+        "Spacecraft"
+      ],
+      "behavior": "Ziridium enables the construction of spacecraft with accelerated propulsion.",
+      "logic": "If ziridium is discovered, then advanced spacecraft can be built.",
+      "trigger": "Upon discovery of ziridium",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 3,
+      "name": "Adaptation of Human Species",
+      "description": "Humans adapt to new environments, leading to the emergence of new human species.",
+      "structure": [
+        "Human Species",
+        "Environment"
+      ],
+      "behavior": "Humans modify their characteristics based on the conditions of their new environment.",
+      "logic": "If humans settle in a new environment, then they will adapt and evolve.",
+      "trigger": "When humans colonize a new planet",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 4,
+      "name": "Arcadian Empire Control",
+      "description": "The Arcadians developed a powerful computer to control their vast empire.",
+      "structure": [
+        "Arcadians",
+        "Computer",
+        "Empire"
+      ],
+      "behavior": "Arcadians use a central computer to maintain control over their empire.",
+      "logic": "If the computer is operational, then the Arcadian Empire can function effectively.",
+      "trigger": "Upon the establishment of the central computer",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 5,
+      "name": "Telepathic Communication",
+      "description": "Arcadians implant telepathic receivers in themselves to communicate with the central computer.",
+      "structure": [
+        "Arcadians",
+        "Telepathic Receivers",
+        "Central Computer"
+      ],
+      "behavior": "Arcadians communicate telepathically with the central computer.",
+      "logic": "If a telepathic receiver is implanted, then the Arcadian can communicate with the computer.",
+      "trigger": "Upon implantation of the telepathic receiver",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 6,
+      "name": "Terran Resistance",
+      "description": "Terrans realize that the central computer is the weakness of the Arcadian Empire.",
+      "structure": [
+        "Terrans",
+        "Arcadian Empire",
+        "Central Computer"
+      ],
+      "behavior": "Terrans strategize to destroy the central computer to weaken the Arcadian Empire.",
+      "logic": "If the central computer is destroyed, then the Arcadian Empire will collapse.",
+      "trigger": "When Terrans plan their resistance",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 1,
+      "name": "Mission Assignment",
+      "description": "You have been chosen to lead a delicate mission to destroy the central computer of Arcadion.",
+      "structure": [
+        "Player",
+        "Mission",
+        "Resistance"
+      ],
+      "behavior": "The player must complete the mission objectives to succeed.",
+      "logic": "If the player completes the mission objectives, they succeed in their mission.",
+      "trigger": "At the start of the game.",
+      "parameters": {},
+      "requirements": [
+        "Player must be qualified in intelligence, courage, and martial arts."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Travel Authorization",
+      "description": "Terrans are allowed to travel in space only if they engage in commercial activities benefiting Arcadion.",
+      "structure": [
+        "Player",
+        "Arcadion",
+        "Commercial Activity"
+      ],
+      "behavior": "The player must transport goods to different planets as part of their mission.",
+      "logic": "If the player transports goods to Tropos, Radix, and Halmuris, they fulfill the travel requirement.",
+      "trigger": "When the player begins their journey.",
+      "parameters": [
+        "Goods to transport: cereals, ziridium, luxury products"
+      ],
+      "requirements": [
+        "Player must engage in commercial activities."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Information Gathering",
+      "description": "The R.E.V.E. has sent agents to gather information necessary for the mission's success.",
+      "structure": [
+        "Player",
+        "R.E.V.E.",
+        "Agents"
+      ],
+      "behavior": "The player must gather information from the leaders of the Resistance on the first three planets visited.",
+      "logic": "If the player interacts with the Resistance leaders, they can obtain information about the code.",
+      "trigger": "When the player visits the first three planets.",
+      "parameters": {},
+      "requirements": [
+        "Player must identify and contact the Resistance leaders."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Code Retrieval",
+      "description": "The player needs to obtain a numerical code to access the central computer.",
+      "structure": [
+        "Player",
+        "Code",
+        "Resistance Leaders"
+      ],
+      "behavior": "The player must reconstruct the code from information provided by the Resistance leaders.",
+      "logic": "If the player collects information from all three leaders, they can reconstruct the code.",
+      "trigger": "After visiting the first three planets.",
+      "parameters": [
+        "Code format: three groups of three binary digits"
+      ],
+      "requirements": [
+        "Player must gather information from all three leaders."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Destruction of Central Computer",
+      "description": "Once the code is obtained, the player can access and destroy the central computer.",
+      "structure": [
+        "Player",
+        "Central Computer"
+      ],
+      "behavior": "The player must input the code to destroy the central computer.",
+      "logic": "If the player inputs the correct code, they succeed in destroying the computer.",
+      "trigger": "After obtaining the code.",
+      "parameters": {},
+      "requirements": [
+        "Player must have the correct code."
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Types d'Arcadiens",
+      "description": "Il existe trois types d'Arcadiens : du Nord, du Sud et du Centre, chacun ayant des caractéristiques physiques et comportementales distinctes.",
+      "structure": [
+        "Arcadiens du Nord",
+        "Arcadiens du Sud",
+        "Arcadiens du Centre"
+      ],
+      "behavior": "Identifier le type d'Arcadien rencontré et appliquer les caractéristiques associées.",
+      "logic": "Si un Arcadien est rencontré, déterminer son type et appliquer les règles spécifiques à ce type.",
+      "trigger": "Lors de la rencontre avec un Arcadien.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 2,
+      "name": "Lancer de dés pour Habileté",
+      "description": "Lancez un dé, ajoutez 6 au résultat et inscrivez le total dans la case HABILETÉ de la Feuille d'Aventure.",
+      "structure": [
+        "Dé",
+        "HABILETÉ"
+      ],
+      "behavior": "Calculer les points d'HABILETÉ en fonction du lancer de dé.",
+      "logic": "HABILETÉ = (Lancer de dé) + 6.",
+      "trigger": "Au début de l'aventure.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 3,
+      "name": "Lancer de dés pour Endurance",
+      "description": "Lancez deux dés, ajoutez 12 au résultat et inscrivez le total dans la case ENDURANCE.",
+      "structure": [
+        "Deux dés",
+        "ENDURANCE"
+      ],
+      "behavior": "Calculer les points d'ENDURANCE en fonction du lancer de dés.",
+      "logic": "ENDURANCE = (Lancer de deux dés) + 12.",
+      "trigger": "Au début de l'aventure.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 4,
+      "name": "Lancer de dés pour Chance",
+      "description": "Lancez un dé, ajoutez 6 au résultat et inscrivez le total dans la case CHANCE.",
+      "structure": [
+        "Dé",
+        "CHANCE"
+      ],
+      "behavior": "Calculer les points de CHANCE en fonction du lancer de dé.",
+      "logic": "CHANCE = (Lancer de dé) + 6.",
+      "trigger": "Au début de l'aventure.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 5,
+      "name": "Rétablissement de l'Habileté",
+      "description": "Les points d'HABILETÉ varient peu au cours de l'aventure, avec des circonstances spécifiques pour les ajuster.",
+      "structure": [
+        "HABILETÉ"
+      ],
+      "behavior": "Ajuster les points d'HABILETÉ selon les circonstances indiquées.",
+      "logic": "Modifier HABILETÉ selon les instructions des paragraphes correspondants.",
+      "trigger": "Lorsqu'indiqué dans le texte.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 6,
+      "name": "Rétablissement de l'Endurance",
+      "description": "Les points d'ENDURANCE changent considérablement au cours de l'aventure, nécessitant repos et nourriture pour se rétablir.",
+      "structure": [
+        "ENDURANCE"
+      ],
+      "behavior": "Récupérer des points d'ENDURANCE en se reposant ou en mangeant.",
+      "logic": "ENDURANCE = ENDURANCE + points récupérés par repos ou nourriture.",
+      "trigger": "Lors de pauses dans l'aventure.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 7,
+      "name": "Rétablissement de la Chance",
+      "description": "Les points de CHANCE changent selon les circonstances de l'aventure.",
+      "structure": [
+        "CHANCE"
+      ],
+      "behavior": "Ajuster les points de CHANCE selon les événements de l'aventure.",
+      "logic": "Modifier CHANCE selon les instructions des paragraphes correspondants.",
+      "trigger": "Lorsqu'indiqué dans le texte.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 8,
+      "name": "Combat",
+      "description": "Les combats se déroulent selon un processus spécifique basé sur les Forces d'Attaque.",
+      "structure": [
+        "HABILETÉ",
+        "ENDURANCE",
+        "Force d'Attaque"
+      ],
+      "behavior": "Calculer les Forces d'Attaque et déterminer les résultats du combat.",
+      "logic": "1. Calculer Force d'Attaque de l'adversaire. 2. Calculer votre Force d'Attaque. 3. Comparer les Forces d'Attaque pour déterminer les blessures.",
+      "trigger": "Lors d'une rencontre avec un adversaire.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 9,
+      "name": "Instructions de Combat",
+      "description": "Suivre des étapes spécifiques lors d'un combat pour déterminer les résultats.",
+      "structure": [
+        "HABILETÉ",
+        "ENDURANCE",
+        "LUCK"
+      ],
+      "behavior": "Appliquer les étapes de combat pour ajuster les points d'ENDURANCE et de LUCK.",
+      "logic": "1. Si Forces d'Attaque égales, recommencer. 2. Si vous blessez, réduire ENDURANCE de l'adversaire. 3. Si vous êtes blessé, réduire votre ENDURANCE. 4. Ajuster ENDURANCE et LUCK. 5. Recommencer le combat.",
+      "trigger": "Lors d'un combat.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 10,
+      "name": "Combat sans arme",
+      "description": "Le combat sans arme suit les mêmes règles que le combat armé, avec une règle spéciale de mort subite.",
+      "structure": [
+        "HABILETÉ",
+        "ENDURANCE"
+      ],
+      "behavior": "Appliquer les règles de combat sans arme, y compris la règle de mort subite.",
+      "logic": "Si Force d'Attaque supérieure, lancer un dé pour déterminer si l'adversaire est blessé ou tué.",
+      "trigger": "Lors d'un combat sans arme.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 11,
+      "name": "Combat avec plusieurs adversaires",
+      "description": "Les combats contre plusieurs adversaires peuvent être gérés de différentes manières selon les instructions.",
+      "structure": [
+        "HABILETÉ",
+        "ENDURANCE"
+      ],
+      "behavior": "Suivre les instructions spécifiques pour combattre plusieurs adversaires.",
+      "logic": "Appliquer les règles de combat selon les instructions fournies.",
+      "trigger": "Lors d'une rencontre avec plusieurs adversaires.",
+      "parameters": [],
+      "requirements": []
+    },
+    {
+      "id": 1,
+      "name": "Tentez votre Chance",
+      "description": "Chaque fois que vous tentez votre chance, jetez deux dés. Si le chiffre obtenu est égal ou inférieur à vos points de CHANCE, vous êtes chanceux et le résultat tournera en votre faveur. Si le chiffre est supérieur, vous êtes malchanceux et serez pénalisé.",
+      "structure": [
+        "Dés",
+        "Points de CHANCE"
+      ],
+      "behavior": "Lancer deux dés et comparer le résultat avec les points de CHANCE.",
+      "logic": "Si (résultat des dés <= Points de CHANCE) alors chanceux, sinon malchanceux.",
+      "trigger": "Chaque fois que le joueur tente sa chance.",
+      "parameters": {
+        "points_de_chance": "Total de points de CHANCE du joueur"
+      },
+      "requirements": "Le joueur doit avoir des points de CHANCE disponibles."
+    },
+    {
+      "id": 2,
+      "name": "Utilisation de la Chance dans les Combats",
+      "description": "Lors des combats, le joueur peut tenter sa chance pour infliger une blessure plus grave à un adversaire ou minimiser les effets d'une blessure subie.",
+      "structure": [
+        "Adversaire",
+        "Points d'ENDURANCE"
+      ],
+      "behavior": "Le joueur peut tenter sa chance après avoir blessé un adversaire ou après avoir été blessé.",
+      "logic": "Si (blessure infligée) alors tenter chance; si chanceux, infliger 2 points de moins à l'ENDURANCE de l'adversaire, sinon ajouter 1 point à l'ENDURANCE de l'adversaire. Si blessé, tenter chance; si chanceux, ajouter 1 point d'ENDURANCE, sinon enlever 1 point d'ENDURANCE.",
+      "trigger": "Après avoir blessé un adversaire ou après avoir été blessé.",
+      "parameters": {
+        "points_d_endurance": "Total de points d'ENDURANCE de l'adversaire"
+      },
+      "requirements": "Le joueur doit avoir des points de CHANCE disponibles."
+    },
+    {
+      "id": 3,
+      "name": "Gestion de l'Équipement et de l'Argent",
+      "description": "Le joueur doit gérer son équipement et son argent pour mener à bien sa mission. Il a un sac antigravitationnel qui peut contenir 6 objets sans perte d'ENDURANCE.",
+      "structure": [
+        "Équipement",
+        "Argent",
+        "Crédits"
+      ],
+      "behavior": "Le joueur doit s'assurer de ne pas dépasser la capacité de son sac et de gérer ses crédits pour couvrir ses frais.",
+      "logic": "Le joueur peut transporter jusqu'à 6 objets sans perte d'ENDURANCE et doit gérer ses crédits pour les dépenses.",
+      "trigger": "Lors de l'acquisition ou de l'utilisation d'équipement et d'argent.",
+      "parameters": {
+        "sac_capacite": 6,
+        "credits_initials": 2000
+      },
+      "requirements": "Le joueur doit tenir à jour son inventaire et ses dépenses."
+    }
+  ],
+  "global_rules": {
+    "default_parameters": {},
+    "constraints": []
+  }
+}

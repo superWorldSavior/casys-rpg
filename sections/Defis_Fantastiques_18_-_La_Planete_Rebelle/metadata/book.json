@@ -1,0 +1,34 @@
+{
+  "title": "Defis_Fantastiques_18_-_La_Planete_Rebelle",
+  "total_sections": 4,
+  "total_images": 68,
+  "sections": [
+    {
+      "number": 1,
+      "page_number": 8,
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_1.md",
+      "title": null
+    },
+    {
+      "number": 2,
+      "page_number": 10,
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_2.md",
+      "title": null
+    },
+    {
+      "number": 3,
+      "page_number": 18,
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_3.md",
+      "title": null
+    },
+    {
+      "number": 4,
+      "page_number": 20,
+      "file_path": "sections/Defis_Fantastiques_18_-_La_Planete_Rebelle/histoire/chapter_4.md",
+      "title": null
+    }
+  ],
+  "base_path": "sections",
+  "processing_status": "completed",
+  "error_message": null
+}
