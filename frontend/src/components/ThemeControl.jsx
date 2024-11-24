@@ -1,5 +1,6 @@
 import React from 'react';
 import { HexColorPicker } from 'react-colorful';
+import { Box, Card, CardContent } from '@mui/material';
 
 const FONT_FAMILIES = [
   { name: 'Default', value: 'var(--bs-body-font-family)' },
@@ -17,10 +18,20 @@ const FONT_SIZES = [
 
 function ThemeControl({ theme, onThemeChange }) {
   return (
-    <div className="theme-control mb-3">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Theme Settings</h5>
+    <Box className="theme-control" sx={{ mb: 3 }}>
+      <Card>
+        <CardContent>
+          <Box
+            component="h2"
+            sx={{
+              fontSize: '1.25rem',
+              fontWeight: 500,
+              mb: 2,
+              color: 'inherit'
+            }}
+          >
+            Theme Settings
+          </Box>
           
           <div className="mb-3">
             <label className="form-label">Font Family</label>
@@ -73,9 +84,9 @@ function ThemeControl({ theme, onThemeChange }) {
               onChange={(e) => onThemeChange({ ...theme, lineHeight: e.target.value })}
             />
           </div>
-        </div>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
 

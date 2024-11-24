@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { Dialog, DialogContent, IconButton, Box, Typography, Button } from '@mui/material';
+import { Dialog, DialogContent, IconButton, Box, Typography, Button, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
@@ -9,6 +9,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 const PDFPreview = ({ open, onClose, pdfUrl, bookTitle }) => {
+  const theme = useTheme();
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [error, setError] = useState(null);
@@ -53,7 +54,17 @@ const PDFPreview = ({ open, onClose, pdfUrl, bookTitle }) => {
         borderBottom: 1,
         borderColor: 'divider'
       }}>
-        <Typography variant="h6">{bookTitle}</Typography>
+        <Box
+          component="h2"
+          sx={{
+            fontSize: '1.25rem',
+            fontWeight: 500,
+            m: 0,
+            fontFamily: theme.typography.h6.fontFamily
+          }}
+        >
+          {bookTitle}
+        </Box>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>

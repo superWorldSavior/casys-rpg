@@ -30,16 +30,28 @@ os.makedirs(METADATA_FOLDER, exist_ok=True)
 
 # Initialize PDF processing components
 pdf_repository = FileSystemPDFRepository()  # Initialisation du dépôt
-pdf_processor = MuPDFProcessor(repository=pdf_repository)  # Passer le dépôt à MuPDFProcessor
-pdf_service = PDFService(processor=pdf_processor, repository=pdf_repository)  # Tout connecter
+pdf_processor = MuPDFProcessor(
+    repository=pdf_repository)  # Passer le dépôt à MuPDFProcessor
+pdf_service = PDFService(processor=pdf_processor,
+                         repository=pdf_repository)  # Tout connecter
 
 app = Flask(__name__, static_folder='frontend/dist')
 
 # Enable CORS
-CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"], "allow_headers": ["Content-Type"]}})
+CORS(app,
+     resources={
+         r"/api/*": {
+             "origins": "*",
+             "methods": ["GET", "POST", "OPTIONS"],
+             "allow_headers": ["Content-Type"]
+         }
+     })
+
 
 def allowed_file(filename: str) -> bool:
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit(
+        '.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def save_metadata(filename: str, metadata: dict):
     """Save metadata to a JSON file."""
@@ -52,6 +64,7 @@ def save_metadata(filename: str, metadata: dict):
         app.logger.error(f"Failed to save metadata for {filename}: {e}")
         return False
 
+
 def load_metadata(filename: str) -> Optional[dict]:
     """Load metadata from a JSON file."""
     filepath = os.path.join(METADATA_FOLDER, f"{filename}.json")
@@ -63,9 +76,15 @@ def load_metadata(filename: str) -> Optional[dict]:
             app.logger.error(f"Failed to load metadata for {filename}: {e}")
     return None
 
+
 @app.errorhandler(405)
 def method_not_allowed(e):
-    return jsonify({"status": "error", "message": "Method not allowed", "code": 405}), 405
+    return jsonify({
+        "status": "error",
+        "message": "Method not allowed",
+        "code": 405
+    }), 405
+
 
 async def process_pdf_file(file):
     if not file or not file.filename:
@@ -112,12 +131,17 @@ async def process_pdf_file(file):
         save_metadata(filename, error_metadata)
         raise
 
+
 @app.route('/api/books/upload', methods=['POST'])
 async def upload_pdfs():
     try:
         uploaded_files = request.files.getlist('pdf_files')
         if not uploaded_files:
-            return jsonify({"status": "error", "message": "No files selected", "code": 400}), 400
+            return jsonify({
+                "status": "error",
+                "message": "No files selected",
+                "code": 400
+            }), 400
 
         processed_files = []
         errors = []
@@ -129,19 +153,36 @@ async def upload_pdfs():
             except ValueError as e:
                 errors.append({"filename": file.filename, "error": str(e)})
             except Exception as e:
-                errors.append({"filename": file.filename, "error": f"Processing failed: {str(e)}"})
+                errors.append({
+                    "filename": file.filename,
+                    "error": f"Processing failed: {str(e)}"
+                })
 
         if not processed_files:
-            return jsonify({"status": "error", "message": "All files failed to process", "errors": errors, "code": 400}), 400
+            return jsonify({
+                "status": "error",
+                "message": "All files failed to process",
+                "errors": errors,
+                "code": 400
+            }), 400
 
-        response_data = {"status": "success", "message": f"{len(processed_files)} files uploaded", "books": processed_files}
+        response_data = {
+            "status": "success",
+            "message": f"{len(processed_files)} files uploaded",
+            "books": processed_files
+        }
         if errors:
             response_data["errors"] = errors
 
         return jsonify(response_data)
     except Exception as e:
         app.logger.error(f"Upload processing error: {e}")
-        return jsonify({"status": "error", "message": str(e), "code": 500}), 500
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "code": 500
+        }), 500
+
 
 @app.route('/api/books')
 def get_books():
@@ -155,18 +196,32 @@ def get_books():
         return jsonify({"status": "success", "books": books})
     except Exception as e:
         app.logger.error(f"Error retrieving books: {e}")
-        return jsonify({"status": "error", "message": str(e), "code": 500}), 500
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "code": 500
+        }), 500
+
 
 @app.route('/api/books/<filename>')
 def get_book(filename):
     try:
         metadata = load_metadata(filename)
         if not metadata:
-            return jsonify({"status": "error", "message": "Book not found", "code": 404}), 404
+            return jsonify({
+                "status": "error",
+                "message": "Book not found",
+                "code": 404
+            }), 404
         return jsonify(metadata)
     except Exception as e:
         app.logger.error(f"Error retrieving book metadata for {filename}: {e}")
-        return jsonify({"status": "error", "message": str(e), "code": 500}), 500
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "code": 500
+        }), 500
+
 
 # Serve static files or React app
 @app.route('/', defaults={'path': ''})
@@ -176,6 +231,7 @@ def serve(path):
     if path and os.path.exists(os.path.join(static_folder, path)):
         return send_from_directory(static_folder, path)
     return send_from_directory(static_folder, 'index.html')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -18,8 +18,6 @@ import {
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import PreviewIcon from '@mui/icons-material/Preview';
-import PDFPreview from './PDFPreview';
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -27,8 +25,6 @@ const HomePage = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -96,22 +92,42 @@ const HomePage = () => {
     navigate(`/chat/${bookId}`);
   };
 
-  const handlePreviewBook = (book) => {
-    setSelectedBook(book);
-    setPreviewOpen(true);
-  };
-
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4, pl: 0 }}>
+      <Box
+        sx={{
+          position: 'relative',
+          marginTop: '80px',
+          marginRight: '16px',
+          textAlign: 'right',
+          zIndex: 1
+        }}
+      >
+        <Box sx={{ fontSize: '1rem', color: theme.palette.text.primary }}>Bonjour</Box>
+        <Box sx={{ fontSize: '0.875rem', color: theme.palette.text.secondary }}>Vous avez 0 crédits</Box>
+        <Box sx={{ display: { xs: 'block', sm: 'none' }, mt: 1 }}>
+          <Button 
+            variant="contained" 
+            size="small"
+          >
+            Acheter des crédits
+          </Button>
+        </Box>
+      </Box>
+
       <Box sx={{ mb: 4, textAlign: 'center' }}>
-        <Typography 
-          variant={isMobile ? "h4" : "h3"} 
-          component="h1" 
-          gutterBottom
-          sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}
+        <Box
+          component="h1"
+          sx={{
+            fontSize: isMobile ? '2rem' : '3rem',
+            fontWeight: 'bold',
+            color: theme.palette.primary.main,
+            mb: 2,
+            fontFamily: theme.typography.h3.fontFamily
+          }}
         >
           Bibliothèque Numérique
-        </Typography>
+        </Box>
         
         <Button
           variant="contained"
@@ -157,7 +173,7 @@ const HomePage = () => {
           <LinearProgress />
         </Box>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={2} sx={{ pl: 0 }}>
           {books.map((book, index) => (
             <Grid item xs={12} sm={6} md={4} key={book.id || index}>
               <Card 
@@ -173,39 +189,44 @@ const HomePage = () => {
                 }}
               >
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h5" component="h2">
+                  <Box
+                    component="h2"
+                    sx={{
+                      fontSize: '1.5rem',
+                      fontWeight: 500,
+                      mb: 2,
+                      color: theme.palette.text.primary,
+                      fontFamily: theme.typography.h5.fontFamily
+                    }}
+                  >
                     {book.title || 'Livre sans titre'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: '0.875rem',
+                      color: theme.palette.text.secondary,
+                      mb: 1,
+                      fontFamily: theme.typography.body2.fontFamily
+                    }}
+                  >
                     Auteur: {book.author || 'Inconnu'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: '0.875rem',
+                      color: theme.palette.text.secondary,
+                      fontFamily: theme.typography.body2.fontFamily
+                    }}
+                  >
                     Pages: {book.pages || '?'}
-                  </Typography>
+                  </Box>
                 </CardContent>
                 <CardActions sx={{ 
                   padding: 2,
-                  justifyContent: 'space-between',
                   backgroundColor: theme.palette.background.paper,
                   borderTop: 1,
                   borderColor: theme.palette.divider
                 }}>
-                  <Button
-                    variant="outlined"
-                    size="medium"
-                    color="primary"
-                    startIcon={<PreviewIcon />}
-                    onClick={() => handlePreviewBook(book)}
-                    sx={{
-                      fontWeight: 'medium',
-                      '&:hover': {
-                        backgroundColor: theme.palette.primary.light,
-                        color: theme.palette.primary.contrastText,
-                      }
-                    }}
-                  >
-                    Aperçu
-                  </Button>
                   <Button
                     variant="contained"
                     size="medium"
@@ -213,6 +234,7 @@ const HomePage = () => {
                     startIcon={<MenuBookIcon />}
                     onClick={() => handleReadBook(book.id)}
                     sx={{
+                      width: '100%',
                       fontWeight: 'medium',
                       '&:hover': {
                         backgroundColor: theme.palette.primary.dark,
@@ -230,26 +252,30 @@ const HomePage = () => {
 
       {!isLoading && books.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h6" color="text.secondary">
+          <Box
+            sx={{
+              fontSize: '1.25rem',
+              fontWeight: 500,
+              color: theme.palette.text.secondary,
+              fontFamily: theme.typography.h6.fontFamily
+            }}
+          >
             Aucun livre dans la bibliothèque
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+          </Box>
+          <Box
+            sx={{
+              fontSize: '1rem',
+              color: theme.palette.text.secondary,
+              mt: 1,
+              fontFamily: theme.typography.body1.fontFamily
+            }}
+          >
             Commencez par télécharger un PDF
-          </Typography>
+          </Box>
         </Box>
       )}
 
-      {selectedBook && (
-        <PDFPreview
-          open={previewOpen}
-          onClose={() => {
-            setPreviewOpen(false);
-            setSelectedBook(null);
-          }}
-          pdfUrl={`/api/books/${selectedBook.filename}`}
-          bookTitle={selectedBook.title}
-        />
-      )}
+      
     </Container>
   );
 };

@@ -44,9 +44,17 @@ class ErrorBoundary extends React.Component {
               textAlign: 'center',
             }}
           >
-            <Typography variant="h5" color="error" gutterBottom>
+            <Box
+              component="h2"
+              sx={{
+                fontSize: '1.5rem',
+                fontWeight: 500,
+                mb: 2,
+                color: 'error.main'
+              }}
+            >
               Something went wrong
-            </Typography>
+            </Box>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
               {this.props.fallbackMessage || 'An error occurred while rendering this component.'}
             </Typography>

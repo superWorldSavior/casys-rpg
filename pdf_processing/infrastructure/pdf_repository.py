@@ -1,7 +1,7 @@
 import os
 import json
 import logging
-from typing import List
+from typing import List, Dict, Any
 from ..domain.ports import PDFRepository
 from ..domain.entities import Section, PDFImage, ProcessedPDF, ProcessingStatus
 
@@ -33,6 +33,30 @@ class FileSystemPDFRepository(PDFRepository):
             )
         except Exception as e:
             logger.error(f"Error saving section {section.number}: {e}")
+            raise
+
+    async def save_rules(self, rules: List[Dict[str, Any]],
+                         output_path: str) -> None:
+        """
+        Save extracted rules to a JSON file.
+
+        Args:
+            rules (List[Dict[str, Any]]): List of rules extracted from the PDF.
+            output_path (str): Path to save the rules JSON file.
+        """
+        try:
+            # Create directory if it doesn't exist
+            rules_dir = os.path.dirname(output_path)
+            os.makedirs(rules_dir, exist_ok=True)
+
+            # Save rules to JSON file
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump({'rules': rules}, f, ensure_ascii=False, indent=2)
+
+            logger.info(
+                f"Rules saved to {output_path}. Total rules: {len(rules)}")
+        except Exception as e:
+            logger.error(f"Error saving rules to {output_path}: {e}")
             raise
 
     async def save_image(self, image: PDFImage) -> None:

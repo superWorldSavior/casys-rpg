@@ -5,6 +5,7 @@ from pdf_processing.infrastructure.pdf_processor import MuPDFProcessor
 from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 from pdf_processing.application.pdf_service import PDFService
 
+
 def find_pdfs_in_project() -> list:
     """Search for all PDF files in the current project."""
     pdf_files = []
@@ -14,26 +15,32 @@ def find_pdfs_in_project() -> list:
                 pdf_files.append(os.path.join(root, file))
     return pdf_files
 
+
 async def process_single_pdf(service: PDFService, pdf_path: str):
     """Process a single PDF file."""
     try:
         print(f'Processing PDF: {pdf_path}')
         processed_pdf = await service.process_pdf(pdf_path)
         print(f'Successfully processed: {pdf_path}')
-        print(f'Sections and images stored in: sections/{processed_pdf.pdf_name}')
+        print(
+            f'Sections and images stored in: sections/{processed_pdf.pdf_name}'
+        )
     except Exception as e:
         print(f'Error processing PDF {pdf_path}: {e}')
+
 
 async def main():
     # Parse CLI arguments
     parser = argparse.ArgumentParser(description="PDF Processor Script")
-    parser.add_argument('--pdf', type=str, help="Path to a specific PDF file to process")
+    parser.add_argument('--pdf',
+                        type=str,
+                        help="Path to a specific PDF file to process")
     args = parser.parse_args()
 
     # Initialize components
-    pdf_repository = FileSystemPDFRepository()  # Initialisation du dépôt
-    pdf_processor = MuPDFProcessor(repository=pdf_repository)  # Passer le dépôt à MuPDFProcessor
-    pdf_service = PDFService(processor=pdf_processor, repository=pdf_repository)  # Tout connecter
+    processor = MuPDFProcessor(repository=FileSystemPDFRepository)
+    repository = FileSystemPDFRepository()
+    service = PDFService(processor, repository)
 
     if args.pdf:
         # Process a specific PDF provided via CLI
@@ -54,6 +61,7 @@ async def main():
 
         for pdf_path in pdf_files:
             await process_single_pdf(service, pdf_path)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -50,6 +50,20 @@ class Section:
     is_chapter: bool = False
     chapter_number: Optional[int] = None
 
+    def to_dict(self):
+        return {
+            "number": self.number,
+            "content": self.content,
+            "page_number": self.page_number,
+            "file_path": self.file_path,
+            "pdf_name": self.pdf_name,
+            "title": self.title,
+            "formatted_content": [ft.__dict__ for ft in self.formatted_content],
+            # Assuming FormattedText also needs conversion
+            "is_chapter": self.is_chapter,
+            "chapter_number": self.chapter_number
+        }
+
 @dataclass
 class PDFImage:
     page_number: int
