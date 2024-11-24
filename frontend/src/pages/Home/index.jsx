@@ -28,83 +28,13 @@ import ErrorBoundary from '../../components/common/ErrorBoundary';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 
 // BookGrid Component
-const BookGrid = ({ books, onReadBook, onPreviewBook, theme }) => (
-  <Grid container spacing={3}>
-    {books.map((book, index) => (
-      <Grid item xs={12} sm={6} md={4} key={`book-${book?.id || index}`}>
-        <Card 
-          sx={{ 
-            height: '100%', 
-            display: 'flex', 
-            flexDirection: 'column',
-            transition: 'transform 0.2s',
-            '&:hover': {
-              transform: book?.status === 'completed' ? 'translateY(-4px)' : 'none',
-              boxShadow: book?.status === 'completed' ? 4 : 1,
-            },
-          }}
-        >
-          {book.cover_image && (
-            <CardMedia
-              component="img"
-              height="200"
-              image={book.cover_image}
-              alt={`Cover for ${book.title}`}
-              sx={{ objectFit: 'contain', p: 1 }}
-            />
-          )}
-          <CardContent sx={{ flexGrow: 1 }}>
-            <Typography gutterBottom variant="h5" component="h2" color="text.primary">
-              {book?.title || 'Untitled Book'}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Author: {book?.author || 'Unknown'}
-            </Typography>
-            <BookStatus book={book} />
-            <BookProgress book={book} />
-            {book.error_message && (
-              <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-                Error: {book.error_message}
-              </Typography>
-            )}
-          </CardContent>
-          <CardActions sx={{ 
-            padding: 2,
-            justifyContent: 'space-between',
-            backgroundColor: 'background.paper',
-            borderTop: 1,
-            borderColor: 'divider'
-          }}>
-            <Button
-              variant="outlined"
-              size="medium"
-              color="primary"
-              startIcon={<PreviewIcon />}
-              onClick={() => onPreviewBook(book)}
-              disabled={book?.status !== 'completed'}
-            >
-              Preview
-            </Button>
-            <Button
-              variant="contained"
-              size="medium"
-              color="primary"
-              startIcon={<MenuBookIcon />}
-              onClick={() => onReadBook(book)}
-              disabled={book?.status !== 'completed'}
-            >
-              Read
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-    ))}
-  </Grid>
-);
+// Component removed as it was duplicated
 
 // BookStatus Component
-const BookStatus = ({ book }) => (
-  book && (
+const BookStatus = ({ book }) => {
+  if (!book) return null;
+  
+  return (
     <Tooltip title={`Status: ${book.status}`}>
       <Chip
         label={book.status}
@@ -113,8 +43,8 @@ const BookStatus = ({ book }) => (
         sx={{ mb: 1 }}
       />
     </Tooltip>
-  )
-);
+  );
+};
 
 // BookProgress Component
 const BookProgress = ({ book }) => (
@@ -148,6 +78,123 @@ const BookProgress = ({ book }) => (
     </Stack>
   )
 );
+
+const BookGrid = ({ books, onReadBook, onPreviewBook, theme }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
+  return (
+    <Box 
+      sx={{ 
+        width: '100%',
+        pb: 2,
+        overflowX: isMobile ? 'auto' : 'hidden',
+        WebkitOverflowScrolling: 'touch',
+        '& .MuiGrid-container': {
+          width: isMobile ? 'auto' : '100%',
+          flexWrap: isMobile ? 'nowrap' : 'wrap',
+          px: isMobile ? 2 : 0
+        }
+      }}
+    >
+      <Grid container spacing={2}>
+        {books.map((book, index) => (
+          <Grid 
+            item 
+            xs={8} 
+            sm={6} 
+            md={4} 
+            lg={3} 
+            key={`book-${book?.id || index}`}
+            sx={{ 
+              flexShrink: 0,
+              width: isMobile ? 'calc(150% - 16px)' : 'auto'
+            }}
+          >
+            <Card 
+              sx={{ 
+                height: '100%',
+                position: 'relative',
+                cursor: book?.status === 'completed' ? 'pointer' : 'default',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: book?.status === 'completed' ? 'translateY(-4px)' : 'none',
+                  boxShadow: book?.status === 'completed' ? 6 : 1,
+                },
+              }}
+              onClick={() => book?.status === 'completed' && onReadBook(book)}
+            >
+              <Box sx={{ position: 'relative', pt: '140%' }}>
+                <CardMedia
+                  component="img"
+                  image={book.cover_image || '/placeholder-cover.jpg'}
+                  alt={`Couverture de ${book.title}`}
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
+                    p: 2,
+                    color: 'white'
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 500,
+                      textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {book?.title || 'Sans titre'}
+                  </Typography>
+                </Box>
+              </Box>
+              <CardActions 
+                sx={{ 
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  justifyContent: 'center',
+                  p: 1,
+                  bgcolor: 'rgba(0,0,0,0.5)',
+                  zIndex: 2
+                }}
+              >
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<PreviewIcon />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPreviewBook(book);
+                  }}
+                  disabled={book?.status !== 'completed'}
+                  sx={{ color: 'white' }}
+                >
+                  Aperçu
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+};
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -273,42 +320,37 @@ const HomePage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ mb: 4, textAlign: 'center' }}>
-        <Typography 
-          variant={isMobile ? "h4" : "h3"} 
-          component="h1" 
-          gutterBottom
-          sx={{ 
-            fontWeight: 'bold', 
-            color: theme.palette.secondary.main,
-            mb: 3
-          }}
-        >
-          Solo RPG AI Narrator
-        </Typography>
-        
-        <ErrorBoundary fallbackMessage="Error in file upload component">
-          <Button
-            variant="contained"
-            component="label"
-            startIcon={<CloudUploadIcon />}
+      <Box sx={{ 
+        mb: 4, 
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 2,
+        p: 2,
+        borderRadius: 2,
+        bgcolor: 'background.paper'
+      }}>
+        <Box>
+          <Typography 
+            variant={isMobile ? "h5" : "h4"}
             sx={{ 
-              mt: 2,
-              px: 3,
-              py: 1.5,
-              borderRadius: 2,
+              fontWeight: 500,
+              color: 'primary.main',
+              mb: 2
             }}
-            disabled={uploading}
           >
-            {uploading ? 'Uploading...' : 'Add PDF Book'}
-            <input
-              type="file"
-              hidden
-              accept=".pdf"
-              onChange={handleFileUpload}
-            />
-          </Button>
-        </ErrorBoundary>
+            Bibliothèque
+          </Typography>
+        </Box>
+        
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2,
+          flexWrap: 'wrap'
+        }}>
+          {/* Le bouton "Ajouter un livre" a été déplacé vers la page profil */}
+        </Box>
       </Box>
 
       <Snackbar

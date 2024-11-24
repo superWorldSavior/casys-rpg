@@ -1,26 +1,26 @@
 {
-  "_NavigateBefore-aiSEENI0.js": {
-    "file": "assets/NavigateBefore-aiSEENI0.js",
+  "_NavigateBefore-BZYtEowt.js": {
+    "file": "assets/NavigateBefore-BZYtEowt.js",
     "name": "NavigateBefore",
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "index.html"
     ]
   },
-  "_mui-DG192JM1.js": {
-    "file": "assets/mui-DG192JM1.js",
+  "_mui-DvUJsNLQ.js": {
+    "file": "assets/mui-DvUJsNLQ.js",
     "name": "mui",
     "imports": [
       "_vendor-Dq37Ohfu.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "_mui-deps-BskQHngj.js"
     ]
   },
-  "_mui-deps-Dl9IqMiS.js": {
-    "file": "assets/mui-deps-Dl9IqMiS.js",
+  "_mui-deps-BskQHngj.js": {
+    "file": "assets/mui-deps-BskQHngj.js",
     "name": "mui-deps",
     "imports": [
       "_vendor-Dq37Ohfu.js",
-      "_mui-DG192JM1.js"
+      "_mui-DvUJsNLQ.js"
     ]
   },
   "_router-B6Hy40oI.js": {
@@ -35,15 +35,15 @@
     "name": "vendor"
   },
   "index.html": {
-    "file": "assets/index-CHFaUFku.js",
+    "file": "assets/index-BG7iL5Qi.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "_vendor-Dq37Ohfu.js",
       "_router-B6Hy40oI.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "_mui-deps-BskQHngj.js"
     ],
     "dynamicImports": [
       "src/pages/Auth/LoginPage.jsx",
@@ -58,77 +58,79 @@
     ]
   },
   "src/pages/Auth/LoginPage.jsx": {
-    "file": "assets/LoginPage-Ks7jLlyB.js",
+    "file": "assets/LoginPage-C6BfnXXg.js",
     "name": "LoginPage",
     "src": "src/pages/Auth/LoginPage.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "_vendor-Dq37Ohfu.js",
       "index.html",
       "_router-B6Hy40oI.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "_mui-deps-BskQHngj.js"
     ]
   },
   "src/pages/Browse/index.jsx": {
-    "file": "assets/index-B1N-bqB5.js",
+    "file": "assets/index-D_AMOki0.js",
     "name": "index",
     "src": "src/pages/Browse/index.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "_vendor-Dq37Ohfu.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "_mui-deps-BskQHngj.js"
     ]
   },
   "src/pages/Home/index.jsx": {
-    "file": "assets/index-BbfD2Cuh.js",
+    "file": "assets/index-B5DeWmk0.js",
     "name": "index",
     "src": "src/pages/Home/index.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "_vendor-Dq37Ohfu.js",
       "index.html",
-      "_NavigateBefore-aiSEENI0.js",
+      "_NavigateBefore-BZYtEowt.js",
       "_router-B6Hy40oI.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "_mui-deps-BskQHngj.js"
     ]
   },
   "src/pages/Library/index.jsx": {
-    "file": "assets/index-DoX2NHeq.js",
+    "file": "assets/index-CHi3Mvkx.js",
     "name": "index",
     "src": "src/pages/Library/index.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "_vendor-Dq37Ohfu.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "_mui-deps-BskQHngj.js"
     ]
   },
   "src/pages/Profile/index.jsx": {
-    "file": "assets/index-DwimLExy.js",
+    "file": "assets/index-B8hEJBPK.js",
     "name": "index",
     "src": "src/pages/Profile/index.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "_vendor-Dq37Ohfu.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "index.html",
+      "_mui-deps-BskQHngj.js",
+      "_router-B6Hy40oI.js"
     ]
   },
   "src/pages/Reader/index.jsx": {
-    "file": "assets/index-B1aLNUSW.js",
+    "file": "assets/index-BgYD8qiP.js",
     "name": "index",
     "src": "src/pages/Reader/index.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-DG192JM1.js",
+      "_mui-DvUJsNLQ.js",
       "_vendor-Dq37Ohfu.js",
-      "_NavigateBefore-aiSEENI0.js",
+      "_NavigateBefore-BZYtEowt.js",
       "index.html",
       "_router-B6Hy40oI.js",
-      "_mui-deps-Dl9IqMiS.js"
+      "_mui-deps-BskQHngj.js"
     ]
   }
 }

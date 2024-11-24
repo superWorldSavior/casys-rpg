@@ -1,71 +1,90 @@
-import React from 'react';
-import { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { CircularProgress, Box } from '@mui/material';
 
 const AuthContext = createContext(null);
 
-function AuthProvider({ children }) {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log('Initializing authentication state...');
-    const storedUser = localStorage.getItem('user');
-    
-    if (storedUser) {
-      console.log('Found stored user session');
+    const initializeAuth = async () => {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        console.log('User session restored:', parsedUser);
-        setUser(parsedUser);
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+        }
       } catch (error) {
-        console.error('Error parsing stored user:', error);
+        console.error('Erreur lors de l\'initialisation de l\'authentification:', error);
         localStorage.removeItem('user');
+        setError('Erreur lors de la restauration de la session');
+      } finally {
+        setLoading(false);
       }
-    } else {
-      console.log('No stored user session found');
-    }
-    
-    setLoading(false);
-    console.log('Authentication state initialized');
+    };
+
+    initializeAuth();
   }, []);
 
-  const login = (userData) => {
-    console.log('Logging in user:', userData);
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-    console.log('User logged in successfully');
+  const login = async (credentials) => {
+    try {
+      setError(null);
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) {
+        throw new Error('Échec de la connexion');
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return userData;
+    } catch (error) {
+      setError('Identifiants invalides');
+      throw error;
+    }
   };
 
   const logout = () => {
-    console.log('Logging out user');
     setUser(null);
     localStorage.removeItem('user');
-    console.log('User logged out successfully');
   };
 
   if (loading) {
-    return <div>Chargement...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
-  const value = {
-    user,
-    login,
-    logout
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider 
+      value={{
+        user,
+        login,
+        logout,
+        error,
+        setError
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-function useAuth() {
+const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
   }
   return context;
-}
+};
 
 export { AuthProvider, useAuth };
