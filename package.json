@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
-    "@mui/material": "^6.1.8",
     "@vite-pwa/assets-generator": "^0.2.6",
     "@vitejs/plugin-react": "^4.3.3",
     "abab": "^2.0.6",
@@ -333,7 +330,6 @@
     "formdata-polyfill": "^4.0.10",
     "forwarded": "^0.2.0",
     "fraction.js": "^4.3.7",
-    "framer-motion": "^11.11.17",
     "freeport-async": "^2.0.0",
     "fresh": "^0.5.2",
     "fs-extra": "^11.2.0",
