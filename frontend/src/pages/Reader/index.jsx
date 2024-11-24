@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useParams } from 'react-router-dom';
+import { Box, LinearProgress, IconButton, useTheme } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import TextDisplay from '../../components/features/reader/TextDisplay';
 import NavigationControls from '../../components/features/reader/NavigationControls';
 import CommandInput from '../../components/features/reader/CommandInput';
 import SpeedControl from '../../components/features/reader/SpeedControl';
 import ThemeControl from '../../components/features/reader/ThemeControl';
+import TableOfContents from '../../components/features/reader/TableOfContents';
 import { storageService } from '../../services/storage';
+
+import { Box, IconButton, LinearProgress } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useInView } from 'react-intersection-observer';
 
 const DEFAULT_THEME = {
   fontFamily: 'var(--bs-body-font-family)',
@@ -16,6 +23,8 @@ const DEFAULT_THEME = {
 };
 
 function ReaderPage() {
+  const [tocOpen, setTocOpen] = useState(false);
+  const [readingProgress, setReadingProgress] = useState(0);
   const { bookId } = useParams();
   const [currentSection, setCurrentSection] = useState(-1);
   const [isPaused, setIsPaused] = useState(true);
@@ -90,21 +99,62 @@ function ReaderPage() {
   }, [currentSection]);
 
   return (
-    <div className="row justify-content-center m-0">
-      <div className="col-12 col-md-8 p-0">
-        <div className="card border-0 rounded-0 h-100">
-          <div className="card-body px-2 py-1"
-               style={{ 
-                 height: '100vh', 
-                 overflowY: 'auto',
-                 WebkitOverflowScrolling: 'touch'
-               }}
-               onScroll={debouncedScroll}>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        bgcolor: 'background.paper',
+        borderBottom: 1,
+        borderColor: 'divider',
+        px: 2,
+        py: 1,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2
+      }}>
+        <IconButton onClick={() => setTocOpen(true)}>
+          <MenuIcon />
+        </IconButton>
+        <LinearProgress 
+          variant="determinate" 
+          value={readingProgress} 
+          sx={{ flexGrow: 1 }}
+        />
+      </Box>
+
+      <TableOfContents
+        chapters={textContent}
+        currentSection={currentSection}
+        onChapterSelect={setCurrentSection}
+        open={tocOpen}
+        onClose={() => setTocOpen(false)}
+      />
+
+      <Box sx={{ 
+        flexGrow: 1, 
+        overflow: 'auto',
+        mt: '64px',
+        px: 2,
+        py: 1,
+               }}>
+        <Box 
+          component="main"
+          sx={{
+            height: '100%',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch'
+          }}
+          onScroll={debouncedScroll}
+        >
             <TextDisplay
               textContent={textContent}
               currentSection={currentSection}
               speed={speed}
               theme={theme}
+              onProgressChange={setReadingProgress}
             />
             <NavigationControls
               currentSection={currentSection}
@@ -144,10 +194,9 @@ function ReaderPage() {
                 }
               }}
             />
-          </div>
-        </div>
-      </div>
-    </div>
+          </Box>
+      </Box>
+    </Box>
   );
 }
 
