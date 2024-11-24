@@ -1,1 +1,0 @@
-import{j as o,C as t,d as r}from"./mui-baHMyI2e.js";import"./vendor-Dq37Ohfu.js";import"./mui-deps-BEMH35sO.js";const s=()=>o.jsx(t,{children:o.jsx(r,{variant:"h4",component:"h1",gutterBottom:!0,children:"Profil"})});export{s as default};

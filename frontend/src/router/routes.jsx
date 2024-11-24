@@ -4,12 +4,12 @@ import Layout from '../layouts/MainLayout';
 import { ProtectedRoute } from '../components/common/ProtectedRoute';
 
 // Lazy load components
-const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
-const HomePage = lazy(() => import('../pages/Home'));
-const ReaderPage = lazy(() => import('../pages/Reader'));
-const BrowsePage = lazy(() => import('../pages/Browse'));
-const LibraryPage = lazy(() => import('../pages/Library'));
-const ProfilePage = lazy(() => import('../pages/Profile'));
+const LoginPage = lazy(() => import('../pages/Auth/LoginPage').then(module => ({ default: module.default || module })));
+const HomePage = lazy(() => import('../pages/Home').then(module => ({ default: module.default || module })));
+const ReaderPage = lazy(() => import('../pages/Reader').then(module => ({ default: module.default || module })));
+const BrowsePage = lazy(() => import('../pages/Browse').then(module => ({ default: module.default || module })));
+const LibraryPage = lazy(() => import('../pages/Library').then(module => ({ default: module.default || module })));
+const ProfilePage = lazy(() => import('../pages/Profile').then(module => ({ default: module.default || module })));
 
 const AuthenticatedLayout = () => {
   return (

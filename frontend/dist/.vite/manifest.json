@@ -1,30 +1,30 @@
 {
-  "_NavigateBefore-B2SJ5y2h.js": {
-    "file": "assets/NavigateBefore-B2SJ5y2h.js",
+  "_NavigateBefore-aiSEENI0.js": {
+    "file": "assets/NavigateBefore-aiSEENI0.js",
     "name": "NavigateBefore",
     "imports": [
-      "_mui-BOmMbq1k.js",
-      "_vendor-Dq37Ohfu.js"
+      "_mui-DG192JM1.js",
+      "index.html"
     ]
   },
-  "_mui-BOmMbq1k.js": {
-    "file": "assets/mui-BOmMbq1k.js",
+  "_mui-DG192JM1.js": {
+    "file": "assets/mui-DG192JM1.js",
     "name": "mui",
     "imports": [
       "_vendor-Dq37Ohfu.js",
-      "_mui-deps-FQPvtg2a.js"
+      "_mui-deps-Dl9IqMiS.js"
     ]
   },
-  "_mui-deps-FQPvtg2a.js": {
-    "file": "assets/mui-deps-FQPvtg2a.js",
+  "_mui-deps-Dl9IqMiS.js": {
+    "file": "assets/mui-deps-Dl9IqMiS.js",
     "name": "mui-deps",
     "imports": [
       "_vendor-Dq37Ohfu.js",
-      "_mui-BOmMbq1k.js"
+      "_mui-DG192JM1.js"
     ]
   },
-  "_router-C0-8wAUP.js": {
-    "file": "assets/router-C0-8wAUP.js",
+  "_router-B6Hy40oI.js": {
+    "file": "assets/router-B6Hy40oI.js",
     "name": "router",
     "imports": [
       "_vendor-Dq37Ohfu.js"
@@ -35,62 +35,100 @@
     "name": "vendor"
   },
   "index.html": {
-    "file": "assets/index-5REBHOuT.js",
+    "file": "assets/index-CHFaUFku.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_mui-BOmMbq1k.js",
+      "_mui-DG192JM1.js",
       "_vendor-Dq37Ohfu.js",
-      "_router-C0-8wAUP.js",
-      "_mui-deps-FQPvtg2a.js"
+      "_router-B6Hy40oI.js",
+      "_mui-deps-Dl9IqMiS.js"
     ],
     "dynamicImports": [
       "src/pages/Auth/LoginPage.jsx",
       "src/pages/Home/index.jsx",
-      "src/pages/Reader/index.jsx"
+      "src/pages/Reader/index.jsx",
+      "src/pages/Browse/index.jsx",
+      "src/pages/Library/index.jsx",
+      "src/pages/Profile/index.jsx"
     ],
     "css": [
       "assets/index-BcO3ECpr.css"
     ]
   },
   "src/pages/Auth/LoginPage.jsx": {
-    "file": "assets/LoginPage-D6JuIm1u.js",
+    "file": "assets/LoginPage-Ks7jLlyB.js",
     "name": "LoginPage",
     "src": "src/pages/Auth/LoginPage.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-BOmMbq1k.js",
+      "_mui-DG192JM1.js",
       "_vendor-Dq37Ohfu.js",
       "index.html",
-      "_router-C0-8wAUP.js",
-      "_mui-deps-FQPvtg2a.js"
+      "_router-B6Hy40oI.js",
+      "_mui-deps-Dl9IqMiS.js"
+    ]
+  },
+  "src/pages/Browse/index.jsx": {
+    "file": "assets/index-B1N-bqB5.js",
+    "name": "index",
+    "src": "src/pages/Browse/index.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_mui-DG192JM1.js",
+      "_vendor-Dq37Ohfu.js",
+      "_mui-deps-Dl9IqMiS.js"
     ]
   },
   "src/pages/Home/index.jsx": {
-    "file": "assets/index-Cc6PF53c.js",
+    "file": "assets/index-BbfD2Cuh.js",
     "name": "index",
     "src": "src/pages/Home/index.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-BOmMbq1k.js",
+      "_mui-DG192JM1.js",
       "_vendor-Dq37Ohfu.js",
-      "_NavigateBefore-B2SJ5y2h.js",
-      "_router-C0-8wAUP.js",
-      "_mui-deps-FQPvtg2a.js"
+      "index.html",
+      "_NavigateBefore-aiSEENI0.js",
+      "_router-B6Hy40oI.js",
+      "_mui-deps-Dl9IqMiS.js"
+    ]
+  },
+  "src/pages/Library/index.jsx": {
+    "file": "assets/index-DoX2NHeq.js",
+    "name": "index",
+    "src": "src/pages/Library/index.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_mui-DG192JM1.js",
+      "_vendor-Dq37Ohfu.js",
+      "_mui-deps-Dl9IqMiS.js"
+    ]
+  },
+  "src/pages/Profile/index.jsx": {
+    "file": "assets/index-DwimLExy.js",
+    "name": "index",
+    "src": "src/pages/Profile/index.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_mui-DG192JM1.js",
+      "_vendor-Dq37Ohfu.js",
+      "_mui-deps-Dl9IqMiS.js"
     ]
   },
   "src/pages/Reader/index.jsx": {
-    "file": "assets/index-DPe6dybB.js",
+    "file": "assets/index-B1aLNUSW.js",
     "name": "index",
     "src": "src/pages/Reader/index.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_mui-BOmMbq1k.js",
+      "_mui-DG192JM1.js",
       "_vendor-Dq37Ohfu.js",
-      "_NavigateBefore-B2SJ5y2h.js",
-      "_router-C0-8wAUP.js",
-      "_mui-deps-FQPvtg2a.js"
+      "_NavigateBefore-aiSEENI0.js",
+      "index.html",
+      "_router-B6Hy40oI.js",
+      "_mui-deps-Dl9IqMiS.js"
     ]
   }
 }
