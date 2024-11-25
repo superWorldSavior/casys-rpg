@@ -27,11 +27,11 @@ const protectedRoutes = [
         index: true,
         element: <HomePage />,
       },
-      {
-        path: 'reader/:bookId',
-        element: <ReaderPage />,
-      },
     ],
+  },
+  {
+    path: '/reader/:bookId',
+    element: <ReaderPage />,
   },
 ];
 

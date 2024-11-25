@@ -3,14 +3,17 @@ from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
 import os
 import mimetypes
-import traceback
-from pathlib import Path
 import json
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from dotenv import load_dotenv
 from pdf_processing.infrastructure.pdf_processor import MuPDFProcessor
 from pdf_processing.infrastructure.pdf_repository import FileSystemPDFRepository
 from pdf_processing.application.pdf_service import PDFService
+
+# Load environment variables
+load_dotenv()
+SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "default_secret_key")
 
 # Add MIME types for JavaScript and CSS
 mimetypes.add_type('application/javascript', '.js')
@@ -29,13 +32,13 @@ os.makedirs(SECTIONS_FOLDER, exist_ok=True)
 os.makedirs(METADATA_FOLDER, exist_ok=True)
 
 # Initialize PDF processing components
-pdf_repository = FileSystemPDFRepository()  # Initialisation du dépôt
-pdf_processor = MuPDFProcessor(
-    repository=pdf_repository)  # Passer le dépôt à MuPDFProcessor
-pdf_service = PDFService(processor=pdf_processor,
-                         repository=pdf_repository)  # Tout connecter
+pdf_repository = FileSystemPDFRepository()
+pdf_processor = MuPDFProcessor(repository=pdf_repository)
+pdf_service = PDFService(processor=pdf_processor, repository=pdf_repository)
 
+# Flask app initialization
 app = Flask(__name__, static_folder='frontend/dist')
+app.secret_key = SECRET_KEY
 
 # Enable CORS
 CORS(app,
@@ -48,45 +51,39 @@ CORS(app,
      })
 
 
+# Helper Functions
 def allowed_file(filename: str) -> bool:
+    """Check if the file extension is allowed."""
     return '.' in filename and filename.rsplit(
         '.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def save_metadata(filename: str, metadata: dict):
+def save_metadata(book_id: str, metadata: dict):
     """Save metadata to a JSON file."""
-    filepath = os.path.join(METADATA_FOLDER, f"{filename}.json")
+    filepath = os.path.join(METADATA_FOLDER, f"{book_id}.json")
     try:
         with open(filepath, 'w') as f:
             json.dump(metadata, f)
         return True
     except Exception as e:
-        app.logger.error(f"Failed to save metadata for {filename}: {e}")
+        app.logger.error(f"Failed to save metadata for {book_id}: {e}")
         return False
 
 
-def load_metadata(filename: str) -> Optional[dict]:
+def load_metadata(book_id: str) -> Optional[dict]:
     """Load metadata from a JSON file."""
-    filepath = os.path.join(METADATA_FOLDER, f"{filename}.json")
+    filepath = os.path.join(METADATA_FOLDER, f"{book_id}.json")
     if os.path.exists(filepath):
         try:
             with open(filepath, 'r') as f:
                 return json.load(f)
         except Exception as e:
-            app.logger.error(f"Failed to load metadata for {filename}: {e}")
+            app.logger.error(f"Failed to load metadata for {book_id}: {e}")
     return None
 
 
-@app.errorhandler(405)
-def method_not_allowed(e):
-    return jsonify({
-        "status": "error",
-        "message": "Method not allowed",
-        "code": 405
-    }), 405
-
-
 async def process_pdf_file(file):
+    """Process and extract metadata from a PDF file."""
     if not file or not file.filename:
         raise ValueError("No file selected")
 
@@ -98,7 +95,6 @@ async def process_pdf_file(file):
     file.save(file_path)
 
     try:
-        # Process the PDF
         processed_pdf = await pdf_service.process_pdf(file_path)
 
         metadata = {
@@ -132,8 +128,24 @@ async def process_pdf_file(file):
         raise
 
 
+# Routes
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    """Login route for authentication."""
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+
+    if username == 'admin' and password == 'admin':
+        response = {'id': 1, 'username': 'admin', 'email': 'admin@example.com'}
+        return jsonify(response), 200
+    else:
+        return jsonify({'message': 'Invalid credentials'}), 401
+
+
 @app.route('/api/books/upload', methods=['POST'])
 async def upload_pdfs():
+    """Upload and process PDF files."""
     try:
         uploaded_files = request.files.getlist('pdf_files')
         if not uploaded_files:
@@ -150,13 +162,8 @@ async def upload_pdfs():
             try:
                 metadata = await process_pdf_file(file)
                 processed_files.append(metadata)
-            except ValueError as e:
-                errors.append({"filename": file.filename, "error": str(e)})
             except Exception as e:
-                errors.append({
-                    "filename": file.filename,
-                    "error": f"Processing failed: {str(e)}"
-                })
+                errors.append({"filename": file.filename, "error": str(e)})
 
         if not processed_files:
             return jsonify({
@@ -166,11 +173,7 @@ async def upload_pdfs():
                 "code": 400
             }), 400
 
-        response_data = {
-            "status": "success",
-            "message": f"{len(processed_files)} files uploaded",
-            "books": processed_files
-        }
+        response_data = {"status": "success", "books": processed_files}
         if errors:
             response_data["errors"] = errors
 
@@ -186,6 +189,7 @@ async def upload_pdfs():
 
 @app.route('/api/books')
 def get_books():
+    """Retrieve the list of all books."""
     try:
         books = []
         for metadata_file in os.listdir(METADATA_FOLDER):
@@ -203,10 +207,11 @@ def get_books():
         }), 500
 
 
-@app.route('/api/books/<filename>')
-def get_book(filename):
+@app.route('/api/books/<book_id>')
+def get_book(book_id):
+    """Retrieve metadata for a specific book."""
     try:
-        metadata = load_metadata(filename)
+        metadata = load_metadata(book_id)
         if not metadata:
             return jsonify({
                 "status": "error",
@@ -215,7 +220,7 @@ def get_book(filename):
             }), 404
         return jsonify(metadata)
     except Exception as e:
-        app.logger.error(f"Error retrieving book metadata for {filename}: {e}")
+        app.logger.error(f"Error retrieving book metadata for {book_id}: {e}")
         return jsonify({
             "status": "error",
             "message": str(e),
@@ -223,14 +228,107 @@ def get_book(filename):
         }), 500
 
 
-# Serve static files or React app
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    static_folder = app.static_folder
-    if path and os.path.exists(os.path.join(static_folder, path)):
-        return send_from_directory(static_folder, path)
-    return send_from_directory(static_folder, 'index.html')
+@app.route('/api/books/<book_id>/chapters/<int:chapter_index>')
+def get_book_chapter(book_id, chapter_index):
+    """Retrieve a specific chapter of a book."""
+    try:
+        histoire_path = os.path.join(SECTIONS_FOLDER,
+                                     book_id.replace(".pdf", ""), "histoire")
+
+        if not os.path.exists(histoire_path):
+            return jsonify({"error": "Book not found"}), 404
+
+        chapter_files = sorted(
+            [
+                file
+                for file in os.listdir(histoire_path) if file.endswith('.md')
+            ],
+            key=lambda x: int(''.join(filter(str.isdigit, x)) or 0))
+
+        if chapter_index < 0 or chapter_index >= len(chapter_files):
+            return jsonify({"error": "Chapter not found"}), 404
+
+        with open(os.path.join(histoire_path, chapter_files[chapter_index]),
+                  'r',
+                  encoding='utf-8') as f:
+            content = f.read()
+
+        return jsonify({"chapter": content, "index": chapter_index})
+    except Exception as e:
+        app.logger.error(f"Error in get_book_chapter: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/books/<book_id>/chapters')
+def get_book_chapters(book_id):
+    """Retrieve all chapters of a book."""
+    try:
+        histoire_path = os.path.join(SECTIONS_FOLDER,
+                                     book_id.replace(".pdf", ""), "histoire")
+
+        if not os.path.exists(histoire_path):
+            return jsonify({"error": "Book not found"}), 404
+
+        chapter_files = sorted(
+            [
+                file
+                for file in os.listdir(histoire_path) if file.endswith('.md')
+            ],
+            key=lambda x: int(''.join(filter(str.isdigit, x)) or 0))
+
+        chapters = []
+        for file in chapter_files:
+            with open(os.path.join(histoire_path, file), 'r',
+                      encoding='utf-8') as f:
+                chapters.append(f.read())
+
+        return jsonify({'chapters': chapters})
+    except Exception as e:
+        app.logger.error(f"Error in get_book_chapters: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/books/<book_id>/cover')
+def get_book_cover(book_id):
+    try:
+        images_dir = os.path.join(SECTIONS_FOLDER, book_id.replace(".pdf", ""),
+                                  'images')
+
+        if not os.path.exists(images_dir):
+            return jsonify({
+                "status": "error",
+                "message": "Images directory not found",
+                "code": 404
+            }), 404
+
+        image_files = sorted(
+            [
+                f for f in os.listdir(images_dir)
+                if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))
+            ],
+            key=lambda x: x.lower()  # Tri alphabétique par défaut
+        )
+
+        if not image_files:
+            return jsonify({
+                "status": "error",
+                "message": "No cover image found",
+                "code": 404
+            }), 404
+
+        first_image = image_files[0]  # Prendre la première image après tri
+        content_type = mimetypes.guess_type(first_image)[0]
+
+        return send_from_directory(images_dir,
+                                   first_image,
+                                   mimetype=content_type)
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "code": 500
+        }), 500
 
 
 if __name__ == '__main__':

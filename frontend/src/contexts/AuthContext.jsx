@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CircularProgress, Box } from '@mui/material';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { CircularProgress, Box } from "@mui/material";
 
 const AuthContext = createContext(null);
 
@@ -11,15 +11,18 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem("user");
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
           setUser(parsedUser);
         }
       } catch (error) {
-        console.error('Erreur lors de l\'initialisation de l\'authentification:', error);
-        localStorage.removeItem('user');
-        setError('Erreur lors de la restauration de la session');
+        console.error(
+          "Erreur lors de l'initialisation de l'authentification:",
+          error,
+        );
+        localStorage.removeItem("user");
+        setError("Erreur lors de la restauration de la session");
       } finally {
         setLoading(false);
       }
@@ -31,47 +34,52 @@ const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       setError(null);
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
 
       if (!response.ok) {
-        throw new Error('Échec de la connexion');
+        throw new Error("Échec de la connexion");
       }
 
       const userData = await response.json();
       setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(userData));
       return userData;
     } catch (error) {
-      setError('Identifiants invalides');
+      setError("Identifiants invalides");
       throw error;
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
   };
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <AuthContext.Provider 
+    <AuthContext.Provider
       value={{
         user,
         login,
         logout,
         error,
-        setError
+        setError,
       }}
     >
       {children}
@@ -82,7 +90,9 @@ const AuthProvider = ({ children }) => {
 const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
+    throw new Error(
+      "useAuth doit être utilisé à l'intérieur d'un AuthProvider",
+    );
   }
   return context;
 };

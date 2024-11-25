@@ -5,7 +5,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      jsxRuntime: 'automatic',
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
@@ -83,6 +85,33 @@ export default defineConfig({
     hmr: {
       overlay: true
     },
+    proxy: {
+      '/api': {
+        target: 'http://0.0.0.0:5000',
+        changeOrigin: true,
+        secure: false
+      }
+    },
+    fs: {
+      strict: true
+    },
+    historyApiFallback: {
+      disableDotRule: true,
+      rewrites: [
+        { from: /^\/reader\/.*/, to: '/index.html' },
+        { from: /^\/.*/, to: '/index.html' }
+      ]
+    },
+    cors: {
+      origin: true
+    },
+    middlewareMode: 'html'
+  },
+  preview: {
+    port: 5175,
+    host: '0.0.0.0',
+    strictPort: true,
+    cors: true,
     proxy: {
       '/api': {
         target: 'http://0.0.0.0:5000',

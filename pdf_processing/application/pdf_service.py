@@ -121,3 +121,27 @@ class PDFService:
             # Handle potential event loop issues for synchronous calls
             logger.error(f"RuntimeError during synchronous processing: {e}")
             return self._handle_error(e, pdf_path)
+    async def get_content(self, pdf_name: str) -> List[dict]:
+        """Récupère le contenu d'un PDF par son nom."""
+        try:
+            metadata_path = os.path.join("sections", pdf_name, "metadata", "book.json")
+            if not os.path.exists(metadata_path):
+                raise FileNotFoundError(f"Metadata not found for {pdf_name}")
+
+            with open(metadata_path, 'r', encoding='utf-8') as f:
+                metadata = json.load(f)
+
+            sections_content = []
+            for section in metadata['sections']:
+                with open(section['file_path'], 'r', encoding='utf-8') as f:
+                    content = f.read()
+                sections_content.append({
+                    'number': section['number'],
+                    'title': section['title'],
+                    'content': content
+                })
+
+            return sections_content
+        except Exception as e:
+            logger.error(f"Error retrieving content for {pdf_name}: {e}")
+            raise

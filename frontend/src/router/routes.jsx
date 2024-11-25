@@ -7,10 +7,11 @@ import { ProtectedRoute } from "../components/common/ProtectedRoute.jsx";
 // Lazy load components
 const LoginPage = lazy(() => import("../pages/Auth/LoginPage.jsx"));
 const HomePage = lazy(() => import("../pages/Home/index.jsx"));
-const ReaderPage = lazy(() => import("../pages/Reader/index.jsx"));
+const ReaderPage = lazy(() => import("../pages/Reader"));
 const BrowsePage = lazy(() => import("../pages/Browse/index.jsx"));
 const LibraryPage = lazy(() => import("../pages/Library/index.jsx"));
 const ProfilePage = lazy(() => import("../pages/Profile/index.jsx"));
+const BookDetailsPage = lazy(() => import("../pages/Book/BookDetailsPage.jsx"));
 
 const AuthenticatedLayout = () => {
   return (
@@ -46,77 +47,82 @@ const routerOptions = {
   },
 };
 
-export const router = createBrowserRouter(
-  [
-    {
-      path: "/login",
-      element: (
-        <SuspenseWrapper>
-          <LoginPage />
-        </SuspenseWrapper>
-      ),
-      errorElement: <HomeErrorBoundary />,
-    },
-    {
-      path: "/",
-      element: <Layout />, // Utilisez `Layout` à la place de `MainLayout`
-      errorElement: <HomeErrorBoundary />,
-      children: [
-        {
-          index: true,
-          element: (
-            <SuspenseWrapper>
-              <HomePage />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: "library",
-          element: (
-            <SuspenseWrapper>
-              <LibraryPage />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: "browse",
-          element: (
-            <SuspenseWrapper>
-              <BrowsePage />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: "profile",
-          element: (
-            <SuspenseWrapper>
-              <ProfilePage />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: "reader/:bookId",
-          element: (
-            <SuspenseWrapper>
-              <ReaderPage />
-            </SuspenseWrapper>
-          ),
-        },
-        {
-          path: "*",
-          element: <Navigate to="/" replace />,
-        },
-      ],
-    },
-  ],
+const router = createBrowserRouter([
   {
-    future: {
-      v7_startTransition: true,
-      v7_relativeSplatPath: true,
-      v7_fetcherPersist: true,
-      v7_normalizeFormMethod: true,
-      v7_partialHydration: true,
-      v7_skipActionErrorRevalidation: true,
-    },
+    path: "/",
+    element: <Navigate to="/login" replace />,
   },
-);
+  {
+    path: "/login",
+    element: (
+      <SuspenseWrapper>
+        <LoginPage />
+      </SuspenseWrapper>
+    ),
+    errorElement: <HomeErrorBoundary />,
+  },
+  {
+    path: "/reader/:bookId",
+    element: (
+      <SuspenseWrapper>
+        <ReaderPage />
+      </SuspenseWrapper>
+    ),
+    errorElement: <HomeErrorBoundary />,
+  },
+  {
+    path: "/",
+    element: <AuthenticatedLayout />,
+    errorElement: <HomeErrorBoundary />,
+    children: [
+      {
+        index: true,
+        element: (
+          <SuspenseWrapper>
+            <HomePage />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: "library",
+        element: (
+          <SuspenseWrapper>
+            <LibraryPage />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: "browse",
+        element: (
+          <SuspenseWrapper>
+            <BrowsePage />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <SuspenseWrapper>
+            <ProfilePage />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: "books/:bookId",
+        element: (
+          <SuspenseWrapper>
+            <BookDetailsPage />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: "*",
+        element: <Navigate to="/" replace />,
+      },
+    ],
+  },
+], {
+  future: routerOptions.future,
+});
+
+export { router };

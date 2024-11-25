@@ -1,200 +1,289 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { useParams } from 'react-router-dom';
-import { Box, LinearProgress, IconButton, useTheme } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import TextDisplay from '../../components/features/reader/TextDisplay';
-import NavigationControls from '../../components/features/reader/NavigationControls';
-import CommandInput from '../../components/features/reader/CommandInput';
-import SpeedControl from '../../components/features/reader/SpeedControl';
-import ThemeControl from '../../components/features/reader/ThemeControl';
-import TableOfContents from '../../components/features/reader/TableOfContents';
-import { storageService } from '../../services/storage';
-
-import { Box, IconButton, LinearProgress } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useInView } from 'react-intersection-observer';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Box,
+  LinearProgress,
+  IconButton,
+  useTheme,
+  CircularProgress,
+  Typography,
+  Button,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import KindleReader from "../../components/features/reader/KindleReader";
+import CommandInput from "../../components/features/reader/CommandInput";
+import TableOfContents from "../../components/features/reader/TableOfContents";
 
 const DEFAULT_THEME = {
-  fontFamily: 'var(--bs-body-font-family)',
-  fontSize: '1rem',
-  textColor: '#ffffff',
-  lineHeight: '1.6'
+  fontFamily: '"Bookerly", "Georgia", serif',
+  fontSize: "1.2rem",
+  textColor: "#2c2c2c",
+  backgroundColor: "#F6F3E9",
+  lineHeight: "1.8",
+};
+
+const DARK_THEME = {
+  ...DEFAULT_THEME,
+  textColor: "#e1e1e1",
+  backgroundColor: "#131516",
 };
 
 function ReaderPage() {
-  const [tocOpen, setTocOpen] = useState(false);
-  const [readingProgress, setReadingProgress] = useState(0);
   const { bookId } = useParams();
-  const [currentSection, setCurrentSection] = useState(-1);
-  const [isPaused, setIsPaused] = useState(true);
-  const [speed, setSpeed] = useState(5);
-  const [textContent, setTextContent] = useState([]);
-  const [theme, setTheme] = useState(DEFAULT_THEME);
+  const navigate = useNavigate();
+  const muiTheme = useTheme();
+
+  // États
+  const [currentChapter, setCurrentChapter] = useState("");
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+  const [totalChapters, setTotalChapters] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() =>
+    muiTheme.palette.mode === "dark" ? DARK_THEME : DEFAULT_THEME,
+  );
 
+  // Mettre à jour le thème en fonction du mode actuel
   useEffect(() => {
-    const fetchContent = async () => {
+    setTheme(muiTheme.palette.mode === "dark" ? DARK_THEME : DEFAULT_THEME);
+  }, [muiTheme.palette.mode]);
+
+  // Charger un chapitre spécifique
+  const fetchChapter = async (index) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await fetch(`/api/books/${bookId}/chapters/${index}`);
+      if (!response.ok) {
+        throw new Error("Erreur lors du chargement du chapitre.");
+      }
+
+      const data = await response.json();
+      setCurrentChapter(data.chapter);
+      setCurrentChapterIndex(data.index);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Charger le nombre total de chapitres et initialiser le premier chapitre
+  useEffect(() => {
+    const fetchTotalChapters = async () => {
       try {
-        const chapters = await storageService.getAllChapters();
-        if (chapters && chapters.length > 0) {
-          const content = await Promise.all(
-            chapters.map(key => storageService.getChapter(key))
-          );
-          setTextContent(content);
-        } else {
-          const response = await fetch(`/api/books/${bookId}/content`);
-          const data = await response.json();
-          if (response.ok) {
-            await Promise.all(
-              data.map((content, index) => 
-                storageService.saveChapter(`book_${bookId}_chapter_${index + 1}`, content)
-              )
-            );
-            setTextContent(data);
-          } else {
-            setError('Error loading book content');
-          }
+        const response = await fetch(`/api/books/${bookId}/chapters`);
+        if (!response.ok) {
+          throw new Error("Erreur lors du chargement des chapitres.");
         }
 
-        const savedTheme = await storageService.getChapter('user_theme');
-        if (savedTheme) {
-          setTheme(savedTheme);
-        }
-      } catch (error) {
-        console.error('Error fetching content:', error);
-        setError('Error loading book content');
+        const data = await response.json();
+        setTotalChapters(data.chapters.length);
+        fetchChapter(0); // Charger le premier chapitre
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
       }
     };
 
-    if (bookId) {
-      fetchContent();
-    }
+    fetchTotalChapters();
   }, [bookId]);
 
-  useEffect(() => {
-    storageService.saveChapter('user_theme', theme);
-  }, [theme]);
+  // Navigation entre les chapitres
+  const goToNextChapter = () => {
+    if (currentChapterIndex < totalChapters - 1) {
+      fetchChapter(currentChapterIndex + 1);
+      setScrollPosition(0); // Reset scroll position for new chapter
+    }
+  };
 
-  if (error) {
+  const goToPreviousChapter = () => {
+    if (currentChapterIndex > 0) {
+      fetchChapter(currentChapterIndex - 1);
+      setScrollPosition(0); // Reset scroll position for new chapter
+    }
+  };
+
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = (event) => {
+    const { scrollTop, scrollHeight, clientHeight } = event.target;
+    const bottom = scrollHeight - scrollTop === clientHeight;
+    
+    if (bottom) {
+      // At the bottom of the content
+      setIsChapterEnd(true);
+    } else {
+      setIsChapterEnd(false);
+    }
+    
+    setScrollPosition(scrollTop);
+  };
+
+  if (isLoading) {
     return (
-      <div className="alert alert-danger" role="alert">
-        {error}
-      </div>
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: theme.backgroundColor,
+          color: theme.textColor,
+        }}
+      >
+        <CircularProgress />
+      </Box>
     );
   }
 
-  const { ref: loadMoreRef, inView } = useInView({
-    threshold: 0.5,
-    triggerOnce: false
-  });
-
-  const debouncedScroll = useCallback((e) => {
-    if (e.target.scrollTop === 0) {
-      // At the top - load previous content if available
-      if (currentSection > 0) {
-        setCurrentSection(prev => prev - 1);
-      }
-    }
-  }, [currentSection]);
+  if (error) {
+    return (
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: theme.backgroundColor,
+          color: theme.textColor,
+          padding: 2,
+        }}
+      >
+        <Typography variant="h6">{error}</Typography>
+        <Button
+          onClick={() => fetchChapter(currentChapterIndex)}
+          variant="contained"
+          sx={{ marginTop: 2 }}
+        >
+          Réessayer
+        </Button>
+      </Box>
+    );
+  }
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ 
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        bgcolor: 'background.paper',
-        borderBottom: 1,
-        borderColor: 'divider',
-        px: 2,
-        py: 1,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 2
-      }}>
-        <IconButton onClick={() => setTocOpen(true)}>
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
+        bgcolor: theme.backgroundColor,
+        color: theme.textColor,
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* En-tête */}
+      <Box
+        component="header"
+        sx={{
+          position: "sticky",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          bgcolor: `${theme.backgroundColor}CC`,
+          borderBottom: 1,
+          borderColor: "divider",
+          px: 2,
+          py: 1,
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <IconButton
+          onClick={() => setMenuOpen(true)}
+          sx={{ color: theme.textColor }}
+        >
           <MenuIcon />
         </IconButton>
-        <LinearProgress 
-          variant="determinate" 
-          value={readingProgress} 
-          sx={{ flexGrow: 1 }}
+        <LinearProgress
+          variant="determinate"
+          value={(currentChapterIndex / totalChapters) * 100}
+          sx={{
+            flexGrow: 1,
+            "& .MuiLinearProgress-bar": { backgroundColor: theme.textColor },
+          }}
         />
       </Box>
 
+      {/* Table des matières */}
       <TableOfContents
-        chapters={textContent}
-        currentSection={currentSection}
-        onChapterSelect={setCurrentSection}
-        open={tocOpen}
-        onClose={() => setTocOpen(false)}
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        chapters={Array(totalChapters).fill("")} // Placeholder chapters
+        currentSection={currentChapterIndex}
+        onChapterSelect={(index) => {
+          fetchChapter(index);
+          setMenuOpen(false);
+        }}
       />
 
-      <Box sx={{ 
-        flexGrow: 1, 
-        overflow: 'auto',
-        mt: '64px',
-        px: 2,
-        py: 1,
-               }}>
-        <Box 
-          component="main"
+      {/* Contenu du lecteur */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <KindleReader 
+        content={currentChapter || []} 
+        initialSection={0}
+        bookId={bookId}
+        customTheme={theme}
+        onProgressChange={(progress) => {
+          // Sauvegarder la progression
+          localStorage.setItem(`reading-progress-${bookId}`, progress.toString());
+        }}
+      />
+        <Box
           sx={{
-            height: '100%',
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch'
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            p: 2,
+            bgcolor: theme.backgroundColor,
+            borderTop: 1,
+            borderColor: "divider",
+            zIndex: 1000
           }}
-          onScroll={debouncedScroll}
         >
-            <TextDisplay
-              textContent={textContent}
-              currentSection={currentSection}
-              speed={speed}
-              theme={theme}
-              onProgressChange={setReadingProgress}
-            />
-            <NavigationControls
-              currentSection={currentSection}
-              setCurrentSection={setCurrentSection}
-              totalSections={textContent.length}
-              isPaused={isPaused}
-              setIsPaused={setIsPaused}
-            />
-            <SpeedControl speed={speed} setSpeed={setSpeed} />
-            <ThemeControl theme={theme} onThemeChange={setTheme} />
-            <CommandInput
-              onCommand={(command) => {
-                switch (command) {
-                  case 'commencer':
-                    setCurrentSection(0);
-                    setIsPaused(false);
-                    break;
-                  case 'pause':
-                    setIsPaused(true);
-                    break;
-                  case 'resume':
-                    setIsPaused(false);
-                    break;
-                  case 'skip':
-                    if (currentSection < textContent.length - 1) {
-                      setCurrentSection(prev => prev + 1);
-                    }
-                    break;
-                  case 'help':
-                    alert(`Available commands:
-- commencer: Start reading
-- pause: Pause reading
-- resume: Resume reading
-- skip: Skip to next section
-- help: Show this help message`);
-                    break;
-                }
-              }}
-            />
-          </Box>
+          <CommandInput
+            onCommand={(command) => {
+              switch (command.toLowerCase()) {
+                case "next":
+                  goToNextChapter();
+                  break;
+                case "prev":
+                  goToPreviousChapter();
+                  break;
+                default:
+                  break;
+              }
+            }}
+          />
+          <Typography
+            variant="caption"
+            sx={{
+              position: "absolute",
+              right: 16,
+              bottom: 16,
+              opacity: 0.7,
+            }}
+          >
+            {currentChapterIndex + 1} / {totalChapters}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

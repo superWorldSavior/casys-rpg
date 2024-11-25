@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -13,6 +13,30 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import BottomNav from "../components/navigation/BottomNav.jsx";
 
 const MainLayout = () => {
+  const location = useLocation();
+  const isReaderRoute = location.pathname.includes('/reader/');
+  
+  // Ne pas afficher l'AppBar en mode lecture
+  if (isReaderRoute) {
+    return (
+      <>
+        <Container
+          maxWidth={false}
+          disableGutters
+          sx={{
+            p: 0,
+            m: 0,
+            height: '100vh',
+            width: '100vw',
+            overflow: 'hidden'
+          }}
+        >
+          <Outlet />
+        </Container>
+      </>
+    );
+  }
+
   return (
     <>
       <AppBar position="static">
@@ -66,14 +90,21 @@ const MainLayout = () => {
         </Toolbar>
       </AppBar>
       <Container
-        maxWidth="xl"
+        maxWidth={isReaderRoute ? false : "xl"}
+        disableGutters={isReaderRoute}
         sx={{
-          mt: 4,
+          mt: isReaderRoute ? 0 : 4,
           minHeight: "calc(100vh - 64px)",
           backgroundColor: "background.default",
-          py: 3,
-          pb: { xs: 9, sm: 3 }, // Increased bottom padding for mobile to prevent content from being hidden behind the navigation bar
-          overflowX: "hidden", // Prevent horizontal scrolling
+          py: isReaderRoute ? 0 : 3,
+          pb: isReaderRoute ? 0 : { xs: 9, sm: 3 },
+          overflowX: "hidden",
+          ...(isReaderRoute && {
+            p: 0,
+            maxWidth: '100%',
+            width: '100vw',
+            height: '100vh'
+          })
         }}
       >
         <Suspense
@@ -91,7 +122,7 @@ const MainLayout = () => {
           <Outlet />
         </Suspense>
       </Container>
-      <BottomNav />
+      {!isReaderRoute && <BottomNav />}
     </>
   );
 };
