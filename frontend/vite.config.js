@@ -82,33 +82,16 @@ export default defineConfig({
     watch: {
       usePolling: true
     },
-    hmr: {
-      overlay: true
-    },
     proxy: {
       '/api': {
         target: 'http://0.0.0.0:5000',
         changeOrigin: true,
         secure: false
       }
-    },
-    fs: {
-      strict: true
-    },
-    historyApiFallback: {
-      disableDotRule: true,
-      rewrites: [
-        { from: /^\/reader\/.*/, to: '/index.html' },
-        { from: /^\/.*/, to: '/index.html' }
-      ]
-    },
-    cors: {
-      origin: true
-    },
-    middlewareMode: 'html'
+    }
   },
   preview: {
-    port: 5175,
+    port: 5173,
     host: '0.0.0.0',
     strictPort: true,
     cors: true,
@@ -124,7 +107,7 @@ export default defineConfig({
     outDir: path.resolve(__dirname, 'dist'),
     assetsDir: 'assets',
     emptyOutDir: true,
-    sourcemap: false,
+    sourcemap: process.env.NODE_ENV === 'development',
     manifest: true,
     rollupOptions: {
       output: {
@@ -140,9 +123,9 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        drop_console: process.env.NODE_ENV === 'production',
+        drop_debugger: process.env.NODE_ENV === 'production',
+        pure_funcs: process.env.NODE_ENV === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
         passes: 2
       },
       mangle: {

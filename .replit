@@ -59,6 +59,10 @@ args = "Frontend Preview"
 task = "workflow.run"
 args = "Frontend Build"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Frontend Production Server"
+
 [[workflows.workflow]]
 name = "Flask Server"
 author = "agent"
@@ -232,6 +236,21 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "ls -la frontend/dist && echo '---' && ls -la frontend/dist/assets"
 
+[[workflows.workflow]]
+name = "Frontend Production Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && node server.js"
+waitForPort = 5176
+
 [deployment]
 run = ["sh", "-c", "python3 app.py"]
 
@@ -262,6 +281,10 @@ externalPort = 3000
 [[ports]]
 localPort = 5175
 externalPort = 6000
+
+[[ports]]
+localPort = 5176
+externalPort = 8000
 
 [[ports]]
 localPort = 8081

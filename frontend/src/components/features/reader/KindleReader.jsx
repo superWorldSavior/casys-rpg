@@ -89,14 +89,31 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
     return normalized;
   }, [content]);
 
-  // Navigation callback
+  // Navigation callback with animation
   const handleNavigation = useCallback((direction) => {
     if (isStreaming) return;
     
-    setCurrentSection(prev => {
-      const next = prev + direction;
-      return Math.max(0, Math.min(next, normalizedContent.length - 1));
-    });
+    // Animation de transition
+    const container = document.querySelector('.kindle-reader-content');
+    if (container) {
+      container.style.transition = 'opacity 0.3s, transform 0.3s';
+      container.style.opacity = '0';
+      container.style.transform = `translateX(${direction * -30}px)`;
+      
+      setTimeout(() => {
+        setCurrentSection(prev => {
+          const next = prev + direction;
+          return Math.max(0, Math.min(next, normalizedContent.length - 1));
+        });
+        
+        // Reset animation
+        setTimeout(() => {
+          container.style.transition = 'opacity 0.3s, transform 0.3s';
+          container.style.opacity = '1';
+          container.style.transform = 'translateX(0)';
+        }, 50);
+      }, 300);
+    }
   }, [isStreaming, normalizedContent.length]);
 
   // Text streaming callback
@@ -118,35 +135,40 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
   }, []);
 
   const streamText = useCallback(async (text) => {
-    if (!text) {
-      console.warn('No text provided for streaming');
-      return;
+  if (!text) {
+    console.warn('No text provided for streaming');
+    return;
+  }
+  
+  const textContent = typeof text === 'string' ? text : text.content || '';
+  
+  try {
+    setIsStreaming(false); // Désactiver le streaming
+    setError(null);
+    // Afficher tout le texte d'un coup
+    setDisplayedText(textContent);
+    
+    // Mettre à jour la progression
+    if (onProgressChange) {
+      onProgressChange(100);
     }
     
-    const textContent = typeof text === 'string' ? text : text.content || '';
+  } catch (err) {
+    setError("Erreur lors de l'affichage du texte");
+    console.error("Display error:", err);
+    setIsStreaming(false);
+  }
+}, [onProgressChange]);
+
+  // Fonction pour détecter si on est proche de la fin du chapitre
+  const detectChapterEnd = useCallback((element) => {
+    if (!element) return false;
+    const scrollPosition = element.scrollTop + element.clientHeight;
+    const scrollHeight = element.scrollHeight;
+    const threshold = scrollHeight - 100; // 100px avant la fin
     
-    try {
-      setIsStreaming(true);
-      setDisplayedText('');
-      setError(null);
-      
-      // Afficher le texte directement
-      const paragraphs = textContent.split('\n').filter(p => p.trim());
-      setDisplayedText(paragraphs.join('\n\n'));
-      
-      // Mettre à jour la progression
-      setProgress(100);
-      if (onProgressChange) {
-        onProgressChange(100);
-      }
-      
-    } catch (err) {
-      setError("Erreur lors de l'affichage du texte");
-      console.error("Display error:", err);
-    } finally {
-      setIsStreaming(false);
-    }
-  }, [onProgressChange]);
+    setIsChapterEnd(scrollPosition >= threshold);
+  }, []);
 
   // Event Handlers
   const navigationHandlers = useMemo(() => {
@@ -170,7 +192,15 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
     };
   }, [handleNavigation]);
 
-  const swipeHandlers = useSwipeable(navigationHandlers.swipe);
+  const swipeHandlers = useSwipeable({
+    ...navigationHandlers.swipe,
+    delta: 50, // Distance minimum pour déclencher le swipe
+    preventDefaultTouchmoveEvent: true,
+    trackTouch: true,
+    trackMouse: false,
+    rotationAngle: 0,
+    touchEventOptions: { passive: false }
+  });
 
   // Effects
   useEffect(() => {
@@ -228,6 +258,8 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
     const initializeContent = async () => {
       if (!isLoading && normalizedContent.length > 0) {
         setError(null);
+        setIsStreaming(false); // Désactiver explicitement le streaming
+        
         const sectionToDisplay = initialSection >= 0 && initialSection < normalizedContent.length
           ? initialSection
           : currentSection;
@@ -237,17 +269,14 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
           const content = typeof section === 'string' ? section : section?.content;
           
           if (content) {
-            // Reset state before starting new stream
-            setDisplayedText('');
             setProgress(0);
             cancelStreamRef.current = false;
             
             try {
               await streamText(content);
             } catch (err) {
-              console.error('Error streaming text:', err);
-              setError('Erreur lors du streaming du texte');
-              // Display full content on error
+              console.error('Error displaying text:', err);
+              setError('Erreur lors de l\'affichage du texte');
               setDisplayedText(content);
             }
           } else {
@@ -394,15 +423,22 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
 
       {/* Text content */}
       <Box
+        className="kindle-reader-content"
+        ref={(el) => {
+          if (el) {
+            el.addEventListener('scroll', () => detectChapterEnd(el));
+          }
+        }}
         sx={{
           maxWidth: '65ch',
           mx: 'auto',
-          pt: { xs: '64px', sm: '72px' }, // Espace pour la barre du haut
-          pb: { xs: '80px', sm: '88px' }, // Espace pour la barre du bas
+          height: 'calc(100vh - 128px)', // Hauteur totale moins les barres haut/bas
+          mt: '64px', // Hauteur de la barre du haut
+          mb: '64px', // Hauteur de la barre du bas
           px: { xs: 3, sm: 4 },
           overflowY: 'auto',
-          height: 'calc(100vh - 144px)', // Hauteur totale moins les barres
           position: 'relative',
+          scrollBehavior: 'smooth',
           fontSize: { xs: '1.1rem', sm: '1.2rem', md: '1.25rem' },
           '& p': {
             mb: 2,
@@ -437,16 +473,16 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
       >
         {displayedText}
         {isChapterEnd && (
-          <Box sx={{ 
-            textAlign: 'center',
-            mt: 4,
-            p: 2,
-            borderRadius: 1,
-            bgcolor: 'rgba(0, 0, 0, 0.05)',
-          }}>
-            <Typography variant="body2" sx={{ mb: 2, color: readerTheme.textColor }}>
-              Faites défiler ou cliquez pour passer au chapitre suivant
-            </Typography>
+          <Box 
+            sx={{ 
+              mt: 4,
+              mb: 4,
+              textAlign: 'center',
+              p: 2,
+              borderRadius: 1,
+              bgcolor: 'rgba(0, 0, 0, 0.05)',
+            }}
+          >
             <Button
               variant="contained"
               onClick={() => handleNavigation(1)}
