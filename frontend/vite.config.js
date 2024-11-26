@@ -77,21 +77,53 @@ export default defineConfig({
     })
   ],
   server: {
-    port: 5173,
-    host: '0.0.0.0',
+    port: 5176,
+    host: true,
     watch: {
       usePolling: true
     },
+    cors: true,
+    hmr: {
+      host: '127.0.0.1',
+      port: 5176,
+      protocol: 'ws'
+    },
     proxy: {
       '/api': {
-        target: 'http://0.0.0.0:5000',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
-        secure: false
+        secure: false,
+        ws: true,
+        configure: (proxy, options) => {
+          proxy.on('error', (err, req, res) => {
+            console.error('Proxy Error:', err);
+            if (res.writeHead && !res.headersSent) {
+              res.writeHead(500, {
+                'Content-Type': 'application/json',
+              });
+              res.end(JSON.stringify({ error: 'Proxy Error', details: err.message }));
+            }
+          });
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            proxyReq.setHeader('X-Forwarded-Proto', 'http');
+            console.log('Proxying:', req.method, req.url);
+          });
+        }
+      }
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          format: 'es',
+          generatedCode: {
+            preset: 'es2015'
+          }
+        }
       }
     }
   },
   preview: {
-    port: 5173,
+    port: 5176,
     host: '0.0.0.0',
     strictPort: true,
     cors: true,

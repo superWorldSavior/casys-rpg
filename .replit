@@ -160,8 +160,8 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd frontend && npm run dev -- --host 0.0.0.0 --port 5175"
-waitForPort = 5175
+args = "cd frontend && npm run dev -- --host 0.0.0.0"
+waitForPort = 5176
 
 [[workflows.workflow]]
 name = "Vue Frontend"
@@ -234,7 +234,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "ls -la frontend/dist && echo '---' && ls -la frontend/dist/assets"
+args = "cd frontend && npm run build"
 
 [[workflows.workflow]]
 name = "Frontend Production Server"
@@ -248,7 +248,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd frontend && node server.js"
+args = "cd frontend && NODE_ENV=production node server.js"
 waitForPort = 5176
 
 [deployment]
@@ -285,6 +285,10 @@ externalPort = 6000
 [[ports]]
 localPort = 5176
 externalPort = 8000
+
+[[ports]]
+localPort = 5177
+externalPort = 8008
 
 [[ports]]
 localPort = 8081

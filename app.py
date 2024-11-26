@@ -40,15 +40,26 @@ pdf_service = PDFService(processor=pdf_processor, repository=pdf_repository)
 app = Flask(__name__, static_folder='frontend/dist')
 app.secret_key = SECRET_KEY
 
-# Enable CORS
+# Enable CORS with more permissive configuration for development
 CORS(app,
      resources={
-         r"/api/*": {
-             "origins": "*",
-             "methods": ["GET", "POST", "OPTIONS"],
-             "allow_headers": ["Content-Type"]
+         r"/*": {
+             "origins": ["http://localhost:5176", "http://127.0.0.1:5176", "http://0.0.0.0:5176"],
+             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"],
+             "expose_headers": ["Content-Type", "X-Total-Count"],
+             "supports_credentials": True,
+             "send_wildcard": False
          }
      })
+
+# Serve SPA for all non-API routes
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_spa(path):
+    if path.startswith('api/'):
+        return jsonify({"error": "Not found"}), 404
+    return send_from_directory(app.static_folder, 'index.html')
 
 
 # Helper Functions

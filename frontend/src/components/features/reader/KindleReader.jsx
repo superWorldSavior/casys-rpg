@@ -1,219 +1,156 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { Box, IconButton, Typography, LinearProgress, Button } from '@mui/material';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { useTheme } from '@mui/material/styles';
-import { useSwipeable } from 'react-swipeable';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Box, Typography, LinearProgress, Button } from '@mui/material';
 import ReaderSettings from './ReaderSettings';
 
-// Constants
-const STORAGE_KEY = 'kindle-reader-state';
-const DEFAULT_SPEED = 30;
+const STORAGE_KEY = 'kindle-reader';
+const DISPLAY_SPEED = {
+  slow: 50,
+  medium: 30,
+  fast: 15
+};
 
-// Theme helper
-const getInitialTheme = (isDark) => ({
-  fontFamily: '"Bookerly", "Georgia", serif',
-  fontSize: '1.2rem',
-  lineHeight: '1.8',
-  textColor: isDark ? '#e1e1e1' : '#2c2c2c',
-  backgroundColor: isDark ? '#131516' : '#F6F3E9'
-});
+const calculateSpeed = (speedSetting) => {
+  const normalizedSpeed = Math.min(Math.max(speedSetting, 1), 10);
+  const baseSpeed = DISPLAY_SPEED.medium;
+  const speedMultiplier = Math.pow(normalizedSpeed / 5, 1.5);
+  return Math.round(baseSpeed / speedMultiplier);
+};
 
-const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChange, customTheme }) => {
-  // Theme hooks
-  const theme = useTheme();
-  const [readerTheme, setReaderTheme] = useState(() => 
-    customTheme || getInitialTheme(theme.palette.mode === 'dark')
-  );
-  
-  // Refs
-  const cancelStreamRef = useRef(false);
-  const contentRef = useRef(content);
-  
-  // State hooks
+const KindleReader = ({ 
+  content = [], 
+  initialSection = 0, 
+  bookId,
+  theme: customTheme,
+  onProgressChange 
+}) => {
   const [currentSection, setCurrentSection] = useState(initialSection);
   const [displayedText, setDisplayedText] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
-  const [isChapterEnd, setIsChapterEnd] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [streamSpeed, setStreamSpeed] = useState(DEFAULT_SPEED);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [streamSpeed, setStreamSpeed] = useState(5);
+  const [isChapterEnd, setIsChapterEnd] = useState(false);
+  const cancelStreamRef = useRef(false);
+  const swipeRef = useRef(null); // Added swipeRef
 
-  // Memoized content
-  const normalizedContent = useMemo(() => {
-    if (!content) {
-      console.warn('No content available');
-      return [];
-    }
-    
-    const contentArray = Array.isArray(content) ? content : [content];
-    
-    const normalized = contentArray.map((section, index) => {
-      try {
-        if (typeof section === 'string') {
-          // Extraire le titre du contenu markdown
-          const lines = section.split('\n');
-          const title = lines[0]?.startsWith('#') ? 
-            lines[0].replace(/^#+\s*/, '') : 
-            `Section ${index + 1}`;
-            
-          return {
-            content: section,
-            number: index + 1,
-            title,
-            key: `section-${index}`
-          };
-        }
-        return {
-          ...section,
-          number: index + 1,
-          title: section.title || `Section ${index + 1}`,
-          key: `section-${index}`
-        };
-      } catch (error) {
-        console.error(`Error processing section ${index}:`, error);
-        return {
-          content: "Erreur de chargement de la section",
-          number: index + 1,
-          title: `Section ${index + 1}`,
-          key: `section-${index}`
-        };
-      }
-    });
-
-    console.log('Content loaded:', normalized.length, 'sections');
-    return normalized;
-  }, [content]);
-
-  // Navigation callback with animation
-  const handleNavigation = useCallback((direction) => {
-    if (isStreaming) return;
-    
-    // Animation de transition
-    const container = document.querySelector('.kindle-reader-content');
-    if (container) {
-      container.style.transition = 'opacity 0.3s, transform 0.3s';
-      container.style.opacity = '0';
-      container.style.transform = `translateX(${direction * -30}px)`;
-      
-      setTimeout(() => {
-        setCurrentSection(prev => {
-          const next = prev + direction;
-          return Math.max(0, Math.min(next, normalizedContent.length - 1));
-        });
-        
-        // Reset animation
-        setTimeout(() => {
-          container.style.transition = 'opacity 0.3s, transform 0.3s';
-          container.style.opacity = '1';
-          container.style.transform = 'translateX(0)';
-        }, 50);
-      }, 300);
-    }
-  }, [isStreaming, normalizedContent.length]);
-
-  // Text streaming callback
-  const autoScroll = useCallback((element, speed = 1) => {
-    if (!element) return;
-    
-    const scrollStep = () => {
-      const isBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
-      if (!isBottom) {
-        element.scrollBy({
-          top: speed,
-          behavior: 'smooth'
-        });
-        requestAnimationFrame(scrollStep);
-      }
-    };
-
-    requestAnimationFrame(scrollStep);
-  }, []);
-
-  const streamText = useCallback(async (text) => {
-  if (!text) {
-    console.warn('No text provided for streaming');
-    return;
-  }
+  const normalizedContent = Array.isArray(content) ? content : [content];
   
-  const textContent = typeof text === 'string' ? text : text.content || '';
-  
-  try {
-    setIsStreaming(false); // Désactiver le streaming
-    setError(null);
-    // Afficher tout le texte d'un coup
-    setDisplayedText(textContent);
-    
-    // Mettre à jour la progression
-    if (onProgressChange) {
-      onProgressChange(100);
-    }
-    
-  } catch (err) {
-    setError("Erreur lors de l'affichage du texte");
-    console.error("Display error:", err);
-    setIsStreaming(false);
-  }
-}, [onProgressChange]);
-
-  // Fonction pour détecter si on est proche de la fin du chapitre
-  const detectChapterEnd = useCallback((element) => {
-    if (!element) return false;
-    const scrollPosition = element.scrollTop + element.clientHeight;
-    const scrollHeight = element.scrollHeight;
-    const threshold = scrollHeight - 100; // 100px avant la fin
-    
-    setIsChapterEnd(scrollPosition >= threshold);
-  }, []);
-
-  // Event Handlers
-  const navigationHandlers = useMemo(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === 'ArrowLeft') handleNavigation(-1);
-      else if (e.key === 'ArrowRight') handleNavigation(1);
-      else if (e.key === 'Escape') {
-        cancelStreamRef.current = true;
-        setIsStreaming(false);
-      }
-    };
-
-    return {
-      keyboard: handleKeyPress,
-      swipe: {
-        onSwipedLeft: () => handleNavigation(1),
-        onSwipedRight: () => handleNavigation(-1),
-        preventDefaultTouchmoveEvent: true,
-        trackMouse: true
-      }
-    };
-  }, [handleNavigation]);
-
-  const swipeHandlers = useSwipeable({
-    ...navigationHandlers.swipe,
-    delta: 50, // Distance minimum pour déclencher le swipe
-    preventDefaultTouchmoveEvent: true,
-    trackTouch: true,
-    trackMouse: false,
-    rotationAngle: 0,
-    touchEventOptions: { passive: false }
+  const [readerTheme, setReaderTheme] = useState({
+    backgroundColor: customTheme?.backgroundColor || '#F6F3E9',
+    textColor: customTheme?.textColor || '#2c2c2c',
+    fontFamily: customTheme?.fontFamily || '"Bookerly", "Georgia", serif',
+    fontSize: customTheme?.fontSize || '1.2rem',
+    lineHeight: customTheme?.lineHeight || 1.8,
   });
 
-  // Effects
-  useEffect(() => {
-    contentRef.current = content;
-  }, [content]);
+  const streamText = useCallback(async (text) => {
+    if (!text) {
+      console.warn('No text provided for streaming');
+      return;
+    }
+    
+    const textContent = typeof text === 'string' ? text : text.content || '';
+    const words = textContent.split(/\s+/);
+    
+    try {
+      setIsStreaming(true);
+      setError(null);
+      setDisplayedText('');
+      
+      const displaySpeed = calculateSpeed(streamSpeed);
+      let currentText = '';
+      
+      for (let i = 0; i < words.length; i++) {
+        if (cancelStreamRef.current) {
+          break;
+        }
+        
+        currentText += (i > 0 ? ' ' : '') + words[i];
+        setDisplayedText(currentText);
+        setProgress((i + 1) / words.length * 100);
+        
+        if (onProgressChange) {
+          onProgressChange((i + 1) / words.length * 100);
+        }
+        
+        // Add natural pauses for punctuation
+        const hasPunctuation = /[,.!?]$/.test(words[i]);
+        await new Promise(resolve => setTimeout(resolve, hasPunctuation ? displaySpeed * 1.5 : displaySpeed));
+      }
+      
+      setIsStreaming(false);
+    } catch (err) {
+      setError("Erreur lors de l'affichage du texte");
+      console.error("Display error:", err);
+      setIsStreaming(false);
+    }
+  }, [onProgressChange, streamSpeed]);
 
-  useEffect(() => {
-    setReaderTheme(prev => ({
-      ...prev,
-      textColor: theme.palette.mode === 'dark' ? '#e1e1e1' : '#2c2c2c',
-      backgroundColor: theme.palette.mode === 'dark' ? '#131516' : '#F6F3E9'
-    }));
-  }, [theme.palette.mode]);
+  const detectChapterEnd = useCallback((element) => {
+    if (!element) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = element;
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+    setIsChapterEnd(isNearBottom);
+  }, []);
+
+  const navigationHandlers = {
+    keyboard: useCallback((e) => {
+      if (isStreaming) return;
+      
+      if (e.key === 'ArrowRight' || e.key === 'Space') {
+        if (currentSection < normalizedContent.length - 1) {
+          setCurrentSection(prev => prev + 1);
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (currentSection > 0) {
+          setCurrentSection(prev => prev - 1);
+        }
+      }
+    }, [currentSection, isStreaming, normalizedContent.length]),
+  };
+
+  const swipeHandlers = {
+    onTouchStart: (e) => {
+      const touch = e.touches[0];
+      swipeRef.current = { x: touch.clientX };
+    },
+    onTouchMove: (e) => {
+      if (!swipeRef.current || isStreaming) return;
+      
+      const touch = e.touches[0];
+      const diff = swipeRef.current.x - touch.clientX;
+      const container = document.querySelector('.kindle-reader-content');
+      
+      if (container) {
+        // Add smooth transition during swipe
+        container.style.transform = `translateX(${-diff}px)`;
+        container.style.transition = 'transform 0.1s ease-out';
+        
+        if (Math.abs(diff) > 50) {
+          if (diff > 0 && currentSection < normalizedContent.length - 1) {
+            container.style.transform = 'translateX(-100%)';
+            setTimeout(() => {
+              setCurrentSection(prev => prev + 1);
+              container.style.transform = 'translateX(0)';
+            }, 300);
+          } else if (diff < 0 && currentSection > 0) {
+            container.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+              setCurrentSection(prev => prev - 1);
+              container.style.transform = 'translateX(0)';
+            }, 300);
+          }
+          swipeRef.current = null;
+        }
+      }
+    },
+    onTouchEnd: () => {
+      swipeRef.current = null;
+    }
+  };
 
   useEffect(() => {
     setIsLoading(normalizedContent.length === 0);
@@ -222,7 +159,6 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
   useEffect(() => {
     if (!bookId || currentSection === undefined) return;
     
-    // Save reading progress with more details
     const readingState = {
       currentSection,
       progress,
@@ -236,9 +172,15 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
       JSON.stringify(readingState)
     );
     
-    // Mettre à jour le titre de la page
     document.title = `Lecture en cours - ${Math.round(progress)}%`;
   }, [bookId, currentSection, progress, readerTheme, streamSpeed]);
+
+  useEffect(() => {
+    if (onProgressChange) {
+      const overallProgress = ((currentSection * 100) + progress) / normalizedContent.length;
+      onProgressChange(Math.min(overallProgress, 100));
+    }
+  }, [currentSection, progress, normalizedContent.length, onProgressChange]);
 
   useEffect(() => {
     if (!bookId) return;
@@ -258,7 +200,7 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
     const initializeContent = async () => {
       if (!isLoading && normalizedContent.length > 0) {
         setError(null);
-        setIsStreaming(false); // Désactiver explicitement le streaming
+        setIsStreaming(false);
         
         const sectionToDisplay = initialSection >= 0 && initialSection < normalizedContent.length
           ? initialSection
@@ -289,75 +231,49 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
 
     initializeContent();
 
-    // Cleanup function
     return () => {
       cancelStreamRef.current = true;
     };
   }, [normalizedContent, currentSection, initialSection, streamText, isLoading]);
 
-  // Render Methods
-  const renderConditionalState = () => {
-    if (!normalizedContent.length || isLoading) {
-      return (
-        <Box 
-          display="flex" 
-          flexDirection="column"
-          justifyContent="center" 
-          alignItems="center" 
-          minHeight="100vh"
-          bgcolor={readerTheme.backgroundColor}
-          gap={2}
-        >
-          <Typography variant="h5" sx={{ color: readerTheme.textColor }}>
-            Chargement du contenu...
+  if (!normalizedContent.length || isLoading) {
+    return (
+      <Box 
+        display="flex" 
+        flexDirection="column"
+        justifyContent="center" 
+        alignItems="center" 
+        minHeight="100vh"
+        bgcolor={readerTheme.backgroundColor}
+        gap={2}
+      >
+        <Typography variant="h5" sx={{ color: readerTheme.textColor }}>
+          Chargement du contenu...
+        </Typography>
+        {!normalizedContent.length && (
+          <Typography variant="body2" sx={{ color: readerTheme.textColor }}>
+            Veuillez patienter pendant le chargement de votre livre
           </Typography>
-          {!normalizedContent.length && (
-            <Typography variant="body2" sx={{ color: readerTheme.textColor }}>
-              Veuillez patienter pendant le chargement de votre livre
-            </Typography>
-          )}
-        </Box>
-      );
-    }
-
-    if (error) {
-      return (
-        <Box 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="center" 
-          minHeight="100vh"
-          bgcolor={readerTheme.backgroundColor}
-        >
-          <Typography variant="h5" sx={{ color: readerTheme.textColor }}>
-            {error}
-          </Typography>
-        </Box>
-      );
-    }
-
-    return null;
-  };
-
-  const conditionalContent = renderConditionalState();
-  if (conditionalContent) {
-    return conditionalContent;
+        )}
+      </Box>
+    );
   }
 
-  console.log('KindleReader rendering with:', { 
-    contentLength: normalizedContent.length,
-    currentSection,
-    isLoading,
-    error
-  });
-
-  // Debug logs
-  console.log('KindleReader rendering with:', {
-    contentLength: content.length,
-    currentContent: content[currentSection],
-    theme,
-    readerTheme
-  });
+  if (error) {
+    return (
+      <Box 
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        minHeight="100vh"
+        bgcolor={readerTheme.backgroundColor}
+      >
+        <Typography variant="h5" sx={{ color: readerTheme.textColor }}>
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -375,7 +291,6 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
         overflow: 'hidden',
       }}
     >
-      {/* Progress bar with percentage */}
       <Box 
         sx={{ 
           position: 'fixed', 
@@ -391,7 +306,7 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
       >
         <LinearProgress
           variant="determinate"
-          value={(currentSection / (content.length || 1)) * 100}
+          value={(currentSection / normalizedContent.length) * 100}
           sx={{
             height: '3px',
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
@@ -419,9 +334,6 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
         </Typography>
       </Box>
 
-      {/* Empty space to preserve layout */}
-
-      {/* Text content */}
       <Box
         className="kindle-reader-content"
         ref={(el) => {
@@ -432,12 +344,17 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
         sx={{
           maxWidth: '65ch',
           mx: 'auto',
-          height: 'calc(100vh - 128px)', // Hauteur totale moins les barres haut/bas
-          mt: '64px', // Hauteur de la barre du haut
-          mb: '64px', // Hauteur de la barre du bas
-          px: { xs: 3, sm: 4 },
-          overflowY: 'auto',
+          height: 'calc(100vh - 128px)',
           position: 'relative',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          pt: '64px',
+          pb: '64px',
+          px: { xs: 3, sm: 4 },
+          '& > *:first-of-type': {
+            mt: 0
+          },
           scrollBehavior: 'smooth',
           fontSize: { xs: '1.1rem', sm: '1.2rem', md: '1.25rem' },
           '& p': {
@@ -485,7 +402,11 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
           >
             <Button
               variant="contained"
-              onClick={() => handleNavigation(1)}
+              onClick={() => {
+                if (currentSection < normalizedContent.length - 1) {
+                  setCurrentSection(prev => prev + 1);
+                }
+              }}
               sx={{
                 bgcolor: readerTheme.textColor,
                 color: readerTheme.backgroundColor,
@@ -501,7 +422,6 @@ const KindleReader = ({ content = [], initialSection = 0, bookId, onProgressChan
         )}
       </Box>
 
-      {/* Settings dialog */}
       <ReaderSettings
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}

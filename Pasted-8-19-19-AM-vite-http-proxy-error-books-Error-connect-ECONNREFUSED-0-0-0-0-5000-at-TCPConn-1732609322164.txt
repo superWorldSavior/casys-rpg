@@ -1,0 +1,57 @@
+8:19:19 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16)
+8:19:19 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x2)
+8:19:24 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x3)
+8:19:29 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x4)
+8:19:29 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x5)
+8:19:35 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x6)
+8:19:40 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x7)
+8:19:45 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x8)
+8:19:50 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x9)
+8:19:51 AM [vite] vite.config.js changed, restarting server...
+8:19:51 AM [vite] server restarted.
+8:19:55 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16)
+8:20:00 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x2)
+8:20:05 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x3)
+8:20:10 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x4)
+8:20:15 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x5)
+8:20:22 AM [vite] vite.config.js changed, restarting server...
+8:20:22 AM [vite] server restarted.
+8:20:44 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16)
+8:20:49 AM [vite] http proxy error: /books
+Error: connect ECONNREFUSED 0.0.0.0:5000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16) (x2)
+8:20:59 AM [vite] http proxy error: /books
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20)
+
+
