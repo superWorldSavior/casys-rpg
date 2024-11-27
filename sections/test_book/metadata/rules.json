@@ -1,0 +1,203 @@
+{
+  "rule_format_version": "1.0",
+  "rules": [
+    {
+      "id": 1,
+      "name": "Player Combat Roll",
+      "description": "The player rolls two dice and adds their SKILL score to determine their total for the combat round.",
+      "structure": [
+        "Player",
+        "Dice",
+        "SKILL"
+      ],
+      "behavior": "Roll two dice, sum the result, and add the SKILL score.",
+      "logic": "total_player = (roll_dice(2) + SKILL)",
+      "trigger": "At the start of a combat round",
+      "parameters": {},
+      "requirements": []
+    },
+    {
+      "id": 2,
+      "name": "Enemy Combat Roll",
+      "description": "The enemy rolls two dice and adds their SKILL score to determine their total for the combat round.",
+      "structure": [
+        "Enemy",
+        "Dice",
+        "SKILL"
+      ],
+      "behavior": "Roll two dice, sum the result, and add the enemy's SKILL score.",
+      "logic": "total_enemy = (roll_dice(2) + ENEMY_SKILL)",
+      "trigger": "At the start of a combat round",
+      "parameters": {},
+      "requirements": []
+    },
+    {
+      "id": 3,
+      "name": "Determine Round Winner",
+      "description": "Compare the totals of the player and the enemy to determine the winner of the round.",
+      "structure": [
+        "Player",
+        "Enemy"
+      ],
+      "behavior": "Compare total_player and total_enemy to find the higher total.",
+      "logic": "if total_player > total_enemy then player_wins else enemy_wins",
+      "trigger": "After both players have rolled",
+      "parameters": {},
+      "requirements": []
+    },
+    {
+      "id": 4,
+      "name": "Stamina Loss for Loser",
+      "description": "The loser of the round loses 2 STAMINA points.",
+      "structure": [
+        "Player",
+        "Enemy",
+        "STAMINA"
+      ],
+      "behavior": "Subtract 2 from the loser's STAMINA points.",
+      "logic": "if player_wins then enemy_STAMINA -= 2 else player_STAMINA -= 2",
+      "trigger": "After determining the round winner",
+      "parameters": {
+        "stamina_loss": 2
+      },
+      "requirements": []
+    },
+    {
+      "id": 1,
+      "name": "Character Creation - Skill",
+      "description": "To determine the SKILL attribute, roll one die and add 6.",
+      "structure": [
+        "Player",
+        "Die",
+        "SKILL"
+      ],
+      "behavior": "Roll one die, add 6 to the result to determine SKILL.",
+      "logic": "SKILL = (Roll 1d6) + 6",
+      "trigger": "At the start of character creation",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 2,
+      "name": "Character Creation - Stamina",
+      "description": "To determine the STAMINA attribute, roll two dice and add 12.",
+      "structure": [
+        "Player",
+        "Dice",
+        "STAMINA"
+      ],
+      "behavior": "Roll two dice, add 12 to the result to determine STAMINA.",
+      "logic": "STAMINA = (Roll 2d6) + 12",
+      "trigger": "At the start of character creation",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 3,
+      "name": "Character Creation - Luck",
+      "description": "To determine the LUCK attribute, roll one die and add 6.",
+      "structure": [
+        "Player",
+        "Die",
+        "LUCK"
+      ],
+      "behavior": "Roll one die, add 6 to the result to determine LUCK.",
+      "logic": "LUCK = (Roll 1d6) + 6",
+      "trigger": "At the start of character creation",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 4,
+      "name": "Starting Items - Sword",
+      "description": "The Sword item increases SKILL by 2.",
+      "structure": [
+        "Player",
+        "Sword",
+        "SKILL"
+      ],
+      "behavior": "Add 2 to SKILL when the Sword is equipped.",
+      "logic": "SKILL = SKILL + 2",
+      "trigger": "When the Sword is equipped",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 5,
+      "name": "Starting Items - Leather Armor",
+      "description": "The Leather Armor item reduces damage taken by 1.",
+      "structure": [
+        "Player",
+        "Leather Armor",
+        "Damage"
+      ],
+      "behavior": "Reduce damage taken by 1 when wearing Leather Armor.",
+      "logic": "Damage Taken = Damage Taken - 1",
+      "trigger": "When Leather Armor is equipped",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 6,
+      "name": "Starting Items - Backpack",
+      "description": "The Backpack item can hold up to 8 items.",
+      "structure": [
+        "Player",
+        "Backpack",
+        "Items"
+      ],
+      "behavior": "Limit the number of items carried to 8.",
+      "logic": "Items Held <= 8",
+      "trigger": "When using the Backpack",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 7,
+      "name": "Starting Items - Lantern",
+      "description": "The Lantern item provides light in dark areas.",
+      "structure": [
+        "Player",
+        "Lantern"
+      ],
+      "behavior": "Provide light in dark areas when the Lantern is equipped.",
+      "logic": "Light = True",
+      "trigger": "When the Lantern is equipped",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 8,
+      "name": "Starting Items - Gold Pieces",
+      "description": "The player starts with 10 Gold Pieces.",
+      "structure": [
+        "Player",
+        "Gold Pieces"
+      ],
+      "behavior": "Add 10 to the player's Gold Pieces.",
+      "logic": "Gold Pieces = 10",
+      "trigger": "At the start of the game",
+      "parameters": {},
+      "requirements": {}
+    },
+    {
+      "id": 9,
+      "name": "Starting Items - Provisions",
+      "description": "Each Provision restores 4 STAMINA when consumed.",
+      "structure": [
+        "Player",
+        "Provisions",
+        "STAMINA"
+      ],
+      "behavior": "Restore 4 STAMINA for each Provision consumed.",
+      "logic": "STAMINA = STAMINA + 4",
+      "trigger": "When a Provision is consumed",
+      "parameters": {},
+      "requirements": {}
+    }
+  ],
+  "global_rules": {
+    "default_parameters": {},
+    "constraints": []
+  }
+}

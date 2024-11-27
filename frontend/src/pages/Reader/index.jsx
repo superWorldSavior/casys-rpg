@@ -33,10 +33,9 @@ function ReaderPage() {
   const navigate = useNavigate();
   const muiTheme = useTheme();
 
-  // États
-  const [currentChapter, setCurrentChapter] = useState("");
+  const [currentChapter, setCurrentChapter] = useState('');
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
-  const [totalChapters, setTotalChapters] = useState(0);
+  const [totalChapters, setTotalChapters] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -44,83 +43,154 @@ function ReaderPage() {
     muiTheme.palette.mode === "dark" ? DARK_THEME : DEFAULT_THEME,
   );
 
-  // Mettre à jour le thème en fonction du mode actuel
   useEffect(() => {
     setTheme(muiTheme.palette.mode === "dark" ? DARK_THEME : DEFAULT_THEME);
   }, [muiTheme.palette.mode]);
 
-  // Charger un chapitre spécifique
   const fetchChapter = async (index) => {
+    if (!bookId) return;
+    
     try {
       setIsLoading(true);
       setError(null);
+      console.log('Fetching chapter:', index, 'for book:', bookId);
+      
+      // Clean up book ID and ensure .pdf extension
+      const cleanBookId = bookId.endsWith('.pdf') ? bookId : `${bookId}.pdf`;
+      const apiUrl = `/api/books/${cleanBookId}/chapters/${index}`;
+      console.log('Making API request to:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'include'
+      });
 
-      const response = await fetch(`/api/books/${bookId}/chapters/${index}`);
       if (!response.ok) {
-        throw new Error("Erreur lors du chargement du chapitre.");
+        console.error('API response not ok:', response.status, response.statusText);
+        let errorMessage;
+        try {
+          const errorData = await response.json();
+          if (response.status === 404) {
+            errorMessage = "Ce chapitre n'est pas disponible. Le livre n'a peut-être pas été correctement traité.";
+          } else if (response.status === 500) {
+            errorMessage = "Une erreur est survenue lors de la lecture du chapitre. Veuillez réessayer.";
+            console.error('Server error details:', errorData);
+          } else {
+            errorMessage = errorData.error || errorData.message || `Erreur serveur: ${response.status}`;
+          }
+        } catch (parseError) {
+          console.error('Error parsing error response:', parseError);
+          errorMessage = `Erreur serveur: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+        console.log('Response data:', data);
+        
+        if (!data) {
+          throw new Error('Aucune donnée reçue du serveur');
+        }
+        
+        if (data.error) {
+          console.error('Server returned error:', data.error);
+          throw new Error(data.error);
+        }
+        
+        if (!data.chapter) {
+          console.error('Invalid response format:', data);
+          throw new Error('Le contenu du chapitre est manquant');
+        }
+
+        // Validate chapter content format
+        if (typeof data.chapter !== 'string') {
+          console.error('Invalid chapter content type:', typeof data.chapter);
+          throw new Error('Format de contenu invalide');
+        }
+      
       setCurrentChapter(data.chapter);
       setCurrentChapterIndex(data.index);
+      setTotalChapters(data.total);
+      setError(null);
+      
+      try {
+        localStorage.setItem(`reader-progress-${bookId}`, JSON.stringify({
+          chapterIndex: data.index,
+          timestamp: Date.now(),
+          total: data.total,
+          bookId
+        }));
+      } catch (storageErr) {
+        console.warn("Erreur lors de la sauvegarde de la progression:", storageErr);
+      }
+
     } catch (err) {
-      console.error(err);
-      setError(err.message);
+      console.error("Erreur fetchChapter:", err);
+      setError(err.message || "Erreur lors du chargement du chapitre");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Charger le nombre total de chapitres et initialiser le premier chapitre
   useEffect(() => {
-    const fetchTotalChapters = async () => {
+    let isMounted = true;
+
+    const initializeReader = async () => {
+      if (!bookId) {
+        setError("Identifiant du livre manquant");
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(`/api/books/${bookId}/chapters`);
-        if (!response.ok) {
-          throw new Error("Erreur lors du chargement des chapitres.");
+        setIsLoading(true);
+        setError(null);
+
+        // Try to load saved progress
+        const savedProgress = localStorage.getItem(`reader-progress-${bookId}`);
+        if (savedProgress) {
+          const { chapterIndex } = JSON.parse(savedProgress);
+          if (typeof chapterIndex === 'number' && chapterIndex >= 0) {
+            await fetchChapter(chapterIndex);
+            return;
+          }
         }
 
-        const data = await response.json();
-        setTotalChapters(data.chapters.length);
-        fetchChapter(0); // Charger le premier chapitre
+        // If no valid saved progress, start from beginning
+        await fetchChapter(0);
       } catch (err) {
-        console.error(err);
-        setError(err.message);
+        if (isMounted) {
+          console.error("Erreur d'initialisation:", err);
+          setError(err.message || "Erreur lors de l'initialisation du lecteur");
+          setIsLoading(false);
+        }
       }
     };
 
-    fetchTotalChapters();
+    initializeReader();
+
+    return () => {
+      isMounted = false;
+    };
   }, [bookId]);
 
-  // Navigation entre les chapitres
   const goToNextChapter = () => {
     if (currentChapterIndex < totalChapters - 1) {
       fetchChapter(currentChapterIndex + 1);
-      setScrollPosition(0); // Reset scroll position for new chapter
     }
   };
 
   const goToPreviousChapter = () => {
     if (currentChapterIndex > 0) {
       fetchChapter(currentChapterIndex - 1);
-      setScrollPosition(0); // Reset scroll position for new chapter
     }
-  };
-
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  const handleScroll = (event) => {
-    const { scrollTop, scrollHeight, clientHeight } = event.target;
-    const bottom = scrollHeight - scrollTop === clientHeight;
-    
-    if (bottom) {
-      // At the bottom of the content
-      setIsChapterEnd(true);
-    } else {
-      setIsChapterEnd(false);
-    }
-    
-    setScrollPosition(scrollTop);
   };
 
   if (isLoading) {
@@ -129,13 +199,18 @@ function ReaderPage() {
         sx={{
           height: "100vh",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          gap: 2,
           backgroundColor: theme.backgroundColor,
           color: theme.textColor,
         }}
       >
-        <CircularProgress />
+        <CircularProgress size={40} />
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>
+          Chargement du chapitre...
+        </Typography>
       </Box>
     );
   }
@@ -151,17 +226,30 @@ function ReaderPage() {
           alignItems: "center",
           backgroundColor: theme.backgroundColor,
           color: theme.textColor,
-          padding: 2,
+          padding: 3,
+          maxWidth: "600px",
+          mx: "auto",
         }}
       >
-        <Typography variant="h6">{error}</Typography>
-        <Button
-          onClick={() => fetchChapter(currentChapterIndex)}
-          variant="contained"
-          sx={{ marginTop: 2 }}
-        >
-          Réessayer
-        </Button>
+        <Typography variant="h6" sx={{ mb: 3, textAlign: 'center', color: 'error.main' }}>
+          {error}
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            onClick={() => navigate('/library')}
+            variant="outlined"
+            sx={{ minWidth: '120px' }}
+          >
+            Bibliothèque
+          </Button>
+          <Button
+            onClick={() => fetchChapter(currentChapterIndex)}
+            variant="contained"
+            sx={{ minWidth: '120px' }}
+          >
+            Réessayer
+          </Button>
+        </Box>
       </Box>
     );
   }
@@ -179,7 +267,6 @@ function ReaderPage() {
         flexDirection: "column",
       }}
     >
-      {/* En-tête */}
       <Box
         component="header"
         sx={{
@@ -207,7 +294,7 @@ function ReaderPage() {
         </IconButton>
         <LinearProgress
           variant="determinate"
-          value={(currentChapterIndex / totalChapters) * 100}
+          value={(currentChapterIndex / (totalChapters || 1)) * 100}
           sx={{
             flexGrow: 1,
             "& .MuiLinearProgress-bar": { backgroundColor: theme.textColor },
@@ -215,11 +302,10 @@ function ReaderPage() {
         />
       </Box>
 
-      {/* Table des matières */}
       <TableOfContents
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        chapters={Array(totalChapters).fill("")} // Placeholder chapters
+        chapters={Array(totalChapters).fill("")}
         currentSection={currentChapterIndex}
         onChapterSelect={(index) => {
           fetchChapter(index);
@@ -227,24 +313,27 @@ function ReaderPage() {
         }}
       />
 
-      {/* Contenu du lecteur */}
-      <Box
-        sx={{
-          flexGrow: 1,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <KindleReader 
-        content={currentChapter || []} 
-        initialSection={0}
-        bookId={bookId}
-        customTheme={theme}
-        onProgressChange={(progress) => {
-          // Sauvegarder la progression
-          localStorage.setItem(`reading-progress-${bookId}`, progress.toString());
-        }}
-      />
+      <Box sx={{ flexGrow: 1, position: "relative", overflow: "hidden" }}>
+        {currentChapter && (
+          <KindleReader
+            content={currentChapter}
+            bookId={bookId}
+            customTheme={theme}
+            onProgressChange={(progress) => {
+              try {
+                localStorage.setItem(`reading-progress-${bookId}`, JSON.stringify({
+                  progress,
+                  chapterIndex: currentChapterIndex,
+                  timestamp: Date.now()
+                }));
+              } catch (err) {
+                console.warn('Failed to save reading progress:', err);
+              }
+            }}
+            onNextChapter={goToNextChapter}
+            onPreviousChapter={goToPreviousChapter}
+          />
+        )}
         <Box
           sx={{
             position: "fixed",
@@ -255,7 +344,10 @@ function ReaderPage() {
             bgcolor: theme.backgroundColor,
             borderTop: 1,
             borderColor: "divider",
-            zIndex: 1000
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
           <CommandInput
@@ -275,10 +367,8 @@ function ReaderPage() {
           <Typography
             variant="caption"
             sx={{
-              position: "absolute",
-              right: 16,
-              bottom: 16,
               opacity: 0.7,
+              ml: 2,
             }}
           >
             {currentChapterIndex + 1} / {totalChapters}

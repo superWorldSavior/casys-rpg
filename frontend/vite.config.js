@@ -1,174 +1,118 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
+import path from "path";
 
 export default defineConfig({
   plugins: [
     react({
-      jsxRuntime: 'automatic',
+      jsxRuntime: "automatic",
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
+      },
     }),
     VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      registerType: "autoUpdate",
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
-        name: 'Text Flow Navigator',
-        short_name: 'TextFlow',
-        description: 'Solo RPG AI Narrator application',
-        theme_color: '#ffffff',
+        name: "Text Flow Navigator",
+        short_name: "TextFlow",
+        description: "Solo RPG AI Narrator application",
+        theme_color: "#ffffff",
         icons: [
           {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
+            src: "pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
           },
           {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/api\./i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              networkTimeoutSeconds: 5,
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 24 * 60 * 60 // 24 hours
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable",
           },
-          {
-            urlPattern: /\.(png|jpg|jpeg|svg|gif)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'image-cache',
-              expiration: {
-                maxEntries: 30,
-                maxAgeSeconds: 7 * 24 * 60 * 60 // 7 days
-              }
-            }
-          },
-          {
-            urlPattern: /\.(woff2|woff|ttf)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'font-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
-              }
-            }
-          }
         ],
-        skipWaiting: true,
-        clientsClaim: true
-      }
-    })
+      },
+    }),
   ],
   server: {
-    port: 5176,
-    host: true,
-    watch: {
-      usePolling: true
-    },
-    cors: true,
-    hmr: {
-      host: '127.0.0.1',
-      port: 5176,
-      protocol: 'ws'
-    },
-    proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:5000',
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-        configure: (proxy, options) => {
-          proxy.on('error', (err, req, res) => {
-            console.error('Proxy Error:', err);
-            if (res.writeHead && !res.headersSent) {
-              res.writeHead(500, {
-                'Content-Type': 'application/json',
-              });
-              res.end(JSON.stringify({ error: 'Proxy Error', details: err.message }));
-            }
-          });
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            proxyReq.setHeader('X-Forwarded-Proto', 'http');
-            console.log('Proxying:', req.method, req.url);
-          });
-        }
-      }
-    },
-    build: {
-      rollupOptions: {
-        output: {
-          format: 'es',
-          generatedCode: {
-            preset: 'es2015'
-          }
-        }
-      }
-    }
-  },
-  preview: {
-    port: 5176,
+    port: 4173,
     host: '0.0.0.0',
-    strictPort: true,
     cors: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+      'Access-Control-Allow-Credentials': 'true'
+    },
+    fs: {
+      strict: false,
+      allow: ['..']
+    },
     proxy: {
       '/api': {
         target: 'http://0.0.0.0:5000',
         changeOrigin: true,
-        secure: false
+        secure: false,
+        ws: false,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.error('Proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending Request:', req.method, req.url);
+            if (req.body) {
+              const bodyData = JSON.stringify(req.body);
+              proxyReq.setHeader('Content-Type', 'application/json');
+              proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+              proxyReq.write(bodyData);
+            }
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received Response:', proxyRes.statusCode, req.url);
+          });
+        }
       }
     }
   },
+  optimizeDeps: {
+    include: [
+      "@emotion/react",
+      "@emotion/styled",
+      "react",
+      "react-dom",
+      "@mui/material",
+      "@mui/icons-material"
+    ],
+    exclude: [],
+    esbuildOptions: {
+      target: "es2020",
+    },
+  },
+  define: {
+    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
+    dedupe: ["react", "react-dom", "@emotion/react", "@emotion/styled"]
+  },
   build: {
-    outDir: path.resolve(__dirname, 'dist'),
-    assetsDir: 'assets',
-    emptyOutDir: true,
-    sourcemap: process.env.NODE_ENV === 'development',
+    outDir: "dist",
+    assetsDir: "assets",
+    sourcemap: true,
     manifest: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom'],
-          'router': ['react-router-dom'],
-          'mui': ['@mui/material'],
-          'mui-deps': ['@emotion/react', '@emotion/styled'],
-        }
-      }
-    },
-    chunkSizeWarningLimit: 1000,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: process.env.NODE_ENV === 'production',
-        drop_debugger: process.env.NODE_ENV === 'production',
-        pure_funcs: process.env.NODE_ENV === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
-        passes: 2
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          mui: ["@mui/material"],
+          "mui-deps": ["@emotion/react", "@emotion/styled"],
+        },
       },
-      mangle: {
-        safari10: true
-      }
     },
-    cssMinify: true,
-    cssCodeSplit: true
   },
-  base: '/',
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', '@mui/material', '@emotion/react', '@emotion/styled']
-  }
-})
+});

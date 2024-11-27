@@ -3,12 +3,16 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import history from 'connect-history-api-fallback';
+import compression from 'compression';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5176;
+
+// Enable compression
+app.use(compression());
 
 // Middleware de logging détaillé
 app.use((req, res, next) => {
@@ -18,16 +22,9 @@ app.use((req, res, next) => {
 
 // Configuration CORS avec gestion sécurisée
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://localhost:5176', 'https://localhost:5176', 'http://0.0.0.0:5176'];
-  const origin = req.headers.origin;
-  
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
   
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
@@ -35,60 +32,48 @@ app.use((req, res, next) => {
   next();
 });
 
-// Chemin vers les fichiers statiques
-const staticPath = path.join(__dirname, 'dist');
-console.log('Serving static files from:', staticPath);
-
-// Configuration du cache pour les assets statiques
-const staticOptions = {
-  etag: true,
-  lastModified: true,
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    } else if (filePath.match(/\.(js|mjs)$/)) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000');
-      res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-      res.setHeader('X-Content-Type-Options', 'nosniff');
-    } else if (filePath.endsWith('.css')) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000');
-      res.setHeader('Content-Type', 'text/css; charset=utf-8');
-    } else if (filePath.match(/\.(png|jpg|jpeg|gif|ico|svg|woff2?)$/)) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000');
-    } else {
-      res.setHeader('Cache-Control', 'public, max-age=0');
-    }
-  }
-};
-
-// Servir les fichiers statiques avant le middleware history
-app.use(express.static(staticPath, staticOptions));
-
 // Configuration pour le SPA routing
 app.use(history({
   verbose: true,
+  disableDotRule: true,
   rewrites: [
-    { 
-      from: /^\/assets\/.*$/,
-      to: context => context.parsedUrl.pathname
-    },
-    {
-      from: /^\/manifest\.webmanifest$/,
-      to: '/manifest.webmanifest'
-    },
-    {
-      from: /^\/sw\.js$/,
-      to: '/sw.js'
-    },
-    {
-      from: /^\/workbox-.*$/,
-      to: context => context.parsedUrl.pathname
-    }
+    { from: /^\/assets\/.*$/, to: context => context.parsedUrl.pathname },
+    { from: /^\/manifest\.webmanifest$/, to: '/manifest.webmanifest' },
+    { from: /^\/sw\.js$/, to: '/sw.js' },
+    { from: /^\/workbox-.*$/, to: context => context.parsedUrl.pathname }
   ]
 }));
 
-// Servir à nouveau les fichiers statiques après le middleware history
+// Configuration MIME types
+app.use((req, res, next) => {
+  if (req.url.endsWith('.js')) {
+    res.type('application/javascript; charset=utf-8');
+  } else if (req.url.endsWith('.mjs')) {
+    res.type('application/javascript; charset=utf-8');
+  } else if (req.url.endsWith('.css')) {
+    res.type('text/css; charset=utf-8');
+  }
+  next();
+});
+
+// Configuration du cache et des types MIME pour les assets statiques
+const staticOptions = {
+  etag: true,
+  lastModified: true,
+  index: false,
+  setHeaders: (res, filePath) => {
+    if (filePath.match(/\.(js|mjs)$/)) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+  }
+};
+
+// Servir les fichiers statiques
+const staticPath = path.join(__dirname, 'dist');
 app.use(express.static(staticPath, staticOptions));
 
 // Route par défaut pour le SPA

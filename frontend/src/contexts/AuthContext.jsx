@@ -1,71 +1,101 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { CircularProgress, Box } from "@mui/material";
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
+import { Box, CircularProgress } from "@mui/material";
 
 const AuthContext = createContext(null);
 
-const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export function AuthProvider({ children }) {
+  const [state, setState] = useState({
+    user: null,
+    loading: true,
+    error: null
+  });
 
   useEffect(() => {
+    let mounted = true;
+
     const initializeAuth = async () => {
       try {
         const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
+        if (storedUser && mounted) {
+          setState(prev => ({
+            ...prev,
+            user: JSON.parse(storedUser),
+            loading: false
+          }));
+        } else {
+          setState(prev => ({
+            ...prev,
+            loading: false
+          }));
         }
-      } catch (error) {
-        console.error(
-          "Erreur lors de l'initialisation de l'authentification:",
-          error,
-        );
+      } catch (err) {
+        console.error("Auth initialization error:", err);
         localStorage.removeItem("user");
-        setError("Erreur lors de la restauration de la session");
-      } finally {
-        setLoading(false);
+        if (mounted) {
+          setState(prev => ({
+            ...prev,
+            error: err.message,
+            loading: false
+          }));
+        }
       }
     };
 
     initializeAuth();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const login = async (credentials) => {
+  const login = useCallback(async (credentials) => {
     try {
-      setError(null);
+      setState(prev => ({ ...prev, error: null }));
       const response = await fetch("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify(credentials)
       });
 
       if (!response.ok) {
-        throw new Error("Échec de la connexion");
+        throw new Error("Login failed");
       }
 
       const userData = await response.json();
-      setUser(userData);
+      setState(prev => ({ ...prev, user: userData, error: null }));
       localStorage.setItem("user", JSON.stringify(userData));
       return userData;
-    } catch (error) {
-      setError("Identifiants invalides");
-      throw error;
+    } catch (err) {
+      setState(prev => ({ ...prev, error: "Invalid credentials" }));
+      throw err;
     }
-  };
+  }, []);
 
-  const logout = () => {
-    setUser(null);
+  const logout = useCallback(() => {
+    setState(prev => ({ ...prev, user: null, error: null }));
     localStorage.removeItem("user");
-  };
+  }, []);
 
-  if (loading) {
+  const contextValue = useMemo(() => ({
+    user: state.user,
+    loading: state.loading,
+    error: state.error,
+    login,
+    logout,
+    setError: (error) => setState(prev => ({ ...prev, error })),
+  }), [state, login, logout]);
+
+  if (state.loading) {
     return (
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         minHeight="100vh"
+        bgcolor="background.default"
       >
         <CircularProgress />
       </Box>
@@ -73,28 +103,16 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        error,
-        setError,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error(
-      "useAuth doit être utilisé à l'intérieur d'un AuthProvider",
-    );
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-};
-
-export { AuthProvider, useAuth };
+}

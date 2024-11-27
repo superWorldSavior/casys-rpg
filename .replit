@@ -118,7 +118,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python main_processor.py"
+args = "python main.py --pdf test_book.pdf"
 
 [[workflows.workflow]]
 name = "Create Test PDF"
@@ -265,6 +265,10 @@ externalPort = 5000
 [[ports]]
 localPort = 4174
 externalPort = 4200
+
+[[ports]]
+localPort = 4175
+externalPort = 8080
 
 [[ports]]
 localPort = 5000
