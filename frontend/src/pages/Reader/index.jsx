@@ -47,18 +47,36 @@ function ReaderPage() {
     setTheme(muiTheme.palette.mode === "dark" ? DARK_THEME : DEFAULT_THEME);
   }, [muiTheme.palette.mode]);
 
-  const fetchChapter = async (index) => {
+  const saveReadingProgress = (index, position = 0) => {
     if (!bookId) return;
-    
+
     try {
-      setIsLoading(true);
-      setError(null);
-      console.log('Fetching chapter:', index, 'for book:', bookId);
-      
+      localStorage.setItem(`reader-progress-${bookId}`, JSON.stringify({
+        chapterIndex: index,
+        timestamp: Date.now(),
+        total: totalChapters,
+        bookId,
+        lastPosition: position
+      }));
+    } catch (storageErr) {
+      console.warn("Erreur lors de la sauvegarde de la progression:", storageErr);
+    }
+  };
+
+  const fetchChapter = async (index) => {
+    if (!bookId) {
+      setError("Identifiant du livre manquant");
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
       // Clean up book ID and ensure .pdf extension
       const cleanBookId = bookId.endsWith('.pdf') ? bookId : `${bookId}.pdf`;
       const apiUrl = `/api/books/${cleanBookId}/chapters/${index}`;
-      console.log('Making API request to:', apiUrl);
       
       const response = await fetch(apiUrl, {
         method: 'GET',
@@ -71,7 +89,6 @@ function ReaderPage() {
       });
 
       if (!response.ok) {
-        console.error('API response not ok:', response.status, response.statusText);
         let errorMessage;
         try {
           const errorData = await response.json();
@@ -90,50 +107,28 @@ function ReaderPage() {
         throw new Error(errorMessage);
       }
 
-      let data;
-      try {
-        data = await response.json();
-        console.log('Response data:', data);
-        
-        if (!data) {
-          throw new Error('Aucune donnée reçue du serveur');
-        }
-        
-        if (data.error) {
-          console.error('Server returned error:', data.error);
-          throw new Error(data.error);
-        }
-        
-        if (!data.chapter) {
-          console.error('Invalid response format:', data);
-          throw new Error('Le contenu du chapitre est manquant');
-        }
-
-        // Validate chapter content format
-        if (typeof data.chapter !== 'string') {
-          console.error('Invalid chapter content type:', typeof data.chapter);
-          throw new Error('Format de contenu invalide');
-        }
+      const data = await response.json();
       
+      if (!data || !data.chapter) {
+        throw new Error('Le contenu du chapitre est manquant ou invalide');
+      }
+
+      if (typeof data.chapter !== 'string' || data.chapter.trim().length === 0) {
+        throw new Error('Le contenu du chapitre est vide ou dans un format invalide');
+      }
+
       setCurrentChapter(data.chapter);
       setCurrentChapterIndex(data.index);
       setTotalChapters(data.total);
       setError(null);
       
-      try {
-        localStorage.setItem(`reader-progress-${bookId}`, JSON.stringify({
-          chapterIndex: data.index,
-          timestamp: Date.now(),
-          total: data.total,
-          bookId
-        }));
-      } catch (storageErr) {
-        console.warn("Erreur lors de la sauvegarde de la progression:", storageErr);
-      }
+      // Save reading progress
+      saveReadingProgress(data.index);
 
     } catch (err) {
       console.error("Erreur fetchChapter:", err);
-      setError(err.message || "Erreur lors du chargement du chapitre");
+      setError(err.message || "Une erreur est survenue lors du chargement du chapitre. Veuillez réessayer.");
+      setCurrentChapter('');
     } finally {
       setIsLoading(false);
     }
@@ -144,31 +139,45 @@ function ReaderPage() {
 
     const initializeReader = async () => {
       if (!bookId) {
-        setError("Identifiant du livre manquant");
-        setIsLoading(false);
+        if (isMounted) {
+          setError("Identifiant du livre manquant");
+          setIsLoading(false);
+        }
         return;
       }
 
       try {
-        setIsLoading(true);
-        setError(null);
-
-        // Try to load saved progress
-        const savedProgress = localStorage.getItem(`reader-progress-${bookId}`);
-        if (savedProgress) {
-          const { chapterIndex } = JSON.parse(savedProgress);
-          if (typeof chapterIndex === 'number' && chapterIndex >= 0) {
-            await fetchChapter(chapterIndex);
-            return;
-          }
+        if (isMounted) {
+          setIsLoading(true);
+          setError(null);
         }
 
-        // If no valid saved progress, start from beginning
-        await fetchChapter(0);
+        // Try to load saved progress
+        let startChapter = 0;
+        try {
+          const savedProgress = localStorage.getItem(`reader-progress-${bookId}`);
+          if (savedProgress) {
+            const progress = JSON.parse(savedProgress);
+            if (progress && typeof progress.chapterIndex === 'number' && progress.chapterIndex >= 0) {
+              startChapter = progress.chapterIndex;
+            }
+          }
+        } catch (storageErr) {
+          console.warn("Erreur lors de la récupération de la progression:", storageErr);
+          // Non-blocking error - continue with default chapter
+        }
+
+        if (isMounted) {
+          await fetchChapter(startChapter);
+        }
       } catch (err) {
         if (isMounted) {
           console.error("Erreur d'initialisation:", err);
-          setError(err.message || "Erreur lors de l'initialisation du lecteur");
+          setError(err.message || "Impossible d'initialiser le lecteur. Veuillez rafraîchir la page ou réessayer plus tard.");
+          setCurrentChapter('');
+        }
+      } finally {
+        if (isMounted) {
           setIsLoading(false);
         }
       }
@@ -181,15 +190,23 @@ function ReaderPage() {
     };
   }, [bookId]);
 
-  const goToNextChapter = () => {
+  const goToNextChapter = async () => {
     if (currentChapterIndex < totalChapters - 1) {
-      fetchChapter(currentChapterIndex + 1);
+      try {
+        await fetchChapter(currentChapterIndex + 1);
+      } catch (err) {
+        setError("Erreur lors du chargement du chapitre suivant. Veuillez réessayer.");
+      }
     }
   };
 
-  const goToPreviousChapter = () => {
+  const goToPreviousChapter = async () => {
     if (currentChapterIndex > 0) {
-      fetchChapter(currentChapterIndex - 1);
+      try {
+        await fetchChapter(currentChapterIndex - 1);
+      } catch (err) {
+        setError("Erreur lors du chargement du chapitre précédent. Veuillez réessayer.");
+      }
     }
   };
 
@@ -207,7 +224,7 @@ function ReaderPage() {
           color: theme.textColor,
         }}
       >
-        <CircularProgress size={40} />
+        <CircularProgress />
         <Typography variant="body1" sx={{ textAlign: 'center' }}>
           Chargement du chapitre...
         </Typography>
@@ -321,11 +338,7 @@ function ReaderPage() {
             customTheme={theme}
             onProgressChange={(progress) => {
               try {
-                localStorage.setItem(`reading-progress-${bookId}`, JSON.stringify({
-                  progress,
-                  chapterIndex: currentChapterIndex,
-                  timestamp: Date.now()
-                }));
+                saveReadingProgress(currentChapterIndex, progress);
               } catch (err) {
                 console.warn('Failed to save reading progress:', err);
               }

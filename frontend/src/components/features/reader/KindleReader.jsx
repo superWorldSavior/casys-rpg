@@ -65,30 +65,34 @@ const KindleReader = ({
             processedContent = JSON.stringify(content, null, 2);
           }
 
-          // Add debug logs
-          console.log('Raw content:', content);
-          console.log('Content type:', typeof content);
-          console.log('Processed content:', processedContent);
+          if (!processedContent) {
+            throw new Error('Le contenu est vide ou dans un format non supporté');
+          }
 
-        // Clean up formatting issues and handle markdown
-        processedContent = processedContent
-          .replace(/\\n/g, '\n')
-          .replace(/\\r/g, '')
-          .replace(/\\/g, '')
-          .replace(/\u0000/g, '')
-          .replace(/#{1,6}\s+/g, (match) => match.trim() + ' ') // Fix markdown headings
-          .replace(/(?:\r\n|\r|\n){2,}/g, '\n\n') // Normalize line breaks
-          .trim();
+          // Clean up formatting issues and handle markdown
+          processedContent = processedContent
+            .replace(/\\n/g, '\n')
+            .replace(/\\r/g, '')
+            .replace(/\\/g, '')
+            .replace(/\u0000/g, '')
+            .replace(/#{1,6}\s+/g, (match) => match.trim() + ' ') // Fix markdown headings
+            .replace(/(?:\r\n|\r|\n){2,}/g, '\n\n') // Normalize line breaks
+            .trim();
 
-        if (!processedContent) {
-          throw new Error('Le contenu est invalide ou vide après traitement');
+          if (!processedContent) {
+            throw new Error('Le contenu est invalide ou vide après traitement');
+          }
+
+          setDisplayedText(processedContent);
+          setError(null);
+        } catch (processErr) {
+          console.error('Error processing content:', processErr);
+          throw new Error(processErr.message || 'Erreur lors du traitement du contenu');
         }
-
-        setDisplayedText(processedContent);
-        setError(null);
       } catch (err) {
-        console.error('Error processing content:', err);
+        console.error('Error in initializeContent:', err);
         setError(err.message || 'Erreur lors du traitement du contenu');
+        setDisplayedText('');
       } finally {
         setIsLoading(false);
       }

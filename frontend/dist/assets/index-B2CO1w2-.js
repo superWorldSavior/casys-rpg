@@ -1,2 +1,0 @@
-import{j as r}from"./index-CTdJZ5md.js";import"./vendor-BBF-xwg4.js";import{b as t,d as o,C as i}from"./mui-CG_8jc0N.js";import"./mui-deps-DIjIPAY3.js";import"./router-DvyW0KNU.js";const s=()=>r(i,{children:r(t,{py:3,children:r(o,{variant:"h4",gutterBottom:!0,sx:{fontWeight:500,color:"primary.main",mb:3},children:"Bibliothèque"})})});export{s as default};
-//# sourceMappingURL=index-B2CO1w2-.js.map

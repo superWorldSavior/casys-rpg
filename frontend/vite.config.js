@@ -4,6 +4,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
 
 export default defineConfig({
+  // base: "./",
   plugins: [
     react({
       jsxRuntime: "automatic",
@@ -38,52 +39,54 @@ export default defineConfig({
   ],
   server: {
     port: 4173,
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     cors: true,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-      'Access-Control-Allow-Credentials': 'true'
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+      "Access-Control-Allow-Headers":
+        "Content-Type, Authorization, X-Requested-With",
+      "Access-Control-Allow-Credentials": "true",
     },
     fs: {
       strict: false,
-      allow: ['..']
+      allow: [".."],
     },
     proxy: {
-      '/api': {
-        target: 'http://0.0.0.0:5000',
+      "/api": {
+        target: "http://0.0.0.0:5000",
         changeOrigin: true,
         secure: false,
         ws: false,
         configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            console.error('Proxy error:', err);
+          proxy.on("error", (err, _req, _res) => {
+            console.error("Proxy error:", err);
           });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            console.log('Sending Request:', req.method, req.url);
+          proxy.on("proxyReq", (proxyReq, req, _res) => {
+            console.log("Sending Request:", req.method, req.url);
             if (req.body) {
               const bodyData = JSON.stringify(req.body);
-              proxyReq.setHeader('Content-Type', 'application/json');
-              proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+              proxyReq.setHeader("Content-Type", "application/json");
+              proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
               proxyReq.write(bodyData);
             }
           });
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
-            console.log('Received Response:', proxyRes.statusCode, req.url);
+          proxy.on("proxyRes", (proxyRes, req, _res) => {
+            console.log("Received Response:", proxyRes.statusCode, req.url);
           });
-        }
-      }
-    }
+        },
+      },
+    },
   },
   optimizeDeps: {
     include: [
       "@emotion/react",
       "@emotion/styled",
+      "@emotion/cache",
       "react",
       "react-dom",
       "@mui/material",
-      "@mui/icons-material"
+      "@mui/icons-material",
     ],
     exclude: [],
     esbuildOptions: {
@@ -97,22 +100,28 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
-    dedupe: ["react", "react-dom", "@emotion/react", "@emotion/styled"]
+    dedupe: [
+      "react",
+      "react-dom",
+      "@emotion/react",
+      "@emotion/styled",
+      "@emotion/cache",
+    ],
   },
   build: {
     outDir: "dist",
     assetsDir: "assets",
     sourcemap: true,
     manifest: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          router: ["react-router-dom"],
-          mui: ["@mui/material"],
-          "mui-deps": ["@emotion/react", "@emotion/styled"],
-        },
-      },
-    },
+    // rollupOptions: {
+    //   output: {
+    //     manualChunks: {
+    //       vendor: ["react", "react-dom", "@emotion/cache"],
+    //       router: ["react-router-dom"],
+    //       mui: ["@mui/material"],
+    //       "mui-deps": ["@emotion/react", "@emotion/styled"],
+    //     },
+    //   },
+    // },
   },
 });
