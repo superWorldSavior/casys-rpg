@@ -1,0 +1,28 @@
+[project]
+name = "repl-nix-textflownavigator"
+version = "0.1.0"
+description = "Add your description here"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+dependencies = [
+    "email-validator>=2.2.0",
+    "flask>=3.1.0",
+    "flask-sqlalchemy>=3.1.1",
+    "psycopg2-binary>=2.9.10",
+    "markdown>=3.7",
+    "replit>=4.1.0",
+    "flask-cors>=5.0.0",
+    "replit-object-storage==1.0.2",
+    "werkzeug",
+    "pymupdf>=1.24.13",
+    "python-dotenv>=1.0.1",
+    "openai>=1.54.4",
+    "pypdf2>=3.0.1",
+    "reportlab>=4.2.5",
+    "pillow>=11.0.0",
+    "asgiref>=3.8.1",
+    "hypercorn>=0.17.3",
+    "pytest>=8.3.3",
+    "pytest-asyncio>=0.24.0",
+    "tenacity>=9.0.0",
+]
